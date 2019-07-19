@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>供应商接口自动化测试报告--预生产</title>
+    <meta name="generator" content="HTMLTestRunner 0.8.3"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    
+<style type="text/css" media="screen">
+body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
+table       { font-size: 100%; }
+pre         { }
+
+/* -- heading ---------------------------------------------------------------------- */
+h1 {
+	font-size: 16pt;
+	color: gray;
+}
+.heading {
+    margin-top: 0ex;
+    margin-bottom: 1ex;
+}
+
+.heading .attribute {
+    margin-top: 1ex;
+    margin-bottom: 0;
+}
+
+.heading .description {
+    margin-top: 4ex;
+    margin-bottom: 6ex;
+}
+
+/* -- css div popup ------------------------------------------------------------------------ */
+a.popup_link {
+}
+
+a.popup_link:hover {
+    color: red;
+}
+.img{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+    border: 2px solid #777;
+}
+
+.screenshots {
+    z-index: 100;
+	position:absolute;
+	left: 23%;
+	top: 20%;
+	display: none;
+}
+.close_shots {
+	position:absolute;
+	top:0; left:98%;
+	z-index:99;
+	width:20px;
+}
+.popup_window {
+    display: none;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    /*border: solid #627173 1px; */
+    padding: 10px;
+    background-color: #E6E6D6;
+    font-family: "Lucida Console", "Courier New", Courier, monospace;
+    text-align: left;
+    font-size: 8pt;
+    width: 500px;
+}
+
+}
+/* -- report ------------------------------------------------------------------------ */
+#show_detail_line {
+    margin-top: 3ex;
+    margin-bottom: 1ex;
+}
+#result_table {
+    width: 80%;
+    border-collapse: collapse;
+    border: 1px solid #777;
+}
+#header_row {
+    font-weight: bold;
+    color: white;
+    background-color: #777;
+}
+#result_table td {
+    border: 1px solid #777;
+    padding: 2px;
+}
+#total_row  { font-weight: bold; }
+.passClass  { background-color: #6c6; }
+.failClass  { background-color: #c60; }
+.errorClass { background-color: #c00; }
+.passCase   { color: #6c6; }
+.failCase   { color: #c60; font-weight: bold; }
+.errorCase  { color: #c00; font-weight: bold; }
+.hiddenRow  { display: none; }
+.testcase   { margin-left: 2em; }
+
+
+/* -- ending ---------------------------------------------------------------------- */
+#ending {
+}
+
+
+.piechart{
+    position:absolute;  ;
+    top:20px;
+    left:300px;
+    width: 200px;
+    float: left;
+    display:  inline;
+}
+
+
+</style>
+
+</head>
+<body>
+<script language="javascript" type="text/javascript">
+output_list = Array();
+
+/* level - 0:Summary; 1:Failed; 2:All */
+function showCase(level) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        tr = trs[i];
+        id = tr.id;
+        if (id.substr(0,2) == 'ft') {
+            if (level < 1) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+            }
+        }
+        if (id.substr(0,2) == 'pt') {
+            if (level > 1) {
+                tr.className = '';
+            }
+            else {
+                tr.className = 'hiddenRow';
+            }
+        }
+    }
+}
+
+
+function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+        tid0 = 't' + cid.substr(1) + '.' + (i+1);
+        tid = 'f' + tid0;
+        tr = document.getElementById(tid);
+        if (!tr) {
+            tid = 'p' + tid0;
+            tr = document.getElementById(tid);
+        }
+        id_list[i] = tid;
+        if (tr.className) {
+            toHide = 0;
+        }
+    }
+    for (var i = 0; i < count; i++) {
+        tid = id_list[i];
+        if (toHide) {
+            document.getElementById('div_'+tid).style.display = 'none'
+            document.getElementById(tid).className = 'hiddenRow';
+        }
+        else {
+            document.getElementById(tid).className = '';
+        }
+    }
+}
+
+
+function showTestDetail(div_id){
+    var details_div = document.getElementById(div_id)
+    var displayState = details_div.style.display
+    // alert(displayState)
+    if (displayState != 'block' ) {
+        displayState = 'block'
+        details_div.style.display = 'block'
+    }
+    else {
+        details_div.style.display = 'none'
+    }
+}
+
+
+function html_escape(s) {
+    s = s.replace(/&/g,'&amp;');
+    s = s.replace(/</g,'&lt;');
+    s = s.replace(/>/g,'&gt;');
+    return s;
+}
+
+function drawCircle(pass, fail, error){
+    var color = ["#6c6","#c60","#c00"];
+    var data = [pass,fail,error];
+    var text_arr = ["pass", "fail", "error"];
+
+    var canvas = document.getElementById("circle");
+    var ctx = canvas.getContext("2d");
+    var startPoint=0;
+    var width = 20, height = 10;
+    var posX = 112 * 2 + 20, posY = 30;
+    var textX = posX + width + 5, textY = posY + 10;
+    for(var i=0;i<data.length;i++){
+        ctx.fillStyle = color[i];
+        ctx.beginPath();
+        ctx.moveTo(112,84);
+        ctx.arc(112,84,84,startPoint,startPoint+Math.PI*2*(data[i]/(data[0]+data[1]+data[2])),false);
+        ctx.fill();
+        startPoint += Math.PI*2*(data[i]/(data[0]+data[1]+data[2]));
+        ctx.fillStyle = color[i];
+        ctx.fillRect(posX, posY + 20 * i, width, height);
+        ctx.moveTo(posX, posY + 20 * i);
+        ctx.font = 'bold 14px';
+        ctx.fillStyle = color[i];
+        var percent = text_arr[i] + ":"+data[i];
+        ctx.fillText(percent, textX, textY + 20 * i);
+
+    }
+}
+
+function show_shots(obj) {
+	obj.nextElementSibling.style.display="block";
+
+}
+
+function close_shots(obj) {
+	obj.parentElement.style.display="none";
+}
+
+</script>
+<div class="piechart">
+    <div>
+        <canvas id="circle" width="350" height="168" </canvas>
+    </div>
+</div>
+<div class='heading'>
+<h1>供应商接口自动化测试报告--预生产</h1>
+<p class='attribute'><strong>开始时间:</strong> 2018-08-28 10:28:02</p>
+<p class='attribute'><strong>耗时:</strong> 0:00:38.185788</p>
+<p class='attribute'><strong>状态:</strong> <span class="tj passCase">Pass</span>19</p>
+
+<p class='description'>自动化测试结果如下：</p>
+</div>
+
+
+
+<p id='show_detail_line'>显示
+<a href='javascript:showCase(0)'>概要</a>
+<a href='javascript:showCase(1)'>失败</a>
+<a href='javascript:showCase(2)'>所有</a>
+</p>
+
+<table id='result_table'>
+<colgroup>
+<col align='left' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+</colgroup>
+<tr id='header_row'>
+    <td>测试组/测试用例</td>
+    <td>总数</td>
+    <td>通过</td>
+    <td>失败</td>
+    <td>错误</td>
+    <td>视图</td>
+    <td>错误截图</td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_02_cart.TestCart: 测试购物车</td>
+    <td>19</td>
+    <td>19</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c1',19)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt1.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_1_0: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.1')" >
+        通过</a></span>
+
+    <div id='div_pt1.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.1: [2018-08-28 10:28:03,097)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:03,108)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:03,118)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI35491864', 'merArray': "{'editPrice':52.,'merchandiseNumber':1,'prodId':'SPH00049242','prodName':'阿莫西林胶囊','prodNo':'BAA003241D'}"}
+[2018-08-28 10:28:04,830)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_2_1: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.2')" >
+        通过</a></span>
+
+    <div id='div_pt1.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.2: [2018-08-28 10:28:04,865)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:04,879)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:04,888)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI35491864', 'merArray': "{'editPrice':2.5,'merchandiseNumber':1,'prodId':'SPH00033644','prodName':'阿莫西林胶囊','prodNo':'BAA003237D'}"}
+[2018-08-28 10:28:06,590)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_3_2: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.3')" >
+        通过</a></span>
+
+    <div id='div_pt1.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.3: [2018-08-28 10:28:06,627)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:06,648)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:06,656)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI35491864', 'merArray': "{'editPrice':8.2,'merchandiseNumber':1,'prodId':'SPH00089207','prodName':'阿莫西林胶囊','prodNo':'BAA003730D'}"}
+[2018-08-28 10:28:08,272)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_4_3: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.4')" >
+        通过</a></span>
+
+    <div id='div_pt1.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.4: [2018-08-28 10:28:08,302)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:08,315)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:08,326)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI31432092', 'merArray': "{'editPrice':52.,'merchandiseNumber':1,'prodId':'SPH00049242','prodName':'阿莫西林胶囊','prodNo':'BAA003241D'}"}
+[2018-08-28 10:28:09,983)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.5' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_5_4: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.5')" >
+        通过</a></span>
+
+    <div id='div_pt1.5' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.5').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.5: [2018-08-28 10:28:10,020)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:10,025)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:10,032)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI31432092', 'merArray': "{'editPrice':2.5,'merchandiseNumber':1,'prodId':'SPH00033644','prodName':'阿莫西林胶囊','prodNo':'BAA003237D'}"}
+[2018-08-28 10:28:11,614)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.6' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_6_5: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.6')" >
+        通过</a></span>
+
+    <div id='div_pt1.6' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.6').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.6: [2018-08-28 10:28:11,650)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:11,661)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:11,671)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI31432092', 'merArray': "{'editPrice':8.2,'merchandiseNumber':1,'prodId':'SPH00089207','prodName':'阿莫西林胶囊','prodNo':'BAA003730D'}"}
+[2018-08-28 10:28:13,469)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.7' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_7_6: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.7')" >
+        通过</a></span>
+
+    <div id='div_pt1.7' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.7').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.7: [2018-08-28 10:28:13,490)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:13,504)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:13,517)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI32467639', 'merArray': "{'editPrice':52.,'merchandiseNumber':1,'prodId':'SPH00049242','prodName':'阿莫西林胶囊','prodNo':'BAA003241D'}"}
+[2018-08-28 10:28:15,193)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.8' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_8_7: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.8')" >
+        通过</a></span>
+
+    <div id='div_pt1.8' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.8').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.8: [2018-08-28 10:28:15,228)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:15,239)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:15,249)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI32467639', 'merArray': "{'editPrice':2.5,'merchandiseNumber':1,'prodId':'SPH00033644','prodName':'阿莫西林胶囊','prodNo':'BAA003237D'}"}
+[2018-08-28 10:28:17,888)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.9' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_addToCart_9_8: 测试加购物车，3个客户同时加3个商品，此测试用例是后续测试用例的前提</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.9')" >
+        通过</a></span>
+
+    <div id='div_pt1.9' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.9').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.9: [2018-08-28 10:28:17,922)]-log.py-INFO:==================================================checkNewCart==============================================
+[2018-08-28 10:28:17,932)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/checkNewCart.json
+[2018-08-28 10:28:17,943)]-log.py-INFO:输入: {'blurCart': 1, 'branchId': 'FDG', 'custId': 'FDGDWI32467639', 'merArray': "{'editPrice':8.2,'merchandiseNumber':1,'prodId':'SPH00089207','prodName':'阿莫西林胶囊','prodNo':'BAA003730D'}"}
+[2018-08-28 10:28:19,556)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '添加成功！', 'success': True}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.10' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_salesManCartList: 测试获取购物车客户列表</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.10')" >
+        通过</a></span>
+
+    <div id='div_pt1.10' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.10').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.10: [2018-08-28 10:28:19,581)]-log.py-INFO:==================================================salesManCartList==============================================
+[2018-08-28 10:28:19,590)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/salesManCartList.json
+[2018-08-28 10:28:19,600)]-log.py-INFO:输入: 
+[2018-08-28 10:28:20,288)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '查询成功', 'totalSize': 3, 'list': [{'branchId': 'FDG', 'linkPhone': '13545187055', 'custId': 'FDGDWI31432092', 'count': 3, 'branchName': '湖北', 'custName': '北京同仁堂武汉大药房有限公司', 'linkMan': '詹娇珍'}, {'branchId': 'FDG', 'linkPhone': '18071366381', 'custId': 'FDGDWI32467639', 'count': 3, 'branchName': '湖北', 'custName': '十堰九州通医药有限公司', 'linkMan': '索云'}, {'branchId': 'FDG', 'linkPhone': '13163243082', 'custId': 'FDGDWI35491864', 'count': 3, 'branchName': '湖北', 'custName': '武汉九州通医院', 'linkMan': '丁敏'}], 'isCanGoNext': False}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.11' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_custCartDetail_1_0: 测试获取购物车商品明细</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.11')" >
+        通过</a></span>
+
+    <div id='div_pt1.11' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.11').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.11: [2018-08-28 10:28:20,326)]-log.py-INFO:==================================================custCartDetail==============================================
+[2018-08-28 10:28:20,344)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/custCartDetail.json
+[2018-08-28 10:28:20,363)]-log.py-INFO:输入: {'custId': 'FDGDWI35491864'}
+[2018-08-28 10:28:22,156)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '请求成功', 'successList': [{'bigPackageQuantity': 600, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '华北制药股份有限公司', 'memberPrice': 2.5, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00049242', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003241D', 'prodSpecification': '0.25g*12s*2板', 'retailPrice': 7.4, 'showTactics': None, 'storageNumber': 14358.0, 'branchId': 'FDG', 'prodBarCode': '22114852011', 'isYiBao': 0, 'farValidityDate': '2021-03-31', 'nearValidityDate': '2021-03-31', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H13020726', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 1100.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003241D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '梁宁宁', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 52.0, 'activityContent': None, 'cartId': 869262, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 52.0, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI35491864', 'supplierId': None, 'erpCheckStatus': 1}, {'bigPackageQuantity': 400, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '华北制药股份有限公司', 'memberPrice': 2.5, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00033644', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003237D', 'prodSpecification': '0.5g*10s', 'retailPrice': 8.57, 'showTactics': None, 'storageNumber': 492624.0, 'branchId': 'FDG', 'prodBarCode': '33644', 'isYiBao': 0, 'farValidityDate': '2021-01-31', 'nearValidityDate': '2020-03-31', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H20043535', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 38255.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003237D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '田凯', 'policyList': [{'prodNo': 'BAA003237D', 'branchId': 'FDG', 'name': '展销会', 'endTime': '2018-12-31', 'systemTime': 1535423182000, 'fairsInfoName': '总代理政策品种展销', 'content': '7.1-7.31日0.15积分/盒'}], 'fairsInfo': 1, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 2.5, 'activityContent': '7.1-7.31日0.15积分/盒', 'cartId': 869263, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 2.5, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI35491864', 'supplierId': None, 'erpCheckStatus': 1}, {'bigPackageQuantity': 400, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '昆明积大制药股份有限公司', 'memberPrice': 8.2, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00089207', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003730D', 'prodSpecification': '0.25g*12s*4板', 'retailPrice': 14.4, 'showTactics': None, 'storageNumber': 6535.0, 'branchId': 'FDG', 'prodBarCode': '6900191226453', 'isYiBao': 0, 'farValidityDate': '2021-02-22', 'nearValidityDate': '2021-02-21', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H53020651', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 6015.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003730D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '陈守刚', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 8.2, 'activityContent': None, 'cartId': 869264, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 8.2, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI35491864', 'supplierId': None, 'erpCheckStatus': 1}], 'cartAmount': 3, 'totalPrice': '62.7', 'success': True, 'failList': []}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.12' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_custCartDetail_2_1: 测试获取购物车商品明细</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.12')" >
+        通过</a></span>
+
+    <div id='div_pt1.12' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.12').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.12: [2018-08-28 10:28:22,193)]-log.py-INFO:==================================================custCartDetail==============================================
+[2018-08-28 10:28:22,205)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/custCartDetail.json
+[2018-08-28 10:28:22,215)]-log.py-INFO:输入: {'custId': 'FDGDWI31432092'}
+[2018-08-28 10:28:23,774)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '请求成功', 'successList': [{'bigPackageQuantity': 400, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '华北制药股份有限公司', 'memberPrice': 2.5, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00033644', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003237D', 'prodSpecification': '0.5g*10s', 'retailPrice': 8.57, 'showTactics': None, 'storageNumber': 492624.0, 'branchId': 'FDG', 'prodBarCode': '33644', 'isYiBao': 0, 'farValidityDate': '2021-01-31', 'nearValidityDate': '2020-03-31', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H20043535', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 38255.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003237D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '田凯', 'policyList': [{'prodNo': 'BAA003237D', 'branchId': 'FDG', 'name': '展销会', 'endTime': '2018-12-31', 'systemTime': 1535423184000, 'fairsInfoName': '总代理政策品种展销', 'content': '7.1-7.31日0.15积分/盒'}], 'fairsInfo': 1, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 2.5, 'activityContent': '7.1-7.31日0.15积分/盒', 'cartId': 869259, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 2.5, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI31432092', 'supplierId': None, 'erpCheckStatus': 1}, {'bigPackageQuantity': 600, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '华北制药股份有限公司', 'memberPrice': 2.57, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00049242', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003241D', 'prodSpecification': '0.25g*12s*2板', 'retailPrice': 7.4, 'showTactics': None, 'storageNumber': 14358.0, 'branchId': 'FDG', 'prodBarCode': '22114852011', 'isYiBao': 0, 'farValidityDate': '2021-03-31', 'nearValidityDate': '2021-03-31', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H13020726', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 1100.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003241D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '梁宁宁', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 52.0, 'activityContent': None, 'cartId': 869260, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 52.0, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI31432092', 'supplierId': None, 'erpCheckStatus': 1}, {'bigPackageQuantity': 400, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '昆明积大制药股份有限公司', 'memberPrice': 8.4, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00089207', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003730D', 'prodSpecification': '0.25g*12s*4板', 'retailPrice': 14.4, 'showTactics': None, 'storageNumber': 6535.0, 'branchId': 'FDG', 'prodBarCode': '6900191226453', 'isYiBao': 0, 'farValidityDate': '2021-02-22', 'nearValidityDate': '2021-02-21', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H53020651', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 6015.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003730D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '陈守刚', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 8.2, 'activityContent': None, 'cartId': 869261, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 8.2, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI31432092', 'supplierId': None, 'erpCheckStatus': 1}], 'cartAmount': 3, 'totalPrice': '62.7', 'success': True, 'failList': []}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.13' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_custCartDetail_3_2: 测试获取购物车商品明细</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.13')" >
+        通过</a></span>
+
+    <div id='div_pt1.13' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.13').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.13: [2018-08-28 10:28:23,835)]-log.py-INFO:==================================================custCartDetail==============================================
+[2018-08-28 10:28:23,841)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/custCartDetail.json
+[2018-08-28 10:28:23,846)]-log.py-INFO:输入: {'custId': 'FDGDWI32467639'}
+[2018-08-28 10:28:27,430)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '请求成功', 'successList': [{'bigPackageQuantity': 600, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '华北制药股份有限公司', 'memberPrice': 2.5, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00049242', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003241D', 'prodSpecification': '0.25g*12s*2板', 'retailPrice': 7.4, 'showTactics': None, 'storageNumber': 14358.0, 'branchId': 'FDG', 'prodBarCode': '22114852011', 'isYiBao': 0, 'farValidityDate': '2021-03-31', 'nearValidityDate': '2021-03-31', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H13020726', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 1100.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003241D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '梁宁宁', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 52.0, 'activityContent': None, 'cartId': 869105, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 52.0, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI32467639', 'supplierId': None, 'erpCheckStatus': 1}, {'bigPackageQuantity': 400, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '华北制药股份有限公司', 'memberPrice': 2.5, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00033644', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003237D', 'prodSpecification': '0.5g*10s', 'retailPrice': 8.57, 'showTactics': None, 'storageNumber': 492624.0, 'branchId': 'FDG', 'prodBarCode': '33644', 'isYiBao': 0, 'farValidityDate': '2021-01-31', 'nearValidityDate': '2020-03-31', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H20043535', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 38255.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003237D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '田凯', 'policyList': [{'prodNo': 'BAA003237D', 'branchId': 'FDG', 'name': '展销会', 'endTime': '2018-12-31', 'systemTime': 1535423186000, 'fairsInfoName': '总代理政策品种展销', 'content': '7.1-7.31日0.15积分/盒'}], 'fairsInfo': 1, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 2.5, 'activityContent': '7.1-7.31日0.15积分/盒', 'cartId': 869106, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 2.5, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI32467639', 'supplierId': None, 'erpCheckStatus': 1}], 'cartAmount': 3, 'totalPrice': '54.5', 'success': True, 'failList': [{'bigPackageQuantity': 400, 'isDecimal': 0, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '昆明积大制药股份有限公司', 'memberPrice': 8.2, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00089207', 'prodName': '阿莫西林胶囊', 'prodNo': 'BAA003730D', 'prodSpecification': '0.25g*12s*4板', 'retailPrice': 14.4, 'showTactics': None, 'storageNumber': 6535.0, 'branchId': 'FDG', 'prodBarCode': '6900191226453', 'isYiBao': 0, 'farValidityDate': '2021-02-22', 'nearValidityDate': '2021-02-21', 'prodLocalName': '阿莫西林胶囊', 'passfileNumber': '国药准字H53020651', 'chineseDrugYieldly': '', 'chuffl': '处方药', 'salesLastMonth': 6015.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003730D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '陈守刚', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 8.2, 'activityContent': None, 'cartId': 869107, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': 8.2, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI32467639', 'supplierId': None, 'erpCheckStatus': 0}]}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.14' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_getCartStatus: 测试查询购物车状态</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.14')" >
+        通过</a></span>
+
+    <div id='div_pt1.14' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.14').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.14: [2018-08-28 10:28:27,471)]-log.py-INFO:==================================================getCartStatus==============================================
+[2018-08-28 10:28:27,495)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/getCartStatus.json
+[2018-08-28 10:28:27,505)]-log.py-INFO:输入: {'cartIds': '869259, 869260, 869261'}
+[2018-08-28 10:28:27,642)]-log.py-INFO:输出: {'code': 1, 'data': {'success': True, 'cartList': [{'bigPackageQuantity': None, 'isDecimal': None, 'isSalesProd': None, 'isUnpick': None, 'manufacturer': None, 'memberPrice': 0, 'midPackageQuantity': None, 'packageUnit': None, 'prodId': 'SPH00033644', 'prodName': None, 'prodNo': 'BAA003237D', 'prodSpecification': None, 'retailPrice': None, 'showTactics': None, 'storageNumber': None, 'branchId': 'FDG', 'prodBarCode': None, 'isYiBao': None, 'farValidityDate': None, 'nearValidityDate': None, 'prodLocalName': None, 'passfileNumber': None, 'chineseDrugYieldly': None, 'chuffl': None, 'salesLastMonth': 0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003237D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': None, 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 2.5, 'activityContent': None, 'cartId': 869259, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': None, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI31432092', 'supplierId': None, 'erpCheckStatus': 1}, {'bigPackageQuantity': None, 'isDecimal': None, 'isSalesProd': None, 'isUnpick': None, 'manufacturer': None, 'memberPrice': 0, 'midPackageQuantity': None, 'packageUnit': None, 'prodId': 'SPH00049242', 'prodName': None, 'prodNo': 'BAA003241D', 'prodSpecification': None, 'retailPrice': None, 'showTactics': None, 'storageNumber': None, 'branchId': 'FDG', 'prodBarCode': None, 'isYiBao': None, 'farValidityDate': None, 'nearValidityDate': None, 'prodLocalName': None, 'passfileNumber': None, 'chineseDrugYieldly': None, 'chuffl': None, 'salesLastMonth': 0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003241D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': None, 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 52.0, 'activityContent': None, 'cartId': 869260, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': None, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI31432092', 'supplierId': None, 'erpCheckStatus': 1}, {'bigPackageQuantity': None, 'isDecimal': None, 'isSalesProd': None, 'isUnpick': None, 'manufacturer': None, 'memberPrice': 0, 'midPackageQuantity': None, 'packageUnit': None, 'prodId': 'SPH00089207', 'prodName': None, 'prodNo': 'BAA003730D', 'prodSpecification': None, 'retailPrice': None, 'showTactics': None, 'storageNumber': None, 'branchId': 'FDG', 'prodBarCode': None, 'isYiBao': None, 'farValidityDate': None, 'nearValidityDate': None, 'prodLocalName': None, 'passfileNumber': None, 'chineseDrugYieldly': None, 'chuffl': None, 'salesLastMonth': 0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'nullBAA003730D', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': None, 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': 8.2, 'activityContent': None, 'cartId': 869261, 'supUserId': 67951, 'purchaseNumber': 1.0, 'rowPrice': None, 'erpCheckFail': 'success', 'submitOrderType': None, 'custId': 'FDGDWI31432092', 'supplierId': None, 'erpCheckStatus': 1}]}, 'msg': '请求成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.15' class='hiddenRow'>
+    <td ><div class='testcase'>test_05_batchDeleteCart: 测试删除购物车列表中某个客户购物车，删除3个客户中第一个客户的购物车</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.15')" >
+        通过</a></span>
+
+    <div id='div_pt1.15' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.15').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.15: [2018-08-28 10:28:27,698)]-log.py-INFO:==================================================batchDeleteCart==============================================
+[2018-08-28 10:28:27,710)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/batchDeleteCart.json
+[2018-08-28 10:28:27,720)]-log.py-INFO:输入: {'custIds': 'FDGDWI35491864'}
+[2018-08-28 10:28:27,881)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '删除成功', 'success': True}}
+[2018-08-28 10:28:27,917)]-log.py-INFO:==================================================custCartDetail==============================================
+[2018-08-28 10:28:27,927)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/custCartDetail.json
+[2018-08-28 10:28:27,937)]-log.py-INFO:输入: {'custId': 'FDGDWI35491864'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.16' class='hiddenRow'>
+    <td ><div class='testcase'>test_06_MobileNextCart: 测试提交订单进入配送确认, 提交三个客户中第二个客户的所有商品</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.16')" >
+        通过</a></span>
+
+    <div id='div_pt1.16' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.16').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.16: [2018-08-28 10:28:28,148)]-log.py-INFO:==================================================getCartStatus==============================================
+[2018-08-28 10:28:28,160)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/getCartStatus.json
+[2018-08-28 10:28:28,171)]-log.py-INFO:输入: {'cartIds': '869259, 869260, 869261'}
+[2018-08-28 10:28:28,332)]-log.py-INFO:==================================================MobileNextCart==============================================
+[2018-08-28 10:28:28,343)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/MobileNextCart.json
+[2018-08-28 10:28:28,356)]-log.py-INFO:输入: {'cartIds': '869259, 869260, 869261', 'custId': 'FDGDWI31432092'}
+[2018-08-28 10:28:32,822)]-log.py-INFO:输出: {'code': 1, 'data': {'msg': '', 'supplierName': 'hm供应商测试', 'sumIntegral': 0, 'linkPhone': '13116000998', 'cartIds': '869259, 869260, 869261,', 'totalPrice': 62.7, 'success': True, 'count': 3, 'msgFlag': 0, 'cust': {'branchId': 'FDG', 'consigneeAdd': '武汉市武昌区武珞路442号中南国际商务公寓一层1、2号商铺', 'custId': 'FDGDWI31432092', 'custName': '北京同仁堂武汉大药房有限公司', 'danwBh': 'C420106001X001HA', 'danwNm': 'DWI31432092', 'distance': None, 'isExistLevelTwo': None, 'kpyLinkphone': '13995649662', 'kpyName': '姚明芳', 'latitude': None, 'linkMan': '詹娇珍', 'linkPhone': '13545187055', 'longitude': None, 'keyword': None, 'deliveryMode': None, 'deliveryModeName': None, 'salePayType': None, 'salePayTypeName': None, 'typeStamps': None, 'typeStampsName': None, 'danwBhTwo': None, 'danwNmTwo': None, 'custNameTwo': None, 'custFlag': 1}, 'storageMsg': ''}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.17' class='hiddenRow'>
+    <td ><div class='testcase'>test_07_mobileLastCart: 测试生成订单, 提交三个客户中第二个客户的所有商品</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.17')" >
+        通过</a></span>
+
+    <div id='div_pt1.17' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.17').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.17: [2018-08-28 10:28:32,859)]-log.py-INFO:==================================================mobileLastCart==============================================
+[2018-08-28 10:28:32,872)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/MobileLastCart.json
+[2018-08-28 10:28:32,883)]-log.py-INFO:输入: {'consigneeAdd': '武汉市武昌区武珞路442号中南国际商务公寓一层1、2号商铺', 'custId': 'FDGDWI31432092', 'isCheck': True, 'cartIds': '869259, 869260, 869261'}
+[2018-08-28 10:28:34,771)]-log.py-INFO:输出: {'data': {'auditFlag': False, 'msg': '提交成功', 'cartIds': ['869259', ' 869260', ' 869261'], 'notes': '', 'checkMsg': '', 'totalPrice': 62.7, 'success': True, 'orderCode': 'dd_20180828_000001', 'checkFlag': 2}, 'code': 1}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.18' class='hiddenRow'>
+    <td ><div class='testcase'>test_08_getOrderStatus: 测试订单状态</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.18')" >
+        通过</a></span>
+
+    <div id='div_pt1.18' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.18').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.18: [2018-08-28 10:28:34,844)]-log.py-INFO:==================================================getOrderStatus==============================================
+[2018-08-28 10:28:34,850)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/getOrderStatus.json
+[2018-08-28 10:28:34,856)]-log.py-INFO:输入: {'orderMainCode': 'dd_20180828_000001'}
+[2018-08-28 10:28:35,063)]-log.py-INFO:输出: {'code': 1, 'data': {'orderMain': {'checkStatus': 0}, 'success': True}, 'msg': '请求成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.19' class='hiddenRow'>
+    <td ><div class='testcase'>test_09_buyAgain: 测试再次购买，第二个客户再次购买</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.19')" >
+        通过</a></span>
+
+    <div id='div_pt1.19' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.19').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.19: [2018-08-28 10:28:35,095)]-log.py-INFO:==================================================buyAgain==============================================
+[2018-08-28 10:28:35,104)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/cart/buyAgain.json
+[2018-08-28 10:28:35,114)]-log.py-INFO:输入: {'branchId': 'FDG', 'custId': 'FDGDWI31432092', 'interceptAll': 1, 'merArray': "[{'prodNo':'BAA003237D','merchandiseNumber':'1','prodId':'SPH00033644','editPrice':'2.5'},{'prodNo':'BAA003241D','merchandiseNumber':'1','prodId':'SPH00049242','editPrice':'52'},{'prodNo':'BAA003730D','merchandiseNumber':'1','prodId':'SPH00089207','editPrice':'8.2'}]", 'supplierId': '6768'}
+[2018-08-28 10:28:40,600)]-log.py-INFO:输出: {'code': 1, 'data': {'success': True, 'message': '批量添加3个商品，成功3个，失败0个'}}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='total_row'>
+    <td>统计</td>
+    <td>19</td>
+    <td>19</td>
+    <td>0</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+</tr>
+</table>
+<script>
+    drawCircle(19, 0, 0)
+</script>
+
+<div id='ending'>&nbsp;</div>
+
+</body>
+</html>

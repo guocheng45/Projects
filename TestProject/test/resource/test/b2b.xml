@@ -1,0 +1,61 @@
+<data>
+    <resource method="Post" name="login">
+	    <test>
+			<input>loginname</input>
+			<compare note="检查返回的response中特定的字段等于已知的值，若jsonPath拿到的值不止一个（是list），则是检查list中每个元素都包含对应的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>["1","登录成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中特定的字段等于sql查出的对应的值,此sql只返回一条数据" type="c2">
+				<jsonPath>["$..children[*].text","$..children[*].id"]</jsonPath>
+				<expected>["1:resource_name","2:resource_id"]</expected>
+				<sql seq="1">sql1</sql>
+				<sql seq="2">sdf12</sql>
+			</compare>
+			<compare note="检查返回的response中特定的一组数据（同一字段）与sql查询一组数据一致,此sql返回多条数据" type="c3">
+				<jsonPath>["$..children[*].text","$..children[*].id"]</jsonPath>
+				<expected>["1:resource_name","2:resource_id"]</expected>
+				<sql seq="1">sql1</sql>
+				<sql seq="2">dfd34ere</sql>
+			</compare>	
+			<compare note="检查数据库中的某些字段等于特定的值" type="c4">
+				<fieldname>["1:resource_name","2:resource_id", "2:resource" ]</fieldname>
+				<expected>["ABC","def"]</expected>
+				<sql seq="1">select resource_name from tabel</sql>
+				<sql seq="2">select resource_id, resource from tabel</sql>
+			</compare>
+			<write_back note="数据回写，给后续依赖此返回数据的接口使用">
+				<field field_name="filedname1" jsonPath="jsonpath1">ccccccc</field>
+				<field field_name="filedname2" jsonPath="jsonpath2" />
+				<field field_name="filedname3" jsonPath="jsonpath3">value3</field>
+			</write_back>
+			<dependence resouce_name="dependece resource">{"dependencefieldname1":"jsonpath1","dependencefieldname2":"jsonpath2"}</dependence>
+		</test>
+    </resource>
+	<resource method="Get" name="salesmanResourceMenu">
+	    <test>
+			<input>1</input>
+			<compare_1 note="检查返回的response中特定的字段等于已知的值，若jsonPath拿到的值不止一个（是list），则是检查list中每个元素都包含对应的值">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>["1","登录成功"]</expected>
+			</compare_1>
+			<compare_2 note="检查返回的response中特定的字段等于sql查出的对应的值,此sql只返回一条数据">
+				<jsonPath>["$..children[*].text","$..children[*].id"]</jsonPath>
+				<expected>["SQL:1:resource_name","SQL:1:resource_id"]</expected>
+				<sql />
+			</compare_2>
+			<compare_3 note="检查返回的response中特定的一组数据（同一字段）与sql查询一组数据一致,此sql返回多条数据">
+				<jsonPath>["$..children[*].text","$..children[*].id"]</jsonPath>
+				<expected>["SQL:1:resource_name","SQL:1:resource_id"]</expected>
+				<sql />
+			</compare_3>	
+			<compare_4 note="检查数据库中的某些字段等于特定的值">
+				<jsonPath>["$..children[*].text","$..children[*].id"]</jsonPath>
+				<expected>["SQL:1:resource_name","SQL:1:resource_id"]</expected>
+				<sql />
+			</compare_4>
+			<neighbor direction="E" name="Austria">你</neighbor>
+			<neighbor direction="W" name="Switzerland">我</neighbor>
+		</test>
+    </resource>
+</data>

@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>供应商接口自动化测试报告--生产</title>
+    <meta name="generator" content="HTMLTestRunner 0.8.3"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    
+<style type="text/css" media="screen">
+body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
+table       { font-size: 100%; }
+pre         { }
+
+/* -- heading ---------------------------------------------------------------------- */
+h1 {
+	font-size: 16pt;
+	color: gray;
+}
+.heading {
+    margin-top: 0ex;
+    margin-bottom: 1ex;
+}
+
+.heading .attribute {
+    margin-top: 1ex;
+    margin-bottom: 0;
+}
+
+.heading .description {
+    margin-top: 4ex;
+    margin-bottom: 6ex;
+}
+
+/* -- css div popup ------------------------------------------------------------------------ */
+a.popup_link {
+}
+
+a.popup_link:hover {
+    color: red;
+}
+.img{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+    border: 2px solid #777;
+}
+
+.screenshots {
+    z-index: 100;
+	position:absolute;
+	left: 23%;
+	top: 20%;
+	display: none;
+}
+.close_shots {
+	position:absolute;
+	top:0; left:98%;
+	z-index:99;
+	width:20px;
+}
+.popup_window {
+    display: none;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    /*border: solid #627173 1px; */
+    padding: 10px;
+    background-color: #E6E6D6;
+    font-family: "Lucida Console", "Courier New", Courier, monospace;
+    text-align: left;
+    font-size: 8pt;
+    width: 500px;
+}
+
+}
+/* -- report ------------------------------------------------------------------------ */
+#show_detail_line {
+    margin-top: 3ex;
+    margin-bottom: 1ex;
+}
+#result_table {
+    width: 80%;
+    border-collapse: collapse;
+    border: 1px solid #777;
+}
+#header_row {
+    font-weight: bold;
+    color: white;
+    background-color: #777;
+}
+#result_table td {
+    border: 1px solid #777;
+    padding: 2px;
+}
+#total_row  { font-weight: bold; }
+.passClass  { background-color: #6c6; }
+.failClass  { background-color: #c60; }
+.errorClass { background-color: #c00; }
+.passCase   { color: #6c6; }
+.failCase   { color: #c60; font-weight: bold; }
+.errorCase  { color: #c00; font-weight: bold; }
+.hiddenRow  { display: none; }
+.testcase   { margin-left: 2em; }
+
+
+/* -- ending ---------------------------------------------------------------------- */
+#ending {
+}
+
+
+.piechart{
+    position:absolute;  ;
+    top:20px;
+    left:300px;
+    width: 200px;
+    float: left;
+    display:  inline;
+}
+
+
+</style>
+
+</head>
+<body>
+<script language="javascript" type="text/javascript">
+output_list = Array();
+
+/* level - 0:Summary; 1:Failed; 2:All */
+function showCase(level) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        tr = trs[i];
+        id = tr.id;
+        if (id.substr(0,2) == 'ft') {
+            if (level < 1) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+            }
+        }
+        if (id.substr(0,2) == 'pt') {
+            if (level > 1) {
+                tr.className = '';
+            }
+            else {
+                tr.className = 'hiddenRow';
+            }
+        }
+    }
+}
+
+
+function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+        tid0 = 't' + cid.substr(1) + '.' + (i+1);
+        tid = 'f' + tid0;
+        tr = document.getElementById(tid);
+        if (!tr) {
+            tid = 'p' + tid0;
+            tr = document.getElementById(tid);
+        }
+        id_list[i] = tid;
+        if (tr.className) {
+            toHide = 0;
+        }
+    }
+    for (var i = 0; i < count; i++) {
+        tid = id_list[i];
+        if (toHide) {
+            document.getElementById('div_'+tid).style.display = 'none'
+            document.getElementById(tid).className = 'hiddenRow';
+        }
+        else {
+            document.getElementById(tid).className = '';
+        }
+    }
+}
+
+
+function showTestDetail(div_id){
+    var details_div = document.getElementById(div_id)
+    var displayState = details_div.style.display
+    // alert(displayState)
+    if (displayState != 'block' ) {
+        displayState = 'block'
+        details_div.style.display = 'block'
+    }
+    else {
+        details_div.style.display = 'none'
+    }
+}
+
+
+function html_escape(s) {
+    s = s.replace(/&/g,'&amp;');
+    s = s.replace(/</g,'&lt;');
+    s = s.replace(/>/g,'&gt;');
+    return s;
+}
+
+function drawCircle(pass, fail, error){
+    var color = ["#6c6","#c60","#c00"];
+    var data = [pass,fail,error];
+    var text_arr = ["pass", "fail", "error"];
+
+    var canvas = document.getElementById("circle");
+    var ctx = canvas.getContext("2d");
+    var startPoint=0;
+    var width = 20, height = 10;
+    var posX = 112 * 2 + 20, posY = 30;
+    var textX = posX + width + 5, textY = posY + 10;
+    for(var i=0;i<data.length;i++){
+        ctx.fillStyle = color[i];
+        ctx.beginPath();
+        ctx.moveTo(112,84);
+        ctx.arc(112,84,84,startPoint,startPoint+Math.PI*2*(data[i]/(data[0]+data[1]+data[2])),false);
+        ctx.fill();
+        startPoint += Math.PI*2*(data[i]/(data[0]+data[1]+data[2]));
+        ctx.fillStyle = color[i];
+        ctx.fillRect(posX, posY + 20 * i, width, height);
+        ctx.moveTo(posX, posY + 20 * i);
+        ctx.font = 'bold 14px';
+        ctx.fillStyle = color[i];
+        var percent = text_arr[i] + ":"+data[i];
+        ctx.fillText(percent, textX, textY + 20 * i);
+
+    }
+}
+
+function show_shots(obj) {
+	obj.nextElementSibling.style.display="block";
+
+}
+
+function close_shots(obj) {
+	obj.parentElement.style.display="none";
+}
+
+</script>
+<div class="piechart">
+    <div>
+        <canvas id="circle" width="350" height="168" </canvas>
+    </div>
+</div>
+<div class='heading'>
+<h1>供应商接口自动化测试报告--生产</h1>
+<p class='attribute'><strong>开始时间:</strong> 2018-08-28 10:43:18</p>
+<p class='attribute'><strong>耗时:</strong> 0:00:07.080743</p>
+<p class='attribute'><strong>状态:</strong> <span class="tj passCase">Pass</span>9</p>
+
+<p class='description'>自动化测试结果如下：</p>
+</div>
+
+
+
+<p id='show_detail_line'>显示
+<a href='javascript:showCase(0)'>概要</a>
+<a href='javascript:showCase(1)'>失败</a>
+<a href='javascript:showCase(2)'>所有</a>
+</p>
+
+<table id='result_table'>
+<colgroup>
+<col align='left' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+</colgroup>
+<tr id='header_row'>
+    <td>测试组/测试用例</td>
+    <td>总数</td>
+    <td>通过</td>
+    <td>失败</td>
+    <td>错误</td>
+    <td>视图</td>
+    <td>错误截图</td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_03_homepage.TestHomePage: 测试首页</td>
+    <td>9</td>
+    <td>9</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c1',9)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt1.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_salesmanResourceMenu: 测试业务员权限查询</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.1')" >
+        通过</a></span>
+
+    <div id='div_pt1.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.1: [2018-08-28 10:43:19,297)]-log.py-INFO:==================================================getAppResourceMenu==============================================
+[2018-08-28 10:43:19,308)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getAppResourceMenu.json
+[2018-08-28 10:43:19,315)]-log.py-INFO:输入: 
+[2018-08-28 10:43:19,551)]-log.py-INFO:输出: {'code': 1, 'data': {'ywyResourceList': [{'id': '44', 'text': '客户信息', 'url': '', 'children': [{'id': '45', 'text': '客户拜访', 'url': 'CustVisit'}, {'id': '46', 'text': '客户登记', 'url': 'CustRegister'}, {'id': '65', 'text': '在线开户', 'url': 'OpenAccount_CustBaseInfo'}]}, {'id': '47', 'text': '工作管理', 'url': '', 'children': [{'id': '48', 'text': '工作总结', 'url': 'WorkLog'}, {'id': '49', 'text': '拜访查询', 'url': 'CustVisitSearch'}, {'id': '50', 'text': '总结查询', 'url': 'WorkLogSearch'}, {'id': '51', 'text': '明细查询', 'url': 'SaleDetailQuery'}, {'id': '52', 'text': '兑付查询', 'url': 'ExchangeQuery'}, {'id': '66', 'text': '开户查询', 'url': 'OpenAccount_OpenedRecords'}, {'id': '73', 'text': '订单审核', 'url': 'OrderReview'}]}, {'id': '53', 'text': '销售业务', 'url': '', 'children': [{'id': '54', 'text': '订单查询', 'url': 'OrderQuery'}, {'id': '55', 'text': '销售查询', 'url': 'SalesQuery'}, {'id': '63', 'text': '缺货篮', 'url': 'Prod_Stockout'}]}, {'id': '56', 'text': '报表中心', 'url': '', 'children': [{'id': '57', 'text': '年度销售报表', 'url': 'b2bSupplierYearSale'}, {'id': '58', 'text': '区域销售报表', 'url': 'b2bSupplierAreaSale'}, {'id': '59', 'text': '品种销售报表', 'url': 'b2bSupplierProductSale'}, {'id': '60', 'text': '销售流向报表', 'url': 'b2bSupplierFlowSale'}, {'id': '61', 'text': '销售渠道报表', 'url': 'b2bSupplierChannelSale'}, {'id': '89', 'text': '全国销售报表', 'url': 'b2bSupplierCoreSale'}]}, {'id': '70', 'text': '供销往来', 'url': '', 'children': [{'id': '71', 'text': '流向查询', 'url': 'FlowQuery'}, {'id': '72', 'text': '购进查询', 'url': 'IncomeQuery'}]}]}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_getSalesmanTaskTarget: 测试获取任务指标数据</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.2')" >
+        通过</a></span>
+
+    <div id='div_pt1.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.2: [2018-08-28 10:43:19,572)]-log.py-INFO:==================================================getSalesmanTaskTarget==============================================
+[2018-08-28 10:43:19,579)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getSalesmanTaskTarget.json
+[2018-08-28 10:43:19,586)]-log.py-INFO:输入: 
+[2018-08-28 10:43:21,320)]-log.py-INFO:输出: {'code': 1, 'data': {'isServiceTask': True, 'todaySales': '62.70', 'recentSalesList': [{'price': 0.0, 'day': '2018-08-21'}, {'price': 369.8, 'day': '2018-08-22'}, {'price': 0.0, 'day': '2018-08-23'}, {'price': 0.0, 'day': '2018-08-24'}, {'price': 0.0, 'day': '2018-08-25'}, {'price': 0.0, 'day': '2018-08-26'}, {'price': 0.0, 'day': '2018-08-27'}], 'taskTarget': 1000.0, 'finishingRate': '0%', 'recentSevenAverageSales': '52.83'}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_searchAccount: 测试客户查询</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.3')" >
+        通过</a></span>
+
+    <div id='div_pt1.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.3: [2018-08-28 10:43:21,331)]-log.py-INFO:==================================================searchAccount==============================================
+[2018-08-28 10:43:21,337)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/searchAccount.json
+[2018-08-28 10:43:21,343)]-log.py-INFO:输入: {'branchId': 'FC5', 'keyWord': '用心', 'latitude': '30.551556', 'longitude': '114.203687', 'page': '1', 'pageSize': '30', 'appVersion': '3.4.0', 'imei': 'dced90296131e146', 'model': 'DUK-AL20', 'systemVersion': 'dced90296131e146'}
+[2018-08-28 10:43:21,572)]-log.py-INFO:输出: {'code': 1, 'data': {'totalSize': 2, 'salesManCustList': [{'branchId': 'FC5', 'consigneeAdd': '十堰经济开发区龙门一路7-2号', 'custId': 'FC5DWI00000013', 'custName': '十堰市用心人大药房连锁有限公司', 'danwBh': 'B420381001X001HS', 'danwNm': 'DWI00000013', 'distance': None, 'isExistLevelTwo': 1, 'kpyLinkphone': '15109805402', 'kpyName': '张丹', 'latitude': None, 'linkMan': '徐延波', 'linkPhone': '0719-8897909', 'longitude': None, 'keyword': '对公', 'deliveryMode': None, 'deliveryModeName': None, 'salePayType': None, 'salePayTypeName': None, 'typeStamps': None, 'typeStampsName': None, 'danwBhTwo': None, 'danwNmTwo': None, 'custNameTwo': None, 'custFlag': None}, {'branchId': 'FC5', 'consigneeAdd': '十堰经济开发区龙门一路7-2号', 'custId': 'FC5DWI35479271', 'custName': '十堰市用心人大药房连锁有限公司', 'danwBh': 'B420381001XZ02HS', 'danwNm': 'DWI35479271', 'distance': None, 'isExistLevelTwo': 0, 'kpyLinkphone': '15109805402', 'kpyName': '张丹', 'latitude': None, 'linkMan': '徐延波', 'linkPhone': '0719-8897090', 'longitude': None, 'keyword': '对公', 'deliveryMode': None, 'deliveryModeName': None, 'salePayType': None, 'salePayTypeName': None, 'typeStamps': None, 'typeStampsName': None, 'danwBhTwo': None, 'danwNmTwo': None, 'custNameTwo': None, 'custFlag': None}], 'isCanGoNext': False}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_searchSecondLevelCust: 测试获取一级客户的二级客户信息</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.4')" >
+        通过</a></span>
+
+    <div id='div_pt1.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.4: [2018-08-28 10:43:21,593)]-log.py-INFO:==================================================searchSecondLevelCust==============================================
+[2018-08-28 10:43:21,603)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/searchSecondLevelCust.json
+[2018-08-28 10:43:21,615)]-log.py-INFO:输入: {'branchId': 'FDG', 'danwBh': 'E420115104X001HA', 'danwNm': 'DWI35526279', 'keyWord': '', 'page': '1', 'pageSize': '30'}
+[2018-08-28 10:43:21,766)]-log.py-INFO:输出: {'code': 1, 'data': {'totalSize': 0, 'salesManCustList': [], 'isCanGoNext': False}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.5' class='hiddenRow'>
+    <td ><div class='testcase'>test_05_checkLicenseForSuplier: 测试证照校验</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.5')" >
+        通过</a></span>
+
+    <div id='div_pt1.5' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.5').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.5: [2018-08-28 10:43:21,799)]-log.py-INFO:==================================================checkLicenseForSuplier==============================================
+[2018-08-28 10:43:21,811)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/checkLicenseForSuplier.json
+[2018-08-28 10:43:21,823)]-log.py-INFO:输入: {'branchId': 'FC5', 'danwBh': 'D420302002X001HS', 'danwNm': 'DWI00738203', 'appVersion': '3.4.0', 'imei': 'dced90296131e146', 'model': 'DUK-AL20', 'systemVersion': 'dced90296131e146'}
+[2018-08-28 10:43:22,117)]-log.py-INFO:输出: {'code': 1, 'data': {'checkMsg': '校验通过', 'checkFlag': '2'}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.6' class='hiddenRow'>
+    <td ><div class='testcase'>test_07_getBranch: 测试根据地理位置获取匹配站点</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.6')" >
+        通过</a></span>
+
+    <div id='div_pt1.6' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.6').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.6: [2018-08-28 10:43:22,151)]-log.py-INFO:==================================================getBranch==============================================
+[2018-08-28 10:43:22,162)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getBranch.json
+[2018-08-28 10:43:22,174)]-log.py-INFO:输入: {'branchId': 'FC5', 'latitude': '30.551546', 'longitude': '114.203671', 'appVersion': '3.4.0', 'imei': 'dced90296131e146', 'model': 'DUK-AL20', 'systemVersion': 'dced90296131e146'}
+[2018-08-28 10:43:22,414)]-log.py-INFO:输出: {'code': 1, 'data': {'branchId': 'FC5', 'isCustTypePrice': 1, 'supUserId': 67951, 'shortName': '十堰', 'userBranchId': 141516}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.7' class='hiddenRow'>
+    <td ><div class='testcase'>test_08_searchMerClassify: 测试药品分类</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.7')" >
+        通过</a></span>
+
+    <div id='div_pt1.7' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.7').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.7: [2018-08-28 10:43:22,440)]-log.py-INFO:==================================================searchMerClassify==============================================
+[2018-08-28 10:43:22,452)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/searchMerClassify.json
+[2018-08-28 10:43:22,458)]-log.py-INFO:输入: {'branchId': 'FDG', 'appVersion': '3.4.0', 'imei': 'dced90296131e146', 'model': 'DUK-AL20', 'systemVersion': 'dced90296131e146'}
+[2018-08-28 10:43:22,594)]-log.py-INFO:输出: {'code': 1, 'data': {'classifyList': []}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.8' class='hiddenRow'>
+    <td ><div class='testcase'>test_09_searchMerchandise: 测试商品搜索 keyword = '风寒感冒'</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.8')" >
+        通过</a></span>
+
+    <div id='div_pt1.8' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.8').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.8: [2018-08-28 10:43:22,606)]-log.py-INFO:==================================================searchMerchandise==============================================
+[2018-08-28 10:43:22,613)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/searchMerchandise.json
+[2018-08-28 10:43:22,619)]-log.py-INFO:输入: {'branchId': 'FDG', 'classifyId': '', 'custId': '', 'isHaveStorage': '0', 'isOnlyResponse': '1', 'keyWord': '风寒感冒', 'page': '1', 'pageSize': '30', 'prodBarCode': '', 'sortType': '', 'appVersion': '3.4.0', 'imei': 'dced90296131e146', 'model': 'DUK-AL20', 'systemVersion': 'dced90296131e146'}
+[2018-08-28 10:43:24,212)]-log.py-INFO:输出: {'code': 1, 'data': {'merchandiseList': [{'bigPackageQuantity': 200, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 1, 'manufacturer': '吉林龙泰制药股份有限公司', 'memberPrice': 4.25, 'midPackageQuantity': 5, 'packageUnit': '盒', 'prodId': 'SPH00077009', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA055007G', 'prodSpecification': '8g*9袋', 'retailPrice': 12.0, 'showTactics': None, 'storageNumber': 5637.0, 'branchId': 'FDG', 'prodBarCode': '6927638100534', 'isYiBao': 0, 'farValidityDate': '2020-12-31', 'nearValidityDate': '2020-12-31', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z22024722', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 961.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA055007G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '张淑怡', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 160, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 0, 'manufacturer': '湖北香连药业有限责任公司', 'memberPrice': 0, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH91381082', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001024GHB1', 'prodSpecification': '8g*8袋', 'retailPrice': 0, 'showTactics': None, 'storageNumber': 0.0, 'branchId': 'FDG', 'prodBarCode': '6931885789671', 'isYiBao': 0, 'farValidityDate': '', 'nearValidityDate': '', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z42020870', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001024GHB1', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '常惠惠', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 200, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 1, 'manufacturer': '贵州百灵企业集团制药股份有限公司', 'memberPrice': 0, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH91944914', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001071GHB1', 'prodSpecification': '8g*10袋', 'retailPrice': 31.2, 'showTactics': None, 'storageNumber': 3779.0, 'branchId': 'FDG', 'prodBarCode': '6936795700518', 'isYiBao': 0, 'farValidityDate': '2021-01-31', 'nearValidityDate': '2020-09-30', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z52020189', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 219.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001071GHB1', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '陈守刚', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 120, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 1, 'manufacturer': '株洲千金药业股份有限公司', 'memberPrice': 12.5, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH93706504', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA055025GHB2', 'prodSpecification': '8g*6袋', 'retailPrice': 17.0, 'showTactics': None, 'storageNumber': 600.0, 'branchId': 'FDG', 'prodBarCode': '', 'isYiBao': 0, 'farValidityDate': '2021-01-31', 'nearValidityDate': '2021-01-31', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z43020938', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA055025GHB2', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '丁丰刚', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 90, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 0, 'manufacturer': '山东孔府制药有限公司', 'memberPrice': 6.1, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH00065703', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001031G', 'prodSpecification': '8g*10袋', 'retailPrice': 8.1, 'showTactics': None, 'storageNumber': 705.0, 'branchId': 'FDG', 'prodBarCode': '6935803462103', 'isYiBao': 0, 'farValidityDate': '2020-12-23', 'nearValidityDate': '2020-12-23', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z37020235', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 185.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001031G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '陈双华', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 200, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 0, 'manufacturer': '四川逢春制药有限公司', 'memberPrice': 4.7, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH90880069', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001006GHB1', 'prodSpecification': '8g*10袋', 'retailPrice': 16.5, 'showTactics': None, 'storageNumber': 2407.0, 'branchId': 'FDG', 'prodBarCode': '', 'isYiBao': 0, 'farValidityDate': '2020-02-28', 'nearValidityDate': '2019-11-30', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z51022422', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 5.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001006GHB1', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '叶丽', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 120, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 0, 'manufacturer': '贵州百灵企业集团制药股份有限公司', 'memberPrice': 0, 'midPackageQuantity': 5, 'packageUnit': '盒', 'prodId': 'SPH92926834', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001073GP1', 'prodSpecification': '8g*16袋', 'retailPrice': 31.7, 'showTactics': None, 'storageNumber': 0.0, 'branchId': 'FDG', 'prodBarCode': '', 'isYiBao': 0, 'farValidityDate': '', 'nearValidityDate': '', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z52020189', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001073GP1', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '陈守刚', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 160, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 0, 'manufacturer': '湖北香连药业有限责任公司', 'memberPrice': 6.6, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH00089348', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001023G', 'prodSpecification': '8g*9袋', 'retailPrice': 17.0, 'showTactics': None, 'storageNumber': 3601.0, 'branchId': 'FDG', 'prodBarCode': '6931885788995', 'isYiBao': 0, 'farValidityDate': '2019-12-31', 'nearValidityDate': '2019-12-31', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z42020870', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 825.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001023G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '潘燕华', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 160, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 1, 'manufacturer': '湖北香连药业有限责任公司', 'memberPrice': 4.4, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH90405810', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001024G', 'prodSpecification': '8g*8袋', 'retailPrice': 15.33, 'showTactics': None, 'storageNumber': 38490.0, 'branchId': 'FDG', 'prodBarCode': '6931885789671', 'isYiBao': 0, 'farValidityDate': '2020-03-31', 'nearValidityDate': '2020-03-31', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z42020870', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 24020.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001024G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '苏天红', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 100, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 0, 'manufacturer': '广东恒诚制药有限公司', 'memberPrice': 6.6, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH00040271', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001015G', 'prodSpecification': '8g*10袋', 'retailPrice': 7.5, 'showTactics': None, 'storageNumber': 11451.0, 'branchId': 'FDG', 'prodBarCode': '6920674132057', 'isYiBao': 0, 'farValidityDate': '2020-01-31', 'nearValidityDate': '2020-01-31', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z44021522', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 327.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001015G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '孙鸿仪', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 120, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 0, 'manufacturer': '康县独一味生物制药有限公司', 'memberPrice': 0, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH94120906', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001105G', 'prodSpecification': '8g*10袋', 'retailPrice': 0, 'showTactics': None, 'storageNumber': 0, 'branchId': 'FDG', 'prodBarCode': '', 'isYiBao': 0, 'farValidityDate': '', 'nearValidityDate': '', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z62020227', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001105G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '徐进', 'policyList': [{'prodNo': 'DZA001105G', 'branchId': 'FDG', 'name': '展销会', 'endTime': '2018-08-30', 'systemTime': 1535424084000, 'fairsInfoName': '政策大集合', 'content': '7.19-8.30日，1积分/盒'}], 'fairsInfo': 1, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': '7.19-8.30日，1积分/盒'}, {'bigPackageQuantity': 200, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 1, 'manufacturer': '云南白药集团股份有限公司', 'memberPrice': 9.9, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH00076052', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001080GLS1', 'prodSpecification': '8g*6袋', 'retailPrice': 16.8, 'showTactics': None, 'storageNumber': 3338.0, 'branchId': 'FDG', 'prodBarCode': '6901070385483', 'isYiBao': 0, 'farValidityDate': '2020-07-31', 'nearValidityDate': '2020-07-31', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z53021576', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 165.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001080GLS1', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '李蓓蓓', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 200, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 1, 'manufacturer': '贵州百灵企业集团制药股份有限公司', 'memberPrice': 0, 'midPackageQuantity': 5, 'packageUnit': '盒', 'prodId': 'SPH00079566', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001071G', 'prodSpecification': '8g*10袋', 'retailPrice': 19.8, 'showTactics': None, 'storageNumber': 27072.0, 'branchId': 'FDG', 'prodBarCode': '6936795700518', 'isYiBao': 0, 'farValidityDate': '2021-01-31', 'nearValidityDate': '2021-01-31', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z52020189', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 20180.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001071G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '陈守刚', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 200, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 1, 'manufacturer': '吉林龙泰制药股份有限公司', 'memberPrice': 3.5, 'midPackageQuantity': 5, 'packageUnit': '盒', 'prodId': 'SPH90266197', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA055008G', 'prodSpecification': '8g*8袋', 'retailPrice': 29.8, 'showTactics': None, 'storageNumber': 0.0, 'branchId': 'FDG', 'prodBarCode': '6927638106642', 'isYiBao': 0, 'farValidityDate': '', 'nearValidityDate': '', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z22024722', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 250.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA055008G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '张淑怡', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 100, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 0, 'manufacturer': '江西南昌桑海制药厂', 'memberPrice': 4.4, 'midPackageQuantity': 1, 'packageUnit': '盒', 'prodId': 'SPH00044104', 'prodName': '风寒感冒颗粒', 'prodNo': 'DZA001045G', 'prodSpecification': '8g*9袋', 'retailPrice': 16.8, 'showTactics': None, 'storageNumber': 3485.0, 'branchId': 'FDG', 'prodBarCode': '6911672041854', 'isYiBao': 0, 'farValidityDate': '2020-02-29', 'nearValidityDate': '2020-02-29', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z36021484', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 1130.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001045G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '肖莉', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, {'bigPackageQuantity': 120, 'isDecimal': 0, 'isSalesProd': 0, 'isUnpick': 1, 'manufacturer': '陕西紫光辰济药业有限公司', 'memberPrice': 5.65, 'midPackageQuantity': 10, 'packageUnit': '盒', 'prodId': 'SPH92190107', 'prodName': '风寒感冒颗粒(无糖)', 'prodNo': 'DZA001094G', 'prodSpecification': '4g*10袋', 'retailPrice': 20.0, 'showTactics': None, 'storageNumber': 47.0, 'branchId': 'FDG', 'prodBarCode': '', 'isYiBao': 0, 'farValidityDate': '2019-01-31', 'nearValidityDate': '2019-01-31', 'prodLocalName': '风寒感冒颗粒', 'passfileNumber': '国药准字Z61020530', 'chineseDrugYieldly': '', 'chuffl': '甲类', 'salesLastMonth': 10.0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGDZA001094G', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '陈双华', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}], 'totalSize': 16, 'isCanGoNext': False}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.9' class='hiddenRow'>
+    <td ><div class='testcase'>test_10_getMerchandiseDetail: 测试药品详情，测试商品：SPH90365009</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.9')" >
+        通过</a></span>
+
+    <div id='div_pt1.9' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.9').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.9: [2018-08-28 10:43:24,235)]-log.py-INFO:==================================================getMerchandiseDetail==============================================
+[2018-08-28 10:43:24,250)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getMerchandiseDetail.json
+[2018-08-28 10:43:24,263)]-log.py-INFO:输入: {'branchId': 'FDG', 'prodId': 'SPH90365009', 'appVersion': '3.4.0', 'imei': 'dced90296131e146', 'model': 'DUK-AL20', 'systemVersion': 'dced90296131e146'}
+[2018-08-28 10:43:25,774)]-log.py-INFO:输出: {'code': 1, 'data': {'bigPackageQuantity': 10, 'isDecimal': 1, 'isSalesProd': 1, 'isUnpick': 1, 'manufacturer': '湖北清大中药饮片有限公司', 'memberPrice': 22, 'midPackageQuantity': 1, 'packageUnit': 'kg', 'prodId': 'SPH90365009', 'prodName': '板蓝根', 'prodNo': 'ZAB210320B', 'prodSpecification': '饮片', 'retailPrice': 0, 'showTactics': None, 'storageNumber': 0.0, 'branchId': 'FDG', 'prodBarCode': '', 'isYiBao': 0, 'farValidityDate': '', 'nearValidityDate': '', 'prodLocalName': '板蓝根', 'passfileNumber': '', 'chineseDrugYieldly': '湖北', 'chuffl': '其他', 'salesLastMonth': 0, 'rewardCash': None, 'branchName': None, 'rewardAmount': '', 'rewardStartNum': None, 'merchandiseId': 'FDGZAB210320B', 'stockoutNum': 0, 'shortName': None, 'typeName': None, 'supMerchandiseId': None, 'staffname': '', 'policyList': [], 'fairsInfo': 0, 'sortType': None, 'merchandiseNumber': 0, 'editPrice': None, 'activityContent': None}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='total_row'>
+    <td>统计</td>
+    <td>9</td>
+    <td>9</td>
+    <td>0</td>
+    <td>0</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+</tr>
+</table>
+<script>
+    drawCircle(9, 0, 0)
+</script>
+
+<div id='ending'>&nbsp;</div>
+
+</body>
+</html>

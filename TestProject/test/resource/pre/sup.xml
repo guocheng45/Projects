@@ -1,0 +1,969 @@
+<data>
+    <note> ============================最前面两个resource是示例==================================== </note>
+    <resource method="Post" name="testresoure1">
+	    <test>
+			<input>loginname1</input>
+			<compare note="检查返回的response中某字段或一组数据各字段的值，等于已知的值" type="c1">
+				<jsonPath>["$..msg","$..success","$..custFlag","$.branchId"]</jsonPath>
+				<expected>["Testing",true,1,"FDG"]</expected>
+			</compare>
+			<compare note="检查返回的response中某字段或一组数据各字段的值，等于sql查出的对应的值,此sql只返回一条数据" type="c2">
+				<jsonPath>["$..supUserId","$..[*]..loginName","$..[*].status"]</jsonPath>
+				<expected>["1:sup_user_id","1:login_name","2:user_status"]</expected>
+				<sql seq="1">select sup_user_id, login_name from tb_sup_user where login_name='wumeng'</sql>
+				<sql seq="2">select user_status from tb_sup_user where login_name='wumeng'</sql>
+			</compare>
+			<compare note="检查返回的response中一组数据（同一字段）与sql查询一组数据一致,此sql返回多条数据" type="c3">
+				<jsonPath>["$..danwNm","$..[*].branchId","$..[*].custFlag"]</jsonPath>
+				<expected>["1:dictcode","1:pk","2:branchid"]</expected>
+				<sql seq="1">SELECT dictcode, pk FROM tb_sys_dictitem WHERE  branchid != 'ZDA' and dictcode = 'CustType'</sql>
+				<sql seq="2">SELECT branchid FROM tb_sys_dictitem WHERE  branchid != 'ZDA' and dictcode = 'CustType'</sql>
+			</compare>
+			<compare note="检查数据库中的某些字段等于特定的值,此sql返回一条数据" type="c4">
+				<fieldname>["1:sup_user_id","1:login_name","2:user_status"]</fieldname>
+				<expected>[48229,"wumeng1",12]</expected>
+				<sql seq="1">select sup_user_id, login_name from tb_sup_user where login_name='wumeng'</sql>
+				<sql seq="2">select user_status from tb_sup_user where login_name='wumeng'</sql>
+			</compare>
+			<compare note="检查返回的response中一组数据的个数，是从数据库查询数量" type="c5">
+				<jsonPath>["$..code","$..[*].branchId","$..[*].custId"]</jsonPath>
+				<expected>["1:count","3:count", "2:count"]</expected>
+				<sql seq="1">select count(user_status) as count from tb_sup_user where login_name='wumeng'</sql>
+				<sql seq="2">SELECT COUNT(PK) as count FROM tb_sys_dictitem WHERE  dictcode = 'PrntRepot' and branchid = 'ZDA'</sql>
+                <sql seq="3">SELECT COUNT(PK) as count FROM tb_sys_dictitem WHERE  dictcode = 'PrntRepot' and branchid = 'ZDA'</sql>
+			</compare>
+			<compare note="检查返回的response中一组数据的每个值或某个字段的值，都包含期望字符串" type="c6">
+				<jsonPath>["$..[*].branchId","$..[*].consigneeAdd","$..data.supplierName","DDD"]</jsonPath>
+				<expected>["wumeng","武汉", "wj1",""]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$...code","$..[*].consigneeAdd","$..custFlag"]</jsonPath>
+			</compare>
+			<compare note="检查返回的response中一组数据的个数，期望结果是已知的固定值" type="c8">
+				<jsonPath>["$..code","$..[*].branchId","$..[*].custId"]</jsonPath>
+				<expected>[1, 3, 3]</expected>
+			</compare>
+			<write_back note="数据回写，给后续依赖此返回数据的接口使用">
+				<field field_name="code" jsonPath="$...code">["test333"]</field>
+				<field field_name="consigneeAdd" jsonPath="$..consigneeAdd">['3武汉市武昌区武珞路442号中南国际商务公寓一层1、2号商铺']</field>
+				<field field_name="custFlag" jsonPath="$..custFlag">[5567]</field>
+			</write_back>
+		</test>
+        <test>
+			<input>loginname2</input>
+			<compare note="检查返回的response中某字段或一组数据各字段的值，等于已知的值" type="c1">
+				<jsonPath>["$.code","$..[*].branchId","$..[*].custFlag"]</jsonPath>
+				<expected>[false,"wumeng1",1]</expected>
+			</compare>
+			<compare note="检查返回的response中某字段或一组数据各字段的值，等于sql查出的对应的值,此sql只返回一条数据" type="c2">
+				<jsonPath>["$.code","$..[*].branchId","$..[*].custFlag"]</jsonPath>
+				<expected>["1:sup_user_id","1:login_name","2:user_status"]</expected>
+				<sql seq="1">select sup_user_id, login_name from tb_sup_user where login_name='wumeng'</sql>
+				<sql seq="2">select user_status from tb_sup_user where login_name='wumeng'</sql>
+			</compare>
+			<compare note="检查返回的response中一组数据（同一字段）与sql查询一组数据一致,此sql返回多条数据" type="c3">
+				<jsonPath>["$..danwNm","$..[*].branchId","$..[*].custFlag"]</jsonPath>
+				<expected>["1:dictcode","1:pk","2:branchid"]</expected>
+				<sql seq="1">SELECT dictcode, pk FROM tb_sys_dictitem WHERE  branchid != 'ZDA' and dictcode = 'CustType'</sql>
+				<sql seq="2">SELECT branchid FROM tb_sys_dictitem WHERE  branchid != 'ZDA' and dictcode = 'CustType'</sql>
+			</compare>
+			<compare note="检查数据库中的某些字段等于特定的值,此sql返回一条数据" type="c4">
+				<fieldname>["1:sup_user_id","1:login_name","2:user_status"]</fieldname>
+				<expected>[48229,"wumeng1",12]</expected>
+				<sql seq="1">select sup_user_id, login_name from tb_sup_user where login_name='wumeng'</sql>
+				<sql seq="2">select user_status from tb_sup_user where login_name='wumeng'</sql>
+			</compare>
+			<compare note="检查返回的response中一组数据的个数，是从数据库查询数量" type="c5">
+				<jsonPath>["$..code","$..[*].branchId","$..[*].custId"]</jsonPath>
+				<expected>["1:count","3:count", "2:count"]</expected>
+				<sql seq="1">select count(user_status) as count from tb_sup_user where login_name='wumeng'</sql>
+				<sql seq="2">SELECT COUNT(PK) as count FROM tb_sys_dictitem WHERE   dictcode = 'PrntRepot' and branchid = 'ZDA'</sql>
+                <sql seq="3">SELECT COUNT(PK) as count FROM tb_sys_dictitem WHERE   dictcode = 'PrntRepot' and branchid = 'ZDA'</sql>
+			</compare>
+			<compare note="检查返回的response中一组数据的每个值或某个字段的值，都包含期望字符串" type="c6">
+				<jsonPath>["$..[*].branchId","$..[*].consigneeAdd","$..data.supplierName"]</jsonPath>
+				<expected>["wumeng","武汉", "wj"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点存在" type="c7">
+				<jsonPath>["$...code","$..[*].consigneeAdd","$..custFlag"]</jsonPath>
+			</compare>
+			<compare note="检查返回的response中一组数据的个数，期望结果是已知的固定值" type="c8">
+				<jsonPath>["$..code","$..[*].branchId","$..[*].custId"]</jsonPath>
+				<expected>[1, 3, 3]</expected>
+			</compare>
+			<write_back note="数据回写，给后续依赖此返回数据的接口使用">
+				<field field_name="code" jsonPath="$...code">["test4444"]</field>
+				<field field_name="consigneeAdd" jsonPath="$..consigneeAdd">['4武汉市武昌区武珞路442号中南国际商务公寓一层1、2号商铺']</field>
+				<field field_name="custFlag" jsonPath="$..custFlag">[44447]</field>
+			</write_back>
+		</test>
+    </resource>
+	<resource method="Get" name="testresource2">
+	    <test>
+			<input>test_resource1</input>
+			<compare note="检查返回的response中某字段或一组数据各字段的值，等于已知的值" type="c1">
+				<jsonPath>["$.code","$..msg","$..supplierName","$.branchId"]</jsonPath>
+				<expected>[11,"Testing2","wj供应商",""]</expected>
+			</compare>
+			<dependence resource_name="testresoure1" test_index="0">{"code":"$..timestamp","consigneeAdd":"$..uid","custFlag":"$..uuid"}</dependence>
+		</test>
+    </resource>
+    <note> ============================【登录】 接口数：1， 已完成：1=============================== </note>
+    <resource method="Get" name="login">
+	    <test>
+			<input>login1</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"登录成功"]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>login2</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"登录成功"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <note> ============================【在线开户】 接口数：20， 已完成：20========================= </note>
+    <resource method="Get" name="getDictitemInfo">
+	    <test>
+			<input>getDictitemInfo</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中custType以及printReport有值" type="c7">
+				<jsonPath>["$.data.custTypeList[*].custType","$.data.printReportList[*].printReport"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getCustBizType">
+	    <test>
+			<input>getCustBizType</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中CustBizType有值" type="c7">
+				<jsonPath>["$.data.custBizTypeList[*].CustBizType"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getBasicTypeInfo">
+	    <test>
+			<input>getBasicTypeInfo</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中systemType,environmentType,manageType,purchaseType有值" type="c7">
+				<jsonPath>["$..[*].systemType","$..[*].environmentType","$..[*].manageType","$..[*].purchaseType"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getCustSurveyInfo">
+	    <test>
+			<input>getCustSurveyInfo</input>
+			<compare note="检查code,msg和CustSurveyId的值" type="c1">
+				<jsonPath>["$.code","$.msg","$.data.CustSurveyId"]</jsonPath>
+				<expected>[1,"查询成功","25698"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getConfirmCodeByPhone">
+	    <test>
+			<input>getConfirmCodeByPhone</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"获取成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中confirmCode有值" type="c7">
+				<jsonPath>["$.data.confirmCode"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getBusinessScope">
+	    <test>
+			<input>getBusinessScope</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中children有值" type="c7">
+				<jsonPath>["$.data.BusinesssList[*].children"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getCustSurveyByName">
+	    <test>
+			<input>getCustSurveyByName</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中custName字段值都包含‘武汉爱尔’" type="c6">
+				<jsonPath>["$.data.custSurveyList[*].custName"]</jsonPath>
+				<expected>["武汉爱尔"]</expected>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getSalesmanRelationInfo">
+	    <test>
+			<input>getSalesmanRelationInfo</input>
+			<compare note="检查code的值" type="c1">
+				<jsonPath>["$.code"]</jsonPath>
+				<expected>[1]</expected>
+			</compare>
+            <compare note="检查返回的response中BusinessId有值" type="c7">
+				<jsonPath>["$.data.BusinessId"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getManInfo">
+	    <test>
+			<input>getManInfo</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+            <compare note="检查返回的response中staffNo有值" type="c7">
+				<jsonPath>["$..[*].staffNo"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getManDepartment">
+	    <test>
+			<input>getManDepartment</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+			<compare note="检查返回的response中ExecutivedeptName字段值都包含‘事业’" type="c6">
+				<jsonPath>["$.data.list[*].ExecutivedeptName"]</jsonPath>
+				<expected>["事业"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="districtManagerTree">
+	    <test>
+			<input>districtManagerTree</input>
+			<compare note="检查code,success，以及treeList的第一个元素的值" type="c1">
+				<jsonPath>["$.code","$.data.success", "$.data.treeList[0].text"]</jsonPath>
+				<expected>[1,true,"九州通医药集团股份有限公司"]</expected>
+			</compare>
+            <compare note="检查返回的response中treeList.id存在" type="c7">
+				<jsonPath>["$..treeList[*].id"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getNecsssaryLicense">
+	    <test>
+			<input>getNecsssaryLicense</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+			<compare note="检查返回的response中licenseList中有4组值" type="c8">
+				<jsonPath>["$.data.licenseList[*].LicenseName"]</jsonPath>
+				<expected>[4]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="searchLicense">
+	    <test>
+			<input>searchLicense</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+			<compare note="检查返回的response中LicenseNameText字段值都包含‘卫生’" type="c6">
+				<jsonPath>["$.data.licenseList[*].LicenseNameText"]</jsonPath>
+				<expected>["卫生"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getAccountInfo">
+	    <test>
+			<input>getAccountInfo</input>
+			<compare note="检查code,totalSize的值" type="c1">
+				<jsonPath>["$.code","$.data.totalSize"]</jsonPath>
+				<expected>[1,5]</expected>
+			</compare>
+            <compare note="检查返回的response中list.applyCode有值" type="c7">
+				<jsonPath>["$..list[*].applyCode"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="queryAccountInfoByCode">
+	    <test>
+			<input>queryAccountInfoByCode</input>
+			<compare note="检查code,applyCode的值" type="c1">
+				<jsonPath>["$.code","$.data.applyCode"]</jsonPath>
+				<expected>[1,"ZXKH20180815111330"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="saveAccountInfoByNative">
+	    <test>
+			<input>saveAccountInfoByNative</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+            <compare note="检查返回的response中applyCode包含‘ZXKH’字符串" type="c6">
+				<jsonPath>["$.data.applyCode"]</jsonPath>
+				<expected>["ZXKH"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Mul" name="uploadImgs">
+	    <test>
+			<input>uploadImgs</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+            <compare note="检查返回的response中picUrls包含‘.temp’后缀" type="c6">
+				<jsonPath>["$.data.picUrls"]</jsonPath>
+				<expected>[".temp"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getMedicalOrgAssistCodeList">
+	    <test>
+			<input>getMedicalOrgAssistCodeList</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中childre,dictcode有值" type="c7">
+				<jsonPath>["$..[*].children","$..[*].dictname"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getAllAreaTree">
+	    <test>
+			<input>getAllAreaTree</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中childre,id有值" type="c7">
+				<jsonPath>["$..[*].children","$..[*].id"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getAllAreaInfo">
+	    <test>
+			<input>getAllAreaInfo</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中childre,id有值" type="c7">
+				<jsonPath>["$..[*].children","$..[*].id"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <note> ============================【客户地图】 接口数：5， 已完成5个：=============================== </note>
+	<resource method="Get" name="getMapcustList">
+	    <test>
+			<input>getMapcustList</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.data.isShowCust","$.msg"]</jsonPath>
+				<expected>[1,true, "查询成功"]</expected>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="updateCustLocation">
+	    <test>
+			<input>updateCustLocation</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success","$.data.message","$.msg"]</jsonPath>
+				<expected>[1,true,"更新成功","更新成功"]</expected>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="searchCusts">
+	    <test>
+			<input>searchCusts</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.data.isCanGoNext","$.msg"]</jsonPath>
+				<expected>[1,true,"查询成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中一组数据的每个值或某个字段的值，都包含期望字符串" type="c6">
+				<jsonPath>["$..[*].custName"]</jsonPath>
+				<expected>["武汉"]</expected>
+			</compare>
+
+		</test>
+    </resource>
+	<resource method="Get" name="noLocationCustList">
+	    <test>
+			<input>noLocationCustList</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.data.isCanGoNext","$.msg"]</jsonPath>
+				<expected>[1,true,"查询成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中一组数据的每个值或某个字段的值，都包含期望字符串" type="c6">
+				<jsonPath>["$..[*].custName"]</jsonPath>
+				<expected>["武汉"]</expected>
+			</compare>
+
+		</test>
+    </resource>
+	<resource method="Get" name="getCustInfo">
+	    <test>
+			<input>getCustInfo</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$..[*].custSurveyId","$.msg"]</jsonPath>
+				<expected>[1,119533,"查询成功"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <note> ============================【我的】 接口数27个：， 已完成27个：=============================== </note>
+	<resource method="Get" name="myPerTodaySales">
+	    <test>
+			<input>myPerTodaySales</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getPersonalCenterInfo">
+	    <test>
+			<input>getPersonalCenterInfo</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.data.loginName"]</jsonPath>
+				<expected>[1,"wumeng"]</expected>
+			</compare>
+			<compare note="检查返回的response中某字段或一组数据各字段的值，等于sql查出的对应的值,此sql只返回一条数据" type="c2">
+				<jsonPath>["$.data.linkPhone","$.data.linkMan"]</jsonPath>
+				<expected>["1:link_phone","1:link_man"]</expected>
+				<sql seq="1">select link_phone, link_man from tb_sup_salesman_info where sup_user_id = (select sup_user_id from tb_sup_user where login_name='wumeng')</sql>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="editSalesManInfo">
+	    <test>
+			<input>editSalesManInfo</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="editSalesManLoginPass">
+	    <test>
+			<input>editSalesManLoginPass</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getMyTaskTarget">
+	    <test>
+			<input>getMyTaskTarget</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code"]</jsonPath>
+				<expected>[1]</expected>
+			</compare>
+			<compare note="检查返回的response中某字段或一组数据各字段的值，等于sql查出的对应的值,此sql只返回一条数据" type="c2">
+				<jsonPath>["$.data.taskTarget","$.data.taskStartTime","$.data.taskEndTime"]</jsonPath>
+				<expected>["1:target_amount","1:start_date","1:end_date"]</expected>
+				<sql seq="1">select target_amount,start_date,end_date from tb_sup_task_target where sup_user_id = (select sup_user_id from tb_sup_user where login_name='wumeng')</sql>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="setSalesManTaskTarget">
+	    <test>
+			<input>setSalesManTaskTarget</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getMerchandiseOrderDetail">
+	    <test>
+			<input>getMerchandiseOrderDetail</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$..[*].totalSize","$..[*].merchandiseList","$..[*].isCanGoNext","$..[*].sumAmount"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getRewardCashDetail">
+	    <test>
+			<input>getRewardCashDetail</input>
+			<compare note="检查code,success的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$..[*].thisDeductionSum","$..[*].totalSize","$..[*].cautionAmountSum","$..[*].rewardCashList","$..[*].surplusAmount","$..[*].surplusCautionAmount","$..[*].isCanGoNext","$..[*].actualAmountSum"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="searchSalesmanBusinessByStructure">
+	    <test>
+			<input>searchSalesmanBusinessByStructure</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$..[*].totalNum","$..[*].totalPrice","$..[*].count","$..[*].isCanGoNext","$..[*].supUserId","$..[*].linkMan","$..[*].totalNum","$..[*].totalPrice","$..[*].salesOrderMainList","$..[*].supCustId","$..[*].branchId","$..[*].branchName","$..[*].custName","$..[*].orderStateStr","$..[*].orderState","$..[*].oneOrderPrice","$..[*].speciesNum","$..[*].orderCode","$..[*].purchaseNum","$..[*].createTimeStr"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="searchSalesmanSummaryByStructure">
+	    <test>
+			<input>searchSalesmanSummaryByStructure</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$..[*].totalNum","$..[*].totalPrice","$..[*].count","$..[*].isCanGoNext","$..[*].supUserId","$..[*].linkMan","$..[*].totalNum","$..[*].totalPrice","$..[*].salesSummaryList","$..[*].myAllCustCount","$..[*].salesAmount","$..[*].structureName","$..[*].rowNum","$..[*].coverageRate","$..[*].actualCustCount"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getSalesmanListByStructure">
+	    <test>
+			<input>getSalesmanListByStructure</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$..[*].salesmanList","$..[*].supUserId","$..[*].linkMan"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getSalesmanStructure">
+	    <test>
+			<input>getSalesmanStructure</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$..[*].treeList","$..[*].id","$..[*].text","$..[*].iconCls","$..[*].children"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getOrderStateNum">
+	    <test>
+			<input>getOrderStateNum</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$..[*].orderSlzNum","$..[*].orderYqxNum","$..[*].orderYckNum","$..[*].orderDshNum","$..[*].orderQbNum"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="getOrderDetailInfo">
+	    <test>
+			<input>getOrderDetailInfo</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$..[*].checkStatus","$..[*].auditMan","$..[*].checkMsg","$..[*].prodDetaillist","$..[*].bigPackageQuantity"]</jsonPath>
+			</compare>
+			<dependence resource_name="mobileLastCart" test_index="0">{"orderCode":"$.orderCode"}</dependence>
+		</test>
+    </resource>
+	<resource method="Get" name="getOrderMainInfo">
+	    <test>
+			<input>getOrderMainInfo</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$.data","$..[*].totalPrice","$..[*].totalNum","$..[*].count","$..[*].orderList","$..[*].isCanGoNext"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="searchAuditOrder">
+	    <test>
+			<input>searchAuditOrder</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$.data","$..[*].totalNum","$..[*].count","$..[*].count","$..[*].orderList","$..[*].isCanGoNext"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+	<resource method="Get" name="switchAccount">
+	    <test>
+			<input>switchAccount</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"登录成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$.data","$..[*].flowAccount","$..[*].contactData","$..[*].branchList","$..[*].branchId","$..[*].isCustTypePrice","$..[*].supUserId","$..[*].shortName","$..[*].userBranchId"]</jsonPath>
+			</compare>
+			<dependence resource_name="createBindAccount" test_index="0">{"accountId":"$.accountId"}</dependence>
+		</test>
+    </resource>
+	<resource method="Get" name="createBindAccount">
+	    <test>
+			<input>createBindAccount</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg","$.data.message"]</jsonPath>
+				<expected>[1,"绑定成功","绑定成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$.data","$..[*].supplierName","$..[*].accountId","$..[*].contactData","$..[*].linkPhone","$..[*].deviceUnauthorized","$..[*].success","$..[*].loginName","$..[*].message","$..[*].linkMan"]</jsonPath>
+			</compare>
+			<write_back note="数据回写，给删除绑定账号使用">
+				<field field_name="accountId" jsonPath="$.data.accountId">[4054]</field>
+			</write_back>
+		</test>
+    </resource>
+	<resource method="Get" name="deleteBindAccount">
+	    <test>
+			<input>deleteBindAccount</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg","$.data.message","$.data.success"]</jsonPath>
+				<expected>[1,"删除成功","删除成功",true]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$.data","$..[*].success","$..[*].message"]</jsonPath>
+			</compare>
+			<dependence resource_name="createBindAccount" test_index="0">{"accountId":"$.accountId"}</dependence>
+
+		</test>
+    </resource>
+	<resource method="Get" name="getBindAccountListByImei">
+	    <test>
+			<input>getBindAccountListByImei</input>
+			<compare note="检查code,msg" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中某节点或多节点存在" type="c7">
+				<jsonPath>["$.data"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+
+    <note> ============================【首页】 接口数：10， 已完成10：=============================== </note>
+	<resource method="Get" name="getAppResourceMenu">
+	    <test>
+			<input>getAppResourceMenu</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中id节点存在" type="c7">
+				<jsonPath>["$..id"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getSalesmanTaskTarget">
+	    <test>
+			<input>getSalesmanTaskTarget</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"操作成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中isServiceTask节点存在" type="c7">
+				<jsonPath>["$..isServiceTask"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="searchAccount">
+	    <test>
+			<input>searchAccount</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中custName都包含期望字符串‘用心’" type="c6">
+				<jsonPath>["$.data.salesManCustList[*].custName"]</jsonPath>
+				<expected>["用心"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="searchSecondLevelCust">
+	    <test>
+			<input>searchSecondLevelCust</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中salesManCustList节点存在" type="c7">
+				<jsonPath>["$..salesManCustList"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="checkLicenseForSuplier">
+	    <test>
+			<input>checkLicenseForSuplier</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+			<compare note="检查返回的response中checkMsg,checkFlag节点存在" type="c7">
+				<jsonPath>["$.data.checkMsg","$.data.checkFlag"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="initCustPosition">
+	    <test>
+			<input>initCustPosition</input>
+			<compare note="检查code和msg的值" type="c1">
+				<jsonPath>["$.code","$.data.msg","$.data.success"]</jsonPath>
+				<expected>[1,"修改成功",true]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="getBranch">
+	    <test>
+			<input>getBranch</input>
+			<compare note="检查code，msg和branchid的值" type="c1">
+				<jsonPath>["$.code","$.msg","$.data.branchId"]</jsonPath>
+				<expected>[1,"查询成功","FC5"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="searchMerClassify">
+	    <test>
+			<input>searchMerClassify</input>
+			<compare note="检查code，msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中classifyList节点存在" type="c7">
+				<jsonPath>["$..classifyList"]</jsonPath>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="searchMerchandise">
+	    <test>
+			<input>searchMerchandise</input>
+			<compare note="检查code，msg的值" type="c1">
+				<jsonPath>["$.code","$.msg"]</jsonPath>
+				<expected>[1,"查询成功"]</expected>
+			</compare>
+            <compare note="检查返回的response中prodName都包含字符串‘风寒感冒’" type="c6">
+				<jsonPath>["$.data.merchandiseList[*].prodName"]</jsonPath>
+				<expected>["风寒感冒"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="getMerchandiseDetail">
+	    <test>
+			<input>getMerchandiseDetail</input>
+			<compare note="检查code，msg，prodid的值" type="c1">
+				<jsonPath>["$.code","$.msg","$.data.prodId"]</jsonPath>
+				<expected>[1,"查询成功","SPH90365009"]</expected>
+			</compare>
+		</test>
+    </resource>
+    <note> ============================【购物车】 接口数：9， 已完成9：=============================== </note>
+    <resource method="Get" name="checkNewCart">
+	    <test>
+			<input>checkNewCart1</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>checkNewCart2</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>checkNewCart3</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>checkNewCart4</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>checkNewCart5</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>checkNewCart6</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>checkNewCart7</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>checkNewCart8</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>checkNewCart9</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="salesManCartList">
+	    <test>
+			<input>salesManCartList</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.totalSize"]</jsonPath>
+				<expected>[1,3]</expected>
+			</compare>
+            <compare note="检查返回的response中custId有3个" type="c8">
+				<jsonPath>["$..[*].custId"]</jsonPath>
+				<expected>[3]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="custCartDetail">
+	    <test>
+			<input>custCartDetail1</input>
+			<compare note="检查code,totalSize的值" type="c1">
+				<jsonPath>["$.code","$.data.cartAmount"]</jsonPath>
+				<expected>[1,3]</expected>
+			</compare>
+			<compare note="检查返回的response中cartId有3个" type="c8">
+				<jsonPath>["$..[*].cartId"]</jsonPath>
+				<expected>[3]</expected>
+			</compare>
+		</test>
+        <test>
+			<input>custCartDetail2</input>
+			<compare note="检查code,totalSize的值" type="c1">
+				<jsonPath>["$.code","$.data.cartAmount"]</jsonPath>
+				<expected>[1,3]</expected>
+			</compare>
+			<compare note="检查返回的response中cartId有3个" type="c8">
+				<jsonPath>["$..[*].cartId"]</jsonPath>
+				<expected>[3]</expected>
+			</compare>
+            <write_back note="数据回写，给后续依赖此返回数据的接口使用">
+				<field field_name="cartId" jsonPath="$..cartId">[869265, 869266, 869267]</field>
+			</write_back>
+		</test>
+        <test>
+			<input>custCartDetail3</input>
+			<compare note="检查code,totalSize的值" type="c1">
+				<jsonPath>["$.code","$.data.cartAmount"]</jsonPath>
+				<expected>[1,3]</expected>
+			</compare>
+			<compare note="检查返回的response中cartId有3个" type="c8">
+				<jsonPath>["$..[*].cartId"]</jsonPath>
+				<expected>[3]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Get" name="getCartStatus">
+	    <test>
+			<input>getCartStatus</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+            <compare note="检查返回的response中erpCheckStatus有3个" type="c8">
+				<jsonPath>["$..[*].erpCheckStatus"]</jsonPath>
+				<expected>[3]</expected>
+			</compare>
+            <dependence resource_name="custCartDetail" test_index="1">{"cartId":"$.cartIds"}</dependence>
+		</test>
+    </resource>
+    <resource method="Get" name="batchDeleteCart">
+	    <test>
+			<input>batchDeleteCart</input>
+			<compare note="检查code,msg的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+    </resource>
+    <resource method="Post" name="MobileNextCart">
+	    <test>
+			<input>MobileNextCart</input>
+			<compare note="检查code,msg,count的值" type="c1">
+				<jsonPath>["$.code","$.data.success","$.data.count"]</jsonPath>
+				<expected>[1,true,3]</expected>
+			</compare>
+            <dependence resource_name="custCartDetail" test_index="1">{"cartId":"$.cartIds"}</dependence>
+		</test>
+    </resource>
+    <resource method="Post" name="mobileLastCart">
+	    <test>
+			<input>mobileLastCart</input>
+			<compare note="检查code的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+            <compare note="检查返回的response中orderCode包含'dd'字符串" type="c6">
+				<jsonPath>["$.data.orderCode"]</jsonPath>
+				<expected>["dd"]</expected>
+			</compare>
+            <write_back note="数据回写，给后续依赖此返回数据的接口使用">
+				<field field_name="orderCode" jsonPath="$.data.orderCode">['dd_20180828_000002']</field>
+			</write_back>
+            <dependence resource_name="custCartDetail" test_index="1">{"cartId":"$.cartIds"}</dependence>
+		</test>
+    </resource>
+    <resource method="Get" name="getOrderStatus">
+	    <test>
+			<input>getOrderStatus</input>
+			<compare note="检查code的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+			<compare note="检查返回的response中checkStatus节点存在" type="c7">
+				<jsonPath>["$..checkStatus"]</jsonPath>
+			</compare>
+            <dependence resource_name="mobileLastCart" test_index="0">{"orderCode":"$.orderMainCode"}</dependence>
+		</test>
+    </resource>
+    <resource method="Get" name="buyAgain">
+	    <test>
+			<input>buyAgain</input>
+			<compare note="检查code的值" type="c1">
+				<jsonPath>["$.code","$.data.success"]</jsonPath>
+				<expected>[1,true]</expected>
+			</compare>
+		</test>
+    </resource>
+</data>

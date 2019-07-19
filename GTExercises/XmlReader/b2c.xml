@@ -1,0 +1,41 @@
+<data>
+    <resource method="post" name="getToken">
+        <test>
+            <input>grant_type</input>
+            <input>client_id</input>
+            <input>client_secret</input>
+            <input>scope</input>
+            <compare note="检查返回的response中特定的字段等于已知的值，若jsonPath拿到的值不止一个（是list），则是检查list中每个元素都包含对应的值" type="c1">
+                <jsonpath>["$.code","$.smg"]</jsonpath>
+                <expected>["1","success"]</expected>
+            </compare>
+            <compare note="检查XXX" type="c2" />
+            <compare note="检查XXXXX" type="c3" />
+            <write_back note="取出access_token给通过性接口使用">
+                <filed filed_name="access_token" json_path="$.access_token">352c31cf60c7497caf75a04d0136f3b6</filed>
+            </write_back>
+        </test>
+    </resource>
+    <resource method="get" name="testStock">
+        <test>
+            <input>access_token</input>
+            <compare note="" type="c1">
+                <jsonpath />
+                <expected />
+            </compare>
+            <dependence resource_name="getToken">{"access_token":"$.access_token"}</dependence>
+        </test>
+    </resource>
+    <resource method="get" name="testPass">
+        <test>
+            <input>channel</input>
+            <input>startDate</input>
+            <input>endDate</input>
+            <compare note="" type="c1">
+                <jsonpath />
+                <expected />
+            </compare>
+            <dependence resource_name="getToken">{"access_token":"$.access_token"}</dependence>
+        </test>
+    </resource>
+</data>

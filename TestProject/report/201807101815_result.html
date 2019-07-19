@@ -1,0 +1,2405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>自动化测试报告</title>
+    <meta name="generator" content="HTMLTestRunner 0.8.3"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    
+<style type="text/css" media="screen">
+body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
+table       { font-size: 100%; }
+pre         { }
+
+/* -- heading ---------------------------------------------------------------------- */
+h1 {
+	font-size: 16pt;
+	color: gray;
+}
+.heading {
+    margin-top: 0ex;
+    margin-bottom: 1ex;
+}
+
+.heading .attribute {
+    margin-top: 1ex;
+    margin-bottom: 0;
+}
+
+.heading .description {
+    margin-top: 4ex;
+    margin-bottom: 6ex;
+}
+
+/* -- css div popup ------------------------------------------------------------------------ */
+a.popup_link {
+}
+
+a.popup_link:hover {
+    color: red;
+}
+.img{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+    border: 2px solid #777;
+}
+
+.screenshots {
+    z-index: 100;
+	position:absolute;
+	left: 23%;
+	top: 20%;
+	display: none;
+}
+.close_shots {
+	position:absolute;
+	top:0; left:98%;
+	z-index:99;
+	width:20px;
+}
+.popup_window {
+    display: none;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    /*border: solid #627173 1px; */
+    padding: 10px;
+    background-color: #E6E6D6;
+    font-family: "Lucida Console", "Courier New", Courier, monospace;
+    text-align: left;
+    font-size: 8pt;
+    width: 500px;
+}
+
+}
+/* -- report ------------------------------------------------------------------------ */
+#show_detail_line {
+    margin-top: 3ex;
+    margin-bottom: 1ex;
+}
+#result_table {
+    width: 80%;
+    border-collapse: collapse;
+    border: 1px solid #777;
+}
+#header_row {
+    font-weight: bold;
+    color: white;
+    background-color: #777;
+}
+#result_table td {
+    border: 1px solid #777;
+    padding: 2px;
+}
+#total_row  { font-weight: bold; }
+.passClass  { background-color: #6c6; }
+.failClass  { background-color: #c60; }
+.errorClass { background-color: #c00; }
+.passCase   { color: #6c6; }
+.failCase   { color: #c60; font-weight: bold; }
+.errorCase  { color: #c00; font-weight: bold; }
+.hiddenRow  { display: none; }
+.testcase   { margin-left: 2em; }
+
+
+/* -- ending ---------------------------------------------------------------------- */
+#ending {
+}
+
+
+.piechart{
+    position:absolute;  ;
+    top:20px;
+    left:300px;
+    width: 200px;
+    float: left;
+    display:  inline;
+}
+
+
+</style>
+
+</head>
+<body>
+<script language="javascript" type="text/javascript">
+output_list = Array();
+
+/* level - 0:Summary; 1:Failed; 2:All */
+function showCase(level) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        tr = trs[i];
+        id = tr.id;
+        if (id.substr(0,2) == 'ft') {
+            if (level < 1) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+            }
+        }
+        if (id.substr(0,2) == 'pt') {
+            if (level > 1) {
+                tr.className = '';
+            }
+            else {
+                tr.className = 'hiddenRow';
+            }
+        }
+    }
+}
+
+
+function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+        tid0 = 't' + cid.substr(1) + '.' + (i+1);
+        tid = 'f' + tid0;
+        tr = document.getElementById(tid);
+        if (!tr) {
+            tid = 'p' + tid0;
+            tr = document.getElementById(tid);
+        }
+        id_list[i] = tid;
+        if (tr.className) {
+            toHide = 0;
+        }
+    }
+    for (var i = 0; i < count; i++) {
+        tid = id_list[i];
+        if (toHide) {
+            document.getElementById('div_'+tid).style.display = 'none'
+            document.getElementById(tid).className = 'hiddenRow';
+        }
+        else {
+            document.getElementById(tid).className = '';
+        }
+    }
+}
+
+
+function showTestDetail(div_id){
+    var details_div = document.getElementById(div_id)
+    var displayState = details_div.style.display
+    // alert(displayState)
+    if (displayState != 'block' ) {
+        displayState = 'block'
+        details_div.style.display = 'block'
+    }
+    else {
+        details_div.style.display = 'none'
+    }
+}
+
+
+function html_escape(s) {
+    s = s.replace(/&/g,'&amp;');
+    s = s.replace(/</g,'&lt;');
+    s = s.replace(/>/g,'&gt;');
+    return s;
+}
+
+function drawCircle(pass, fail, error){
+    var color = ["#6c6","#c60","#c00"];
+    var data = [pass,fail,error];
+    var text_arr = ["pass", "fail", "error"];
+
+    var canvas = document.getElementById("circle");
+    var ctx = canvas.getContext("2d");
+    var startPoint=0;
+    var width = 20, height = 10;
+    var posX = 112 * 2 + 20, posY = 30;
+    var textX = posX + width + 5, textY = posY + 10;
+    for(var i=0;i<data.length;i++){
+        ctx.fillStyle = color[i];
+        ctx.beginPath();
+        ctx.moveTo(112,84);
+        ctx.arc(112,84,84,startPoint,startPoint+Math.PI*2*(data[i]/(data[0]+data[1]+data[2])),false);
+        ctx.fill();
+        startPoint += Math.PI*2*(data[i]/(data[0]+data[1]+data[2]));
+        ctx.fillStyle = color[i];
+        ctx.fillRect(posX, posY + 20 * i, width, height);
+        ctx.moveTo(posX, posY + 20 * i);
+        ctx.font = 'bold 14px';
+        ctx.fillStyle = color[i];
+        var percent = text_arr[i] + ":"+data[i];
+        ctx.fillText(percent, textX, textY + 20 * i);
+
+    }
+}
+
+function show_shots(obj) {
+	obj.nextElementSibling.style.display="block";
+
+}
+
+function close_shots(obj) {
+	obj.parentElement.style.display="none";
+}
+
+</script>
+<div class="piechart">
+    <div>
+        <canvas id="circle" width="350" height="168" </canvas>
+    </div>
+</div>
+<div class='heading'>
+<h1>自动化测试报告</h1>
+<p class='attribute'><strong>开始时间:</strong> 2018-07-10 18:15:23</p>
+<p class='attribute'><strong>耗时:</strong> 0:25:56.701747</p>
+<p class='attribute'><strong>状态:</strong> <span class="tj passCase">Pass</span>84 <span class="tj errorCase">Error</span>4</p>
+
+<p class='description'>测试浏览器: chrome</p>
+</div>
+
+
+
+<p id='show_detail_line'>显示
+<a href='javascript:showCase(0)'>概要</a>
+<a href='javascript:showCase(1)'>失败</a>
+<a href='javascript:showCase(2)'>所有</a>
+</p>
+
+<table id='result_table'>
+<colgroup>
+<col align='left' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+</colgroup>
+<tr id='header_row'>
+    <td>测试组/测试用例</td>
+    <td>总数</td>
+    <td>通过</td>
+    <td>失败</td>
+    <td>错误</td>
+    <td>视图</td>
+    <td>错误截图</td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_01_login.TestLogin: 测试从登录页面，首页顶部和右侧，以及侧边栏登录</td>
+    <td>4</td>
+    <td>4</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c1',4)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt1.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_login_top: 从顶部登录</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.1')" >
+        通过</a></span>
+
+    <div id='div_pt1.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.1: [2018-07-10 18:19:08,985)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:19:09,288)]-log.py-INFO:在首页顶部用户名输入框输入：whlkdyf
+[2018-07-10 18:19:09,579)]-log.py-INFO:在首页顶部密码输入框输入：123456
+[2018-07-10 18:19:09,771)]-log.py-INFO:点击登录
+[2018-07-10 18:19:23,491)]-log.py-INFO:退出登录
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_login_side: 从右侧登录</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.2')" >
+        通过</a></span>
+
+    <div id='div_pt1.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.2: [2018-07-10 18:19:24,594)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:19:25,129)]-log.py-INFO:在首页右侧用户名输入框输入：whlkdyf
+[2018-07-10 18:19:25,492)]-log.py-INFO:在首页右侧密码输入框输入：123456
+[2018-07-10 18:19:33,120)]-log.py-INFO:点击登录
+[2018-07-10 18:19:36,771)]-log.py-INFO:退出登录
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_login_loginpage: 从登录界面登录</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.3')" >
+        通过</a></span>
+
+    <div id='div_pt1.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.3: [2018-07-10 18:19:37,163)]-log.py-INFO:打开登录首页: http://fdg.pre.yyjzt.com/user/toLogin.htm
+[2018-07-10 18:19:37,454)]-log.py-INFO:在登录首页用户名输入框输入：whlkdyf
+[2018-07-10 18:19:37,749)]-log.py-INFO:在登录首页密码输入框输入：123456
+[2018-07-10 18:19:44,949)]-log.py-INFO:点击登录
+[2018-07-10 18:19:49,036)]-log.py-INFO:退出登录
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt1.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_login_sidebar: 从侧边栏打开登录窗口登录</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.4')" >
+        通过</a></span>
+
+    <div id='div_pt1.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.4: [2018-07-10 18:19:51,723)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:19:52,482)]-log.py-INFO:打开侧边栏会员中心
+[2018-07-10 18:19:54,483)]-log.py-INFO:打开侧边栏登录窗口
+[2018-07-10 18:19:54,906)]-log.py-INFO:在登录窗口用户名输入框输入：whlkdyf
+[2018-07-10 18:19:55,241)]-log.py-INFO:在登录窗口密码输入框输入：123456
+[2018-07-10 18:19:55,420)]-log.py-INFO:点击登录
+[2018-07-10 18:20:07,483)]-log.py-INFO:退出登录
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_02_homepage_info.TestCustomerService: 测试非两票账户，无两票下载的菜单</td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c2',1)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt2.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_two_tickets_check: 测试非两票账号无两票下载入口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.1')" >
+        通过</a></span>
+
+    <div id='div_pt2.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.1: display: none;
+display: none
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_02_homepage_info.TestHomePageInfo: 测试首页信息,用两票账号登录</td>
+    <td>14</td>
+    <td>14</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c3',14)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt3.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_hot_words: 测试热词</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.1')" >
+        通过</a></span>
+
+    <div id='div_pt3.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.1: [2018-07-10 18:20:49,914)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:20:52,952)]-log.py-INFO:点击热词：醋酸地塞米松乳膏
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_categories_1: 测试商品分类,任意选择一个商品分类</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.2')" >
+        通过</a></span>
+
+    <div id='div_pt3.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.2: [2018-07-10 18:21:04,053)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:21:05,491)]-log.py-INFO:点击商品分类：补益安神药物
+测试第1个商品分类: 补益安神药物
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_categories_2: 测试商品分类,任意选择一个商品分类</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.3')" >
+        通过</a></span>
+
+    <div id='div_pt3.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.3: [2018-07-10 18:21:24,584)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:21:25,871)]-log.py-INFO:点击商品分类：补益安神药物
+测试第2个商品分类: 补益安神药物
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_categories_3: 测试商品分类,任意选择一个商品分类</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.4')" >
+        通过</a></span>
+
+    <div id='div_pt3.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.4: [2018-07-10 18:21:44,119)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:21:45,443)]-log.py-INFO:点击商品分类：其它商品
+测试第3个商品分类: 其它商品
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.5' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_categories_4: 测试商品分类,任意选择一个商品分类</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.5')" >
+        通过</a></span>
+
+    <div id='div_pt3.5' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.5').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.5: [2018-07-10 18:22:04,949)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:22:06,279)]-log.py-INFO:点击商品分类：中药材/中药饮片
+测试第4个商品分类: 中药材/中药饮片
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.6' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_categories_5: 测试商品分类,任意选择一个商品分类</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.6')" >
+        通过</a></span>
+
+    <div id='div_pt3.6' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.6').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.6: [2018-07-10 18:22:15,983)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:22:17,342)]-log.py-INFO:点击商品分类：消化系统药物
+测试第5个商品分类: 消化系统药物
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.7' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_categories_6: 测试商品分类,任意选择一个商品分类</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.7')" >
+        通过</a></span>
+
+    <div id='div_pt3.7' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.7').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.7: [2018-07-10 18:22:32,195)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:22:33,654)]-log.py-INFO:点击商品分类：心脑血管药物
+测试第6个商品分类: 心脑血管药物
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.8' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_toplink_username: 测试顶部用户名称链接</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.8')" >
+        通过</a></span>
+
+    <div id='div_pt3.8' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.8').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.8: [2018-07-10 18:22:37,671)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:22:40,058)]-log.py-INFO:点击顶部用户名称链接
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.9' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_toplink_myorder: 测试顶部我的订单链接</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.9')" >
+        通过</a></span>
+
+    <div id='div_pt3.9' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.9').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.9: [2018-07-10 18:22:51,581)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:22:54,191)]-log.py-INFO:点击顶部我的订单链接
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.10' class='hiddenRow'>
+    <td ><div class='testcase'>test_05_toplink_help_center: 测试顶部客户服务下帮助中心链接</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.10')" >
+        通过</a></span>
+
+    <div id='div_pt3.10' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.10').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.10: [2018-07-10 18:23:05,642)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:23:06,959)]-log.py-INFO:鼠标移至顶部客户服务链接
+[2018-07-10 18:23:08,590)]-log.py-INFO:点击顶部客户服务-&gt;帮助中心链接
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.11' class='hiddenRow'>
+    <td ><div class='testcase'>test_06_toplink_suggestions: 测试顶部客户服务下投诉建议链接</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.11')" >
+        通过</a></span>
+
+    <div id='div_pt3.11' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.11').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.11: [2018-07-10 18:23:20,192)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:23:21,527)]-log.py-INFO:鼠标移至顶部客户服务链接
+[2018-07-10 18:23:22,705)]-log.py-INFO:点击顶部客户服务-&gt;投诉建议链接
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.12' class='hiddenRow'>
+    <td ><div class='testcase'>test_07_toplink_two_tickets: 测试顶部客户服务下两票下载链接</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.12')" >
+        通过</a></span>
+
+    <div id='div_pt3.12' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.12').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.12: [2018-07-10 18:23:34,358)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+[2018-07-10 18:23:35,638)]-log.py-INFO:鼠标移至顶部客户服务链接
+[2018-07-10 18:23:36,333)]-log.py-INFO:点击顶部客户服务-&gt;两票下载链接
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.13' class='hiddenRow'>
+    <td ><div class='testcase'>test_08_check_bottom_qr_code: 测试底部九州通医药APP二维码是否显示</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.13')" >
+        通过</a></span>
+
+    <div id='div_pt3.13' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.13').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.13: [2018-07-10 18:23:49,298)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt3.14' class='hiddenRow'>
+    <td ><div class='testcase'>test_09_check_bottom_qr_code: 测试底部供应商APP二维码是否显示</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt3.14')" >
+        通过</a></span>
+
+    <div id='div_pt3.14' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt3.14').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt3.14: [2018-07-10 18:23:51,378)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_02_homepage_info.TestQualificationForSites: 测试FDG和FWE的证书</td>
+    <td>6</td>
+    <td>6</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c4',6)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt4.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_qualification_FDG_1: 测试FDG站点的证书</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt4.1')" >
+        通过</a></span>
+
+    <div id='div_pt4.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt4.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt4.1: {'01': 1}
+[2018-07-10 18:24:04,162)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt4.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_qualification_FDG_2: 测试FDG站点的证书</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt4.2')" >
+        通过</a></span>
+
+    <div id='div_pt4.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt4.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt4.2: {'02': 2}
+[2018-07-10 18:24:05,005)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt4.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_qualification_FDG_3: 测试FDG站点的证书</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt4.3')" >
+        通过</a></span>
+
+    <div id='div_pt4.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt4.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt4.3: {'03': 3}
+[2018-07-10 18:24:05,849)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt4.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_qualification_FWE_1: 测试FWE站点的证书</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt4.4')" >
+        通过</a></span>
+
+    <div id='div_pt4.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt4.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt4.4: {'01': 1}
+[2018-07-10 18:24:06,974)]-log.py-INFO:打开首页: http://fwe.pre.yyjzt.com/
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt4.5' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_qualification_FWE_2: 测试FWE站点的证书</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt4.5')" >
+        通过</a></span>
+
+    <div id='div_pt4.5' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt4.5').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt4.5: {'02': 2}
+[2018-07-10 18:24:07,855)]-log.py-INFO:打开首页: http://fwe.pre.yyjzt.com/
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt4.6' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_qualification_FWE_3: 测试FWE站点的证书</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt4.6')" >
+        通过</a></span>
+
+    <div id='div_pt4.6' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt4.6').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt4.6: {'03': 3}
+[2018-07-10 18:24:08,815)]-log.py-INFO:打开首页: http://fwe.pre.yyjzt.com/
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_03_search_not_login.TestHomepageSearch: 测试未登录时，首页搜索</td>
+    <td>4</td>
+    <td>4</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c5',4)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt5.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_homepage: 测试未登录时首页无关键字搜索</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt5.1')" >
+        通过</a></span>
+
+    <div id='div_pt5.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt5.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt5.1: [2018-07-10 18:24:20,533)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt5.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_homepage: 测试未登录时首页用商品编码搜索 测试商品编码：DUC001008F</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt5.2')" >
+        通过</a></span>
+
+    <div id='div_pt5.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt5.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt5.2: [2018-07-10 18:24:27,973)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt5.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_homepage: 测试未登录时首页用商品名称关键字搜索 测试商品名称关键字：感冒颗粒</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt5.3')" >
+        通过</a></span>
+
+    <div id='div_pt5.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt5.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt5.3: [2018-07-10 18:24:31,675)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt5.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_homepage: 测试未登录时，首页用生产厂家关键字搜索，测试生产厂家关键字：华润三九</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt5.4')" >
+        通过</a></span>
+
+    <div id='div_pt5.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt5.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt5.4: [2018-07-10 18:24:35,735)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_03_search_not_login.TestProdDetailPageSearch: 测试未登录时，商品详情页搜索</td>
+    <td>4</td>
+    <td>4</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c6',4)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt6.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_detailpage: 测试未登录时商品详情页无关键字搜索</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt6.1')" >
+        通过</a></span>
+
+    <div id='div_pt6.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt6.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt6.1: [2018-07-10 18:24:49,831)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt6.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_detailpage: 测试未登录时商品详情页用商品编码搜索 测试商品编码：HAG017060C</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt6.2')" >
+        通过</a></span>
+
+    <div id='div_pt6.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt6.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt6.2: [2018-07-10 18:24:56,650)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt6.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_detailpage: 测试未登录时商品详情页用商品名称关键字搜索 测试商品名称关键字：注射液</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt6.3')" >
+        通过</a></span>
+
+    <div id='div_pt6.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt6.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt6.3: [2018-07-10 18:24:59,091)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt6.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_detailpage: 测试未登录时商品详情页用生产厂家关键字搜索，测试生产厂家关键字：上海上</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt6.4')" >
+        通过</a></span>
+
+    <div id='div_pt6.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt6.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt6.4: [2018-07-10 18:25:02,870)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_03_search_not_login.TestSearchResultPageSearch: 测试未登录时，搜索列表页搜索</td>
+    <td>4</td>
+    <td>4</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c7',4)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt7.1' class='hiddenRow'>
+    <td><div class='testcase'>test_01_resultpage: 测试未登录时搜索列表页无关键字搜索</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt7.2' class='hiddenRow'>
+    <td><div class='testcase'>test_02_resultpage: 测试未登录时搜索列表页用商品编码搜索 测试商品编码：BAA027003D</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt7.3' class='hiddenRow'>
+    <td><div class='testcase'>test_03_resultpage: 测试未登录时搜索列表页用商品名称关键字搜索 测试商品名称关键字：阿莫西林</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt7.4' class='hiddenRow'>
+    <td><div class='testcase'>test_04_resultpage: 测试未登录时，搜索列表页用生产厂家关键字搜索，测试生产厂家关键字：珠海</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_04_search_login.TestHomepageSearch: 测试登录后，首页搜索</td>
+    <td>4</td>
+    <td>4</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c8',4)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt8.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_homepage: 测试登录后首页无关键字搜索</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt8.1')" >
+        通过</a></span>
+
+    <div id='div_pt8.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt8.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt8.1: [2018-07-10 18:25:58,569)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt8.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_homepage: 测试登录后首页用商品编码搜索 测试商品编码：DUC006002F</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt8.2')" >
+        通过</a></span>
+
+    <div id='div_pt8.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt8.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt8.2: [2018-07-10 18:26:07,091)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt8.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_homepage: 测试登录后首页用商品名称关键字搜索 测试商品名称关键字：活菌</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt8.3')" >
+        通过</a></span>
+
+    <div id='div_pt8.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt8.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt8.3: [2018-07-10 18:26:11,153)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt8.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_homepage: 测试登录后，首页用生产厂家关键字搜索，测试生产厂家关键字：东北制药</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt8.4')" >
+        通过</a></span>
+
+    <div id='div_pt8.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt8.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt8.4: [2018-07-10 18:26:17,294)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_04_search_login.TestMemberCenterPageSearch: 测试登录后，会员中心页搜索</td>
+    <td>4</td>
+    <td>4</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c9',4)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt9.1' class='hiddenRow'>
+    <td><div class='testcase'>test_01_memberpage: 测试登录后会员中心页无关键字搜索</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt9.2' class='hiddenRow'>
+    <td><div class='testcase'>test_02_memberpage: 测试登录后会员中心页用商品编码搜索 测试商品编码：BME008005C</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt9.3' class='hiddenRow'>
+    <td><div class='testcase'>test_03_memberpage: 测试登录后会员中心页用商品名称关键字搜索 测试商品名称关键字：感冒颗粒</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt9.4' class='hiddenRow'>
+    <td><div class='testcase'>test_04_memberpage: 测试登录后会员中心页用生产厂家关键字搜索，测试生产厂家关键字：华润三九</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_04_search_login.TestProdDetailPageSearch: 测试登录后，商品详情页搜索</td>
+    <td>4</td>
+    <td>4</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c10',4)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt10.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_detailpage: 测试登录后商品详情页无关键字搜索</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt10.1')" >
+        通过</a></span>
+
+    <div id='div_pt10.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt10.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt10.1: [2018-07-10 18:27:33,252)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt10.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_detailpage: 测试登录后商品详情页用商品编码搜索 测试商品编码：CAA021004G</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt10.2')" >
+        通过</a></span>
+
+    <div id='div_pt10.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt10.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt10.2: [2018-07-10 18:27:42,099)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt10.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_detailpage: 测试登录后商品详情页用商品名称关键字搜索 测试商品名称关键字：头孢</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt10.3')" >
+        通过</a></span>
+
+    <div id='div_pt10.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt10.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt10.3: [2018-07-10 18:27:46,343)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt10.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_detailpage: 测试登录后商品详情页用生产厂家关键字搜索，测试生产厂家关键字：华润双鹤</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt10.4')" >
+        通过</a></span>
+
+    <div id='div_pt10.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt10.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt10.4: [2018-07-10 18:27:51,907)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_04_search_login.TestSearchResultPageSearch: 测试登录后，搜索列表页搜索</td>
+    <td>4</td>
+    <td>4</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c11',4)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt11.1' class='hiddenRow'>
+    <td><div class='testcase'>test_01_resultpage: 测试登录后搜索列表页无关键字搜索</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt11.2' class='hiddenRow'>
+    <td><div class='testcase'>test_02_resultpage: 测试登录后搜索列表页用商品编码搜索 测试商品编码：BMC004190CHB1</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt11.3' class='hiddenRow'>
+    <td><div class='testcase'>test_03_resultpage: 测试登录后搜索列表页用商品名称关键字搜索 测试商品名称关键字：感冒片</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt11.4' class='hiddenRow'>
+    <td><div class='testcase'>test_04_resultpage: 测试登录后，搜索列表页用生产厂家关键字搜索，测试生产厂家关键字：西安</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_05_member_center.TestMemberCenterInfo: 测试会员中心页面和右侧栏会员中心的信息是否一致</td>
+    <td>6</td>
+    <td>6</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c12',6)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt12.1' class='hiddenRow'>
+    <td><div class='testcase'>test_01_name: 测试用户名称</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt12.2' class='hiddenRow'>
+    <td><div class='testcase'>test_02_jzb: 测试九州币</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt12.3' class='hiddenRow'>
+    <td><div class='testcase'>test_03_xde: 测试信贷额度</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt12.4' class='hiddenRow'>
+    <td><div class='testcase'>test_04_xdq: 测试信贷期</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt12.5' class='hiddenRow'>
+    <td><div class='testcase'>test_05_qk: 测试欠款</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt12.6' class='hiddenRow'>
+    <td><div class='testcase'>test_06_qk_days: 测试欠款天数</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_05_member_center.TestMemberCenterLinks: 测试会员中心页面左侧菜单</td>
+    <td>17</td>
+    <td>17</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c13',17)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt13.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_wddd: 测试我的订单</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt13.1')" >
+        通过</a></span>
+
+    <div id='div_pt13.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt13.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt13.1: [2018-07-10 18:29:21,200)]-log.py-INFO:title is: 我的订单
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt13.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_ksxd: 测试快速下单</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt13.2')" >
+        通过</a></span>
+
+    <div id='div_pt13.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt13.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt13.2: [2018-07-10 18:29:23,779)]-log.py-INFO:title is: 快速下单
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt13.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_03_lscg: 测试历史采购</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt13.3')" >
+        通过</a></span>
+
+    <div id='div_pt13.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt13.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt13.3: [2018-07-10 18:29:26,321)]-log.py-INFO:title is: 历史采购
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt13.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_04_wdgz: 测试我的关注</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt13.4')" >
+        通过</a></span>
+
+    <div id='div_pt13.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt13.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt13.4: [2018-07-10 18:29:28,838)]-log.py-INFO:title is: 我的关注
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt13.5' class='hiddenRow'>
+    <td ><div class='testcase'>test_05_wdqhl: 测试我的缺货篮</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt13.5')" >
+        通过</a></span>
+
+    <div id='div_pt13.5' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt13.5').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt13.5: [2018-07-10 18:29:31,907)]-log.py-INFO:title is: 我的缺货篮
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt13.6' class='hiddenRow'>
+    <td ><div class='testcase'>test_06_wdyhq: 测试我的优惠券</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt13.6')" >
+        通过</a></span>
+
+    <div id='div_pt13.6' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt13.6').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt13.6: [2018-07-10 18:29:34,649)]-log.py-INFO:title is: 我的优惠券 - 会员中心 - 九州通网
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt13.7' class='hiddenRow'>
+    <td><div class='testcase'>test_07_zxzfcx: 测试在线支付查询</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.8' class='hiddenRow'>
+    <td><div class='testcase'>test_08_wdjzb: 测试我的九州币</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.9' class='hiddenRow'>
+    <td><div class='testcase'>test_09_zjjl: 测试中奖记录</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.10' class='hiddenRow'>
+    <td><div class='testcase'>test_10_grxx: 测试个人信息</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.11' class='hiddenRow'>
+    <td><div class='testcase'>test_11_zhgl: 测试账户管理</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.12' class='hiddenRow'>
+    <td><div class='testcase'>test_12_zzhgl: 测试子账户管理</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.13' class='hiddenRow'>
+    <td><div class='testcase'>test_13_zhaq: 测试账户安全</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.14' class='hiddenRow'>
+    <td><div class='testcase'>test_14_tsjy: 测试投诉建议</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.15' class='hiddenRow'>
+    <td><div class='testcase'>test_15_bzzx: 测试帮助中心</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.16' class='hiddenRow'>
+    <td><div class='testcase'>test_16_zzgl: 测试资质管理</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr id='pt13.17' class='hiddenRow'>
+    <td><div class='testcase'>test_17_ckmxcx: 测试出库明细查询</div></td>
+    <td colspan='5' align='center'><span class='status passCase'>通过</span></td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_06_goto_detailpage.TestHomePageToDetailPage: 测试在主页点击任意商品的图片或名称进入商品详情页面</td>
+    <td>2</td>
+    <td>2</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c14',2)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt14.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_homepage_goto_details: 测试在首页点击任意商品的图片进入商品详情页面</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt14.1')" >
+        通过</a></span>
+
+    <div id='div_pt14.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt14.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt14.1: [2018-07-10 18:30:18,586)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+windows display
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt14.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_homepage_goto_details: 测试在首页点击任意商品的名称进入商品详情页面</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt14.2')" >
+        通过</a></span>
+
+    <div id='div_pt14.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt14.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt14.2: [2018-07-10 18:30:22,746)]-log.py-INFO:打开首页: http://fdg.pre.yyjzt.com
+===== 23 ======
+windows display
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_06_goto_detailpage.TestResultPageToDetailPage: 测试在搜索列表页面点击任意商品的图片或名称进入商品详情页面</td>
+    <td>2</td>
+    <td>2</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c15',2)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt15.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_resultpage_goto_details: 测试在搜索列表点击任意商品的title进入商品详情页面</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt15.1')" >
+        通过</a></span>
+
+    <div id='div_pt15.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt15.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt15.1: windows display
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt15.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_resultpage_goto_details: 测试在搜索列表点击任意商品的图片进入商品详情页面</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt15.2')" >
+        通过</a></span>
+
+    <div id='div_pt15.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt15.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt15.2: windows display
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_07_my_attention.TestOrder: 测试在商品详情页关注商品</td>
+    <td>2</td>
+    <td>2</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c16',2)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt16.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_follow: 商品详情页关注商品</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt16.1')" >
+        通过</a></span>
+
+    <div id='div_pt16.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt16.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt16.1: [2018-07-10 18:31:20,165)]-log.py-INFO:点击关注按钮
+[2018-07-10 18:31:21,012)]-log.py-INFO:打开侧边栏我的关注
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt16.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_unfollow: 取消关注</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt16.2')" >
+        通过</a></span>
+
+    <div id='div_pt16.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt16.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt16.2: [2018-07-10 18:31:25,230)]-log.py-INFO:侧边栏我的关注已打开
+[2018-07-10 18:31:28,536)]-log.py-INFO:点击删除关注按钮
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_08_add_to_cart.TestAddToCart: 测试从商品搜索列表页和商品详情页加购物车</td>
+    <td>2</td>
+    <td>2</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c17',2)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt17.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_add_to_cart: 从商品详情页加商品到购物车</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt17.1')" >
+        通过</a></span>
+
+    <div id='div_pt17.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt17.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt17.1: [2018-07-10 18:31:57,577)]-log.py-INFO:打开商品详情页，URL: http://fdg.pre.yyjzt.com/front/merchandise/detail/FDG/BMC004190CHB1
+[2018-07-10 18:31:57,989)]-log.py-INFO:编辑商品数量，输入： 20
+[2018-07-10 18:31:58,263)]-log.py-INFO:点击加入购物车按钮
+[2018-07-10 18:31:58,897)]-log.py-INFO:打开侧边栏购物车
+==== 2018-07-10 18:31:59.898183
+==== 2018-07-10 18:32:00.010198
+No prod in invalid list.
+[2018-07-10 18:32:24,409)]-log.py-INFO:侧边栏购物车已打开
+[2018-07-10 18:32:25,063)]-log.py-INFO:清空购物车
+[2018-07-10 18:32:26,744)]-log.py-INFO:侧边栏呈打开状态，关闭。
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt17.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_02_add_to_cart: 从商品搜索列表页加商品到购物车</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt17.2')" >
+        通过</a></span>
+
+    <div id='div_pt17.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt17.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt17.2: [2018-07-10 18:32:28,445)]-log.py-INFO:打开商品搜索列表页面，URL: http://fdg.pre.yyjzt.com/search/merchandise.htm?keyword=HAG017060C&amp;category=
+[2018-07-10 18:32:28,625)]-log.py-INFO:商品搜索列表页面，测试加购物车的测试商品为：HAG017060C, 库存为：37246
+[2018-07-10 18:32:28,846)]-log.py-INFO:编辑商品数量，输入： 2
+[2018-07-10 18:32:29,112)]-log.py-INFO:点击加入购物车按钮
+[2018-07-10 18:32:29,804)]-log.py-INFO:打开侧边栏购物车
+==== 2018-07-10 18:32:30.805103
+==== 2018-07-10 18:32:30.857108
+No prod in invalid list.
+[2018-07-10 18:32:55,233)]-log.py-INFO:侧边栏购物车已打开
+[2018-07-10 18:32:55,906)]-log.py-INFO:清空购物车
+[2018-07-10 18:32:57,557)]-log.py-INFO:侧边栏呈打开状态，关闭。
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='errorClass'>
+    <td>test_09_place_order.TestOrderFromMyCartPage: 测试从我的购物车页面提交订单</td>
+    <td>3</td>
+    <td>0</td>
+    <td>0</td>
+    <td>3</td>
+    <td><a href="javascript:showClassDetail('c18',3)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='ft18.1' class='none'>
+    <td ><div class='testcase'>test_01_submit_order: 从我的购物车页面提交订单</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status errorCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft18.1')" >
+        错误</a></span>
+
+    <div id='div_ft18.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft18.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft18.1: ==== 2018-07-10 18:33:32.066244
+No prod in cart
+==== 2018-07-10 18:33:56.793988
+Traceback (most recent call last):
+  File "D:\AutomationProject\Auto\B2B_PC\test\case\test_09_place_order.py", line 190, in test_01_submit_order
+    cart.submit_order()
+  File "D:\AutomationProject\Auto\B2B_PC\pages\myCartPage.py", line 217, in submit_order
+    self.click(self.__submit_loc)
+  File "D:\AutomationProject\Auto\B2B_PC\common\basePage.py", line 137, in click
+    element = self.find_element(locator)
+  File "D:\AutomationProject\Auto\B2B_PC\common\basePage.py", line 122, in find_element
+    element = WebDriverWait(self.driver, timeout, 1).until(EC.visibility_of_element_located(locator))
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python36-32\lib\site-packages\selenium\webdriver\support\wait.py", line 80, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td>
+            <a href="#" onclick="show_shots(this)">显示截图</a>
+            <div class="screenshots">
+            <a  class="close_shots" onclick="close_shots(this)">X</a>
+            <img src="data:image/jpg;base64,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oAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIq6iFsoAABANSURBVARoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAgP+/HTsWAAAAABjkbz2KfYURLAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAAiwBugFuyAOW4KgAAAABJRU5ErkJggg==" class="img"/>
+            </div></td>
+</tr>
+
+<tr id='ft18.2' class='none'>
+    <td ><div class='testcase'>test_02_submit: 在订单确认页面提交订单</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status errorCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft18.2')" >
+        错误</a></span>
+
+    <div id='div_ft18.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft18.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft18.2: Traceback (most recent call last):
+  File "D:\AutomationProject\Auto\B2B_PC\test\case\test_09_place_order.py", line 205, in test_02_submit
+    page.submit_order()
+  File "D:\AutomationProject\Auto\B2B_PC\pages\orderConfirmationPage.py", line 19, in submit_order
+    self.click(self.__under_line_settlement_loc)
+  File "D:\AutomationProject\Auto\B2B_PC\common\basePage.py", line 137, in click
+    element = self.find_element(locator)
+  File "D:\AutomationProject\Auto\B2B_PC\common\basePage.py", line 122, in find_element
+    element = WebDriverWait(self.driver, timeout, 1).until(EC.visibility_of_element_located(locator))
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python36-32\lib\site-packages\selenium\webdriver\support\wait.py", line 80, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td>
+            <a href="#" onclick="show_shots(this)">显示截图</a>
+            <div class="screenshots">
+            <a  class="close_shots" onclick="close_shots(this)">X</a>
+            <img src="data:image/jpg;base64,iVBORw0KGgoAAAANSUhEUgAABaAAAALvCAYAAACTCWL/AAAgAElEQVR4nOzdLVTb9////wf/8xPMUQVVzdSYGhPf01SRie8pU+SjlqoyVaZKVcHNwVSZGj1fUabI1ECVqQXVTDVT46OWqVJVXHH5i16RCy7a9bVu3e12DqJp8s477wRzz4vna6zX6/UCAAAAAABv2f/3rk8AAAAAAID3kwANAAAAAEARAjQAAAAAAEUI0AAAAAAAFCFAAwAAAABQhAANAAAAAEARAjQAAAAAAEUI0AAAAAAAFCFAAwAAAABQhAANAAAAAEARAjQAAAAAAEUI0AAAAAAAFCFAAwAAAABQhAANAAAAAEARAjQAAAAAAEUI0AAA/Hu01zI2Ntb/U2/m4F2fFwAAvKcEaACAPu2sDQbKM3/W0j7PoY8O0m6uZ7FeTeXlYyup1hez3my/XgQ93E+ruZGlhVpq01OvzqVSTW1hKZu7+zl8swsw4CDN+jmvQ6WaWm0hS5vb6RwcvZVn/+c6Sreznc3lxdRrtUxP9V+rSrWWWn0xyxvN7Ha6+bdfLQAA3l9jvV6v965PAgDg76OdtbErWXmtx6zmQW851VPucdhaTr3xTfYen3KnS/P5bnszizMTpxxoP82vF7P07V5OO9Sz413Pvd2NLEyPn3XPUxykWb+Yazuv+7jJzN5cz8ZaI3/q6d+29lrGrgy8u/NbebTdyNRbeYKDtDaW8/XX35/+Xg96q+cAAAB/H1ZAAwAU1m02Mv3ZGfE5Sf7YyVefzmWtfdJ62E7Wpj/OtfPE5yT54/t8+XHtlOOV9Dh7315LbW49nX/J8t7DzkbqlYv57KvXjM9/uaMc7LfS3FjKQnX9fKv3AQDgDQnQAAAlddbTuPbD+YJxkuSXrCyuZ3QzPsprHOgcxyvv8d6tLDe77+bJ/0Ld3cXMffpVdv5412dymm6aC9VUxj7IxY8/y7Wvvs33v/xLvh0AAOCdEaABAM6w+qCXXu+0n5PGbxyk+fWt/DJw6+UbW3n45Nljnzy8ly8mB+7w60q+PivaXprP6taD/P7k6cvzePrkt/x4ezaDh8uvK9lsvZ2J0C/0X5OnefL7g9y7OeK5k/y02cr7nKCP2mtpfH536H1Okkvzq9n6+bc8ejpwvZ78nof3t7L6xUcjr1kZB+l+/0v+1o0cAID3jgANAFBKp5m1wdnJV++ludHIizHPEzML2WzeHIqQJ0fbyczevp9H3e0sN6qpTLwasDw+MZ362m6aN4eT5t3O/p94IWcZz0SlmoX10c+dvYPX22Dxn+RgOwv1lRHx+XJu33+U7vZyGrXpTPXNwR7PxEQlM3ONLDf3c/DkYbbmTpn7DQAA/2ACNABAIZ3WZn4duO36Yj2VgdvGawtZ/mTgxr3NtIYK9Himt9pprc2dslndeGqNheGb292/IAKPZ7o6Yi34ZPJ32ofw7TlKa20xPwyNRbmc1QetrM2dc0vBiZk0Fk97TwEA4J9LgAYAKKKbzvZgfp7PXHXUSteZVOcGb9tLe39wbMZM6o3BfD3K32s17eRCNdMn/N/R4X7a25tZXqynVqumMjaWsbGxjI1VUq3Vs7ixm6HLcJqDdpprC6lVK8+PM5Xp2kLWtvfzdoeQJOk2s/bt8FDuy3c2slx9m8n9KIf77WxvLmexXjv22sYyVqmmVl/Mxu5Jr+8gzfqLa3olK0P/v5IrL6/5WMbG1k7ZlPAw+7ubWVqoZXpq7Nj1rWdxvZn2iG84Dpr1Y8d+9jO11jnhZbayNHDfsbHl0efTWc/MwH2XWgPzrI+66ew2s7G0kFpt8JxrWVhrpn0wagZ2N5tzg+cxlqnlVk6bmN3dnBt6TL353q79BwA4NwEaAKCEo246ewO3fVLL9AnLXCsz80O3tfff4uTkauUvWGHbTas5OHPkcpYbtREroPezOVfJBxc+zpX/fJlv7u5kb+/4fOI/8sveTu5+9Xk+vlDJwpkbGR6ms1FP5eKVXFv5Pnu/vDjS4/x37/us/OfjTDeab3UWdbe1mZ+Gbr2e5YWZt/ck+5uZq3yQCx9fyX++/CZ3d/aOvbYkf/ySvZ27+erzj3OhspBS+z0edjZSr1zIx59/mW+/38t/X3b3x/nv3k7u3rqWKxenMrfW7gvhU9V6ZgeO9bi9P/p96LTTHLpxN+0Rvfqg2x7464IbmZt58Sk7zO7SdKY++DCffn4tX337ffb2Bs95L9+vXMuVi5XUBs45qaS+eH3oOR9vtnNCOs+zz/7gp+F6Fs67Ch4A4D0mQAMAnGFj6djK3Knp1OqLWW+2M3Lx5AsHB8ORrTJ1YgSeqgyPrvj16LQnOFl3f3fothszJ61BfhuOcthtZb1ey7W+/nwp139sZmlkjz3MwU/n3Q7vj3x/rZrF3ZPWMB+lvTaXT7/aOXWDvcc/XEtjafucz3mWg3R2B79hSHJzIW91nPPhQc5/mb7PtepiTrxMb3oKreXMffpVds48j8f5aeVK5tbar1YKV2ZSHxwvs9Mauaq9025meD35r2ntD68i7rZ/6L9hvvZyrvqzz+N/Rxxr9DnvrVzJ3Hp/Wp6YW8jtwXHmj5sjY3iS5KCd7YH+PHn7LX8WAAD+oQRoAIAz/PHLsZW5j/+bvZ27uXXtSi5WalnaPmHJ6UE3g2uBX3sV8hvNbe5ke30gjE7eTqP2dkvYypXjowY+yIUPP8utY4Vy8qMv8t3DTjbrZ4wMmfwoX6xu5effHuXJ0156vV56vad58nArNy4fv+Pj3F3eSHtEkz9qLae+MrwN4Ci//HK++52tm/0fhm+dr04XmXc9+dEXWd36Ob89epKnvefX6emTPNy6kf7LdDfLG+1TR0W8lu5mGp9907fJ4uTs7dx/9PTVOdz7om8TzV9W6ll6WcFnUm0MltztdIZ+bQ6y3xocWfPMTnt/4PV0sz8wl2O2Xh3xu3UpV298lx8f/n7ss9XL099/zurV/nP65dbX6ZuWMV7N3MLgef+azdboAn3Qag78vk9mYa76ns4+BwB4PQI0AMCberyXb/9TTeNtzD2YqmR4CMfr66wv5tZAx7u6tpjaX1jCPvriTjaa61mYOS16j2fi5lZ+299Pc7mR2vRUJsaP/d9MIxsbd9K3ePbX9Qz3v042lr4dXu166Xq+e/DoZawdFR3/lIPuyNnE1cqorxjaWRuabTzip94c/sJhfCI3t37L/n4zy41apqcmXkXN8YnMNDaycad/ifGv661joyKm0th+EV8fZHXo3FbzoPcqzvZ6y3m1Fr+bzcUv+8eMfHI727trmZsaf3UOC5tp3jx+bR/n7vr2y78AmKk2Bp7zcXYHC/RhJ62hb2yea3Wy33ff/bT7vmP5JPWZ/i86xqt38vOjbnY3FlOfqRz7bCXjlVqWmxvpH7Kxk2arr0Cn1ljO4OLtX7c7I8aHHAyPnvlkOY2/8pcOAOBvTIAGAPhTHueHa4vZ/LMN+i20qqP2WhZvDazwvbyatXNtXPj2/PeHW/nPpxfzQaWe9fZJ8yBmsrjeyPRpjXqmmv50+Ti7g3Ox27tZG1o4O5+t1mYWq1MvL+t4pZbl3XbuXT3/6/hbmFnMemP61G0lhwLv4928lfHhne2sD4yVuLq0mOH9FcdTayz03/TTdtrPz2G8Ws/NgUfstfs3TTzq7Obui3/MXs/144Ojf231v55uJ32DVCYbqfaNeZlKfXkptdP+3GCimrmBb3yGVlrP1LM0+HnZ20xr8NoetDLUnxdqeYuTwAEA/tEEaACAPtUsPXnS9yf7L0YN/P7wx9yZvzTiMT9leaP158Ye/MmZCUf7m1mor6Q/P1/NveZyZt7VQsw/dnLryvRrrRA/OjxMt9NKa3sz6+ubaQ38/95B/xrhUXODJ1eXM7q5V9JYHkyh/0RHOTzsptNqZXtzPeubQ1cpB68/u2VIp7U5sNHfbBq1E77MmJoe2GxwJ90X5zA+k7kbA/ff7l/VvN8+tv3gdDXVvni8k9axodHd/Xb/e96oniv2Hh0e5mC/ndZuMxvr6xmantM9OMdmhHvZbvdf3MP27sD4jatZqsvPAAAvCNAAAAPGJyb6/mT/+Y2pzNSztL2fB6uXhx7zeLPdPybgdY2aGX183MJpus0s1L7MD31V7nJu/9zMQqHFz6sPRgT6B/dyc3Zo57ZTV4gfHbTTXF9MvVrJ2NhYPrhwIR9++lk++8+XuXXrbn4a/bDnDtJtD88NXqgNb+j4wvh09a2MOknGR7433cO3vANgkuQoB+1m1hfrqVaez9y+8GE+/eyz/OfLW7l19/Sr9GZGXdu9fPnhCeNDPvwyg1sytl8W6InM1Aauet8q7W46u68+vPO1uczN9efs7c6L366jdNv9vyk35mZG/54c7md3cykLtelMPf9sXfz4Sj77/Fq+uvVNfhg9crrPRK2RwXa+02wdG5VymNb29/13uL6Ys0afAwD8mwjQAACvZTzVxa+HolQet7N/1qrT7mFeK09WJk4dvZA8W/ncqF4biM+Xcv3HZtbe8saDpxqfSKW6kPXd7dweHJybn7LcHJyY3M3uUi2Vi1dy7dbd7Pzyx+CDzuVoaOX4bKZfa6fHNzQ1NXLVbXvk7ItqlnsDwf7R1vlCeHc3S7VKLl65llt3d/KGl+mNDF/bNzdVrQ+skN5L+8Wq5oN2tl/W609Sm66kMjPXt7Hh493957OX99PpW/A9n9rQrPGjdDbqqVz4OJ9/+W2+3/vv8Izw85qopXF74EuVnVY6L36RD9vZHezP9dqZv7cAAP8mAjQAwOuamM7ggs4hlRGbCu4P/on/Kwfd4S3t5iunL6M86qynPmLl8437rWy+qyWY49UsLs0O3fwqICbJUdprjXz+7d7IMDj50Wxm52/k9p0bef2RzRMZ/0tGjkxnZuhbiOTXzeMbAP5JR+2sNT7Pt3sjr1I+mp3N/I3buXPjHzDYujKT+sAXE3dbz1Y1H3Zar1b/v5jnPD0w/3tvN52DPNv88fjK5dn6wLiOpNtcyNxXOxnZ6i9dzuzs9dy8cztfDH1RMsqozQjvZvv5bPPD9var2dVJMnk7C3PyMwDAcQI0AMAbODprKfNUJdODt+110j1hVWm3MziAYzLVU5byHrXXMjd3Kz8db5OTs1l9sJuNuXf79//j4yMC3N7Bq7EFnY0srgxulngj9x78nqe9Xg72W2ltb2RtaSG113729qvZw6McHORt7M83cqxEkvy6ls3W21k63NlYzPBlupcHvz9Nr3eQ/VYr2xtrWVp4/av0Zuaz9WhgJfcpP9uN45/fmdQWBopv+9mXEvutYwn3xTznobnRPzzb1LDbzg/Hbv2kPpO+T/vhbtau/dD/xcbk1aze/+3ZXPduO63WZtaXls4/JmPEZoR3dzs5ymHa2335OZNL9dTe1cx1AIC/KQEaAOB1HXbSGhx4O1kdGP1QSfWLwQc2s9seFSc7ae8O3tZIdahgP3/69lpqV1bStzB28mru7O5mufruV18eHIxIvLNTeXF5up3tgc3tPsmdjY0sVCvnm3n90ngmhhr94+x2Tk7M3c5uzjH691ym5hYyuEVd8jjfLq9n5Nv8WrrpbA+c6Sd3srGxkGrlbRbOk75JmcjUUKDdySmX9kwz1UbfWI1nq5r7P/uv5jlPZHog8O+2O+l2j09an0yj2j8I5aiz278iOcn1jWaW56aH57qfWyVzCwNfNjTb6Rx1stv3ZJ9kee7k+eMAAP9WAjQAwEsH2V7beDXfdaTDtNa+zveDNzeqAyuep1KtD66QfZxv1reHVuAetTazNtAaJ2/XUx0RzA5by5m7spK+hbGXrmervZulmb/B0sujVjYHX0ySzFReBuiDg8F6/3zswqCDboYHkxw3kenq8LiPvfWN0QG428zy8lvcsG+inqU7wxtS5peV1OvrZ3yOznKQ4ctUHTl3etT4lvNrZ+TY6oxnujq8wntzu5U3buszA2M18kP2W/tpvfy4zKY6/eoLlMp0rW/0xa/tTlrHNyCcXMrgfpOHQ19+zGdu5Jcy3bzOZRv6suHxbjqbu/n2+G2zS6mPeoMAAP7lBGgAgGOO2l/l0wuV1NeaaXcPj8W2oxzs72a9PpPPvhkMrJ9ktVEdWr07coXszrU0lndz8PzAh+311BvfDsxCvpzlRm3oeN3dxcx99k1/fL58Oz93NtN4t1M3kqPDdNubWax9lm+HRhZP5nb91fUZz8CmbiPHZhylvb6WwcEkgyq1heE50b9+k/rccrZfbHKXoxx2mllsDG7W+OfNLG5kdUSDfvzTrXw6XcvCxnY6oz5Hi8tnvLbxDF+mboYvUzvra2ddpVfHHB+ae7yX5eXm89Ewh9nf3H45w3rU5/fxN8tZf9Pl3UNjNZJ2s/nqOnxSz8zxz/FMNY3j1+Cg078Ce1SQHxoA3k53RGDvNtey8jqfhYm5LPRtRriXjY3+P1u4ulDLu/41BAD4W+oBAPDco97WfHrJ6/1M3vy59/SEIz68c/ntHO/Rj70vXvM4fT+rD/7Sa9L3c/Ve7/djR3xy/8bwa/7iXu/hk+d3ePp77/7t2d7kuV7Hk979G5N/7vzmt3qP3vDq9Hq9Xu/3H3vXL/3JazR0Hk96928M3mey98W9h71Xl+l+7/bs6Nc++u1+2vv55lnnsdo7/tDf710dvs/kbO/mvQe935887Tv2k0e/9R78+F3vxtU7vZM+bY+25k/+3I98b08+1xv3nww/wcM7vU8G73v5du/+o+fn+vRJ7+G9671Lb/I5GHXslz/Xez+OOB0AAHo9K6ABAP6EyS/upbU2vFr5hZmlZra+GFzKeorLq9keebyjNx998C5dvpH7Gwt9K0Mnao3cHrgkj3/4Mp9eGMvY2FjGPvgwn3+zl8rqam6e+QQTmft6I+e7xJezuvVdRmwd+OdU6tns/Jzbs6/xPp9pIrXG7YFF0I/zw5ef5sLYs+v0wYef55u9SlZXz75Kz4yn2ljN0CLoU1QWNvLj9Uv9Nz7ey7dfXsmHFz549n6NjWVs7INcuPhxrvznq9z96eRP6lS1nuGhKc8MznM+caPHJMl8ajMjRmuM2DAwv3yTzy8+P9cPLuTTL7/P0RerWX3dD8JMPUsnnfyNRmrvfvw6AMDfkgANAHDM0F/wn+hS5u88yH5zIdOnPqaSxmYrWzdGzGkYPOL1e/mttTxy9vM/0aXr9/Lb7kbmBucSjNfy9e6dXD2l116+cT/N5VqG9hgcZaqeZvvHnH6JL+fG/WaWS1XCiVrWWvv5betmrl46++59Jj/KF6tbebDR6Hu947Wvs3vn6tAkjldevKZzXaVnx6wuZWN19pRjDqqkvtnJgzvzed2XNfpwtSyMjLjzqY74RToxWM/WUx35sitZ2Lh/6mdh8uqd7G4uvMG4jEpqC0MDX5JM5najFv0ZAGA0ARoA4KWp1JtP8+jhj7l3+0bmZy/3R7dLlzM7fyN3tn7O70+62V6qni86jU+nsdHOk9/u597N65m9/Oqokx/NZv7Gd7n/25N0N8+K2X93l3J59npufreVB4+ePns9J1yg8Zml7O7/lh9Xr2f2o8lXj5+/ke9+fpT2xtzrBcJKPRvtR3mwtZrrx963yY9mc/3mvfz8qJ2NoRL+tk1kurGe3e7zz9Cdm7k+O5vLA+X20uXZzD6/Tvcf/p6nB/tpLjdGBNXxzCztZv+3H7N6fTavLtPlzN/47g1f03iqy610Hmz1HzOT+Wj2em7eqw1spvnsdVWXttN98lvu33v2mj7qK9iXcnl2NvM3bufejw/z6OlyqkPHeKGSmfqINdgnBeXKdOZG1PJP6jMnfz4qc9loP8rP393I/MuL/+z1rf74W/Z3l/Km+3VWagvDK+gnl1Kv/aN/cQEAihrr9Xq9d30SAAAAf3eHu4u58Pndvts+ufMwnaWh7RABAHjOCmgAAIAzHabVvDtw29Us1cVnAIDTCNAAAABn6Wxm7fuB264vpl56sgsAwD+cAA0AAHDcwW42mp0cJkmOctjZzEL9Vn7pu9MnWV2cs/kgAMAZzIAGAAA47qCZ+sVr2TnlLpM3f053vRbbDwIAnM4KaAAAgNdxeTXba+IzAMB5CNAAAADnNHn1Th7uLqeqPgMAnIsADQAAcNz4VKrzs/lo8sUNl3J5/ka+u/979neXMmPwMwDAuZkBDQAAAABAEVZAAwAAAABQhAANAAAAAEARAjQAAAAAAEUI0AAAAAAAFCFAAwAAAABQhAANAAAAAEARAjQAAAAAAEUI0AAAAAAAFCFAAwAAAABQhAANAAAAAEARAjQAAAAAAEUI0AAAAAAAFCFAAwAAAABQhAANAAAAAEARAjQAAAAAAEUI0AAAAAAAFCFAAwAAAABQhAANAAAAAEARAjQAAAAAAEUI0AAAAAAAFPH/zrrD//3f//0V5wEAAAAAwD9IpVLJ//7v/556nzMD9KVLl/I///M/b+2kAAAAAAD4dxjr9Xq9d30SAAAAAAC8f8yABgAAAACgCAEaAAAAAIAiBGgAAAAAAIoQoAEAAAAAKEKABgAAAACgCAEaAAAAAIAiBGgAAAAAAIoQoAEAAAAAKEKABgAAAACgCAEaAAAAAIAiBGgAAAAAAIoQoAEA4DW018YyNraW9rs+EQAA+AcQoAEAAAAAKGKs1+v13vVJAAAAAADw/rECGgAAAACAIgRoAADeYwdp1scyVm/moL2WsbGxlz9ro4Y4D9yn3my/evzLuwzMgH7+mLX28+d68fhjjzlo1kc8ZztrA/cDAID3jQANAMD7b+daLrZq6fV66fV6ebCarFypp3ms/B406xm7spLVB72X91vuXsm1nfM9xcqVxWTj+WMfbWV+51ouPi/OU42NbM0nK1dehev22pWsZDUPthuZeruvFgAA/jYEaAAA/gVW82C5+vJf1YWtzGcnzdbLdc3ZvLaTrD7Isbuluvwgq+d8hvmtjTRelOSpRpZXk6y0ngfnqTQ2tjKflaw1D5KDZtZWktUHy6meeEQAAPjnE6ABAHj/zVdSOf7vqUp/+G23spJktTaYgyupzJ/vKaqV/nXMlcEHTjWysTWfnWubWdu8lp2B2A0AAO8jARoAgH+tnW732L/mU6mceNc31E732JiPqcZyVrOSlZX+FdkAAPC+EqABACBJspO+Hl3AQXMtK0mSlVwZuQsiAAC8XwRoAACoVDKfpH18uXKSHLTSPOcmhGc6aGbx2s6zTQ6f7YIYDRoAgPedAA0AAM83Ddy5dvFYFD5Ic/Fa3k5/fn6s+a0sVJNUF7I1n6xcWYsGDQDA+0yABgCAJNXlXp4tTB7L2NhYxsYWk41H2TrnJoSnaa9dzLWd+WxtNPJsq8KpNDa2Mm8UBwAA77mxXq/Xe9cnAQAAf08HadYv5lr1QXo2DQQAgNdmBTQAAJzk+Qzo1Zr4DAAAb0KABgCAJO21sYFNAdtZu3hsbjMAAPDajOAAAIAkL8dtHN91cNXoDQAA+DMEaAAAAAAAijCCAwAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIq6iFsoAABANSURBVARoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAgP+/HTsWAAAAABjkbz2KfYURLAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAAiwBugFuyAOW4KgAAAABJRU5ErkJggg==" class="img"/>
+            </div></td>
+</tr>
+
+<tr id='ft18.3' class='none'>
+    <td ><div class='testcase'>test_03_order_detail: 从订单完成页面，进入订单详情页面</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status errorCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft18.3')" >
+        错误</a></span>
+
+    <div id='div_ft18.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft18.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft18.3: 元素没定位到： ('xpath', '//div[@class="oderInformPage"]/following-sibling::div[1]/div[1]')
+Traceback (most recent call last):
+  File "D:\AutomationProject\Auto\B2B_PC\test\case\test_09_place_order.py", line 226, in test_03_order_detail
+    complete_page.click_view_order()
+  File "D:\AutomationProject\Auto\B2B_PC\pages\orderCompletePage.py", line 49, in click_view_order
+    self.click(self.__view_order_loc)
+  File "D:\AutomationProject\Auto\B2B_PC\common\basePage.py", line 137, in click
+    element = self.find_element(locator)
+  File "D:\AutomationProject\Auto\B2B_PC\common\basePage.py", line 122, in find_element
+    element = WebDriverWait(self.driver, timeout, 1).until(EC.visibility_of_element_located(locator))
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python36-32\lib\site-packages\selenium\webdriver\support\wait.py", line 80, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td>
+            <a href="#" onclick="show_shots(this)">显示截图</a>
+            <div class="screenshots">
+            <a  class="close_shots" onclick="close_shots(this)">X</a>
+            <img src="data:image/jpg;base64,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oAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIq6iFsoAABANSURBVARoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAAChCgAYAAAAAoAgBGgAAAACAIgRoAAAAAACKEKABAAAAgP+/HTsWAAAAABjkbz2KfYURLAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAACwENAAAAAMBCQAMAAAAAsBDQAAAAAAAsBDQAAAAAAAsBDQAAAADAQkADAAAAALAQ0AAAAAAALAQ0AAAAAAALAQ0AAAAAwEJAAwAAAACwENAAAAAAACwENAAAAAAAiwBugFuyAOW4KgAAAABJRU5ErkJggg==" class="img"/>
+            </div></td>
+</tr>
+
+<tr class='errorClass'>
+    <td>unittest.suite._ErrorHolder</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>1</td>
+    <td><a href="javascript:showClassDetail('c19',1)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='ft19.1' class='none'>
+    <td ><div class='testcase'>TestOrderFromSideCart)</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status errorCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft19.1')" >
+        错误</a></span>
+
+    <div id='div_ft19.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft19.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft19.1: 元素没定位到： ('xpath', '//div[@class="oderInformPage"]/following-sibling::div[1]/div[1]')
+Traceback (most recent call last):
+  File "D:\AutomationProject\Auto\B2B_PC\test\case\test_09_place_order.py", line 41, in setUpClass
+    login_page.login_homepage(cls.url_login, cls.username, cls.password)
+  File "D:\AutomationProject\Auto\B2B_PC\pages\loginPage.py", line 42, in login_homepage
+    self.submit()
+  File "D:\AutomationProject\Auto\B2B_PC\pages\loginPage.py", line 32, in submit
+    self.enter_key(self.__password_loc)
+  File "D:\AutomationProject\Auto\B2B_PC\common\basePage.py", line 367, in enter_key
+    ele.send_keys(Keys.ENTER)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python36-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 479, in send_keys
+    'value': keys_to_typing(value)})
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python36-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 628, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python36-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 314, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python36-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: timeout
+  (Session info: chrome=67.0.3396.99)
+  (Driver info: chromedriver=2.37.544315 (730aa6a5fdba159ac9f4c1e8cbc59bf1b5ce12b7),platform=Windows NT 6.2.9200 x86_64)
+
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='total_row'>
+    <td>统计</td>
+    <td>88</td>
+    <td>84</td>
+    <td>0</td>
+    <td>4</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+</tr>
+</table>
+<script>
+    drawCircle(84, 0, 4)
+</script>
+
+<div id='ending'>&nbsp;</div>
+
+</body>
+</html>

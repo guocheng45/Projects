@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>供应商接口自动化测试报告--生产</title>
+    <meta name="generator" content="HTMLTestRunner 0.8.3"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    
+<style type="text/css" media="screen">
+body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
+table       { font-size: 100%; }
+pre         { }
+
+/* -- heading ---------------------------------------------------------------------- */
+h1 {
+	font-size: 16pt;
+	color: gray;
+}
+.heading {
+    margin-top: 0ex;
+    margin-bottom: 1ex;
+}
+
+.heading .attribute {
+    margin-top: 1ex;
+    margin-bottom: 0;
+}
+
+.heading .description {
+    margin-top: 4ex;
+    margin-bottom: 6ex;
+}
+
+/* -- css div popup ------------------------------------------------------------------------ */
+a.popup_link {
+}
+
+a.popup_link:hover {
+    color: red;
+}
+.img{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+    border: 2px solid #777;
+}
+
+.screenshots {
+    z-index: 100;
+	position:absolute;
+	left: 23%;
+	top: 20%;
+	display: none;
+}
+.close_shots {
+	position:absolute;
+	top:0; left:98%;
+	z-index:99;
+	width:20px;
+}
+.popup_window {
+    display: none;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    /*border: solid #627173 1px; */
+    padding: 10px;
+    background-color: #E6E6D6;
+    font-family: "Lucida Console", "Courier New", Courier, monospace;
+    text-align: left;
+    font-size: 8pt;
+    width: 500px;
+}
+
+}
+/* -- report ------------------------------------------------------------------------ */
+#show_detail_line {
+    margin-top: 3ex;
+    margin-bottom: 1ex;
+}
+#result_table {
+    width: 80%;
+    border-collapse: collapse;
+    border: 1px solid #777;
+}
+#header_row {
+    font-weight: bold;
+    color: white;
+    background-color: #777;
+}
+#result_table td {
+    border: 1px solid #777;
+    padding: 2px;
+}
+#total_row  { font-weight: bold; }
+.passClass  { background-color: #6c6; }
+.failClass  { background-color: #c60; }
+.errorClass { background-color: #c00; }
+.passCase   { color: #6c6; }
+.failCase   { color: #c60; font-weight: bold; }
+.errorCase  { color: #c00; font-weight: bold; }
+.hiddenRow  { display: none; }
+.testcase   { margin-left: 2em; }
+
+
+/* -- ending ---------------------------------------------------------------------- */
+#ending {
+}
+
+
+.piechart{
+    position:absolute;  ;
+    top:20px;
+    left:300px;
+    width: 200px;
+    float: left;
+    display:  inline;
+}
+
+
+</style>
+
+</head>
+<body>
+<script language="javascript" type="text/javascript">
+output_list = Array();
+
+/* level - 0:Summary; 1:Failed; 2:All */
+function showCase(level) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        tr = trs[i];
+        id = tr.id;
+        if (id.substr(0,2) == 'ft') {
+            if (level < 1) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+            }
+        }
+        if (id.substr(0,2) == 'pt') {
+            if (level > 1) {
+                tr.className = '';
+            }
+            else {
+                tr.className = 'hiddenRow';
+            }
+        }
+    }
+}
+
+
+function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+        tid0 = 't' + cid.substr(1) + '.' + (i+1);
+        tid = 'f' + tid0;
+        tr = document.getElementById(tid);
+        if (!tr) {
+            tid = 'p' + tid0;
+            tr = document.getElementById(tid);
+        }
+        id_list[i] = tid;
+        if (tr.className) {
+            toHide = 0;
+        }
+    }
+    for (var i = 0; i < count; i++) {
+        tid = id_list[i];
+        if (toHide) {
+            document.getElementById('div_'+tid).style.display = 'none'
+            document.getElementById(tid).className = 'hiddenRow';
+        }
+        else {
+            document.getElementById(tid).className = '';
+        }
+    }
+}
+
+
+function showTestDetail(div_id){
+    var details_div = document.getElementById(div_id)
+    var displayState = details_div.style.display
+    // alert(displayState)
+    if (displayState != 'block' ) {
+        displayState = 'block'
+        details_div.style.display = 'block'
+    }
+    else {
+        details_div.style.display = 'none'
+    }
+}
+
+
+function html_escape(s) {
+    s = s.replace(/&/g,'&amp;');
+    s = s.replace(/</g,'&lt;');
+    s = s.replace(/>/g,'&gt;');
+    return s;
+}
+
+function drawCircle(pass, fail, error){
+    var color = ["#6c6","#c60","#c00"];
+    var data = [pass,fail,error];
+    var text_arr = ["pass", "fail", "error"];
+
+    var canvas = document.getElementById("circle");
+    var ctx = canvas.getContext("2d");
+    var startPoint=0;
+    var width = 20, height = 10;
+    var posX = 112 * 2 + 20, posY = 30;
+    var textX = posX + width + 5, textY = posY + 10;
+    for(var i=0;i<data.length;i++){
+        ctx.fillStyle = color[i];
+        ctx.beginPath();
+        ctx.moveTo(112,84);
+        ctx.arc(112,84,84,startPoint,startPoint+Math.PI*2*(data[i]/(data[0]+data[1]+data[2])),false);
+        ctx.fill();
+        startPoint += Math.PI*2*(data[i]/(data[0]+data[1]+data[2]));
+        ctx.fillStyle = color[i];
+        ctx.fillRect(posX, posY + 20 * i, width, height);
+        ctx.moveTo(posX, posY + 20 * i);
+        ctx.font = 'bold 14px';
+        ctx.fillStyle = color[i];
+        var percent = text_arr[i] + ":"+data[i];
+        ctx.fillText(percent, textX, textY + 20 * i);
+
+    }
+}
+
+function show_shots(obj) {
+	obj.nextElementSibling.style.display="block";
+
+}
+
+function close_shots(obj) {
+	obj.parentElement.style.display="none";
+}
+
+</script>
+<div class="piechart">
+    <div>
+        <canvas id="circle" width="350" height="168" </canvas>
+    </div>
+</div>
+<div class='heading'>
+<h1>供应商接口自动化测试报告--生产</h1>
+<p class='attribute'><strong>开始时间:</strong> 2018-08-28 10:44:42</p>
+<p class='attribute'><strong>耗时:</strong> 0:00:13.623645</p>
+<p class='attribute'><strong>状态:</strong> <span class="tj passCase">Pass</span>13 <span class="tj failCase">Failure</span>1 <span class="tj errorCase">Error</span>1</p>
+
+<p class='description'>自动化测试结果如下：</p>
+</div>
+
+
+
+<p id='show_detail_line'>显示
+<a href='javascript:showCase(0)'>概要</a>
+<a href='javascript:showCase(1)'>失败</a>
+<a href='javascript:showCase(2)'>所有</a>
+</p>
+
+<table id='result_table'>
+<colgroup>
+<col align='left' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+</colgroup>
+<tr id='header_row'>
+    <td>测试组/测试用例</td>
+    <td>总数</td>
+    <td>通过</td>
+    <td>失败</td>
+    <td>错误</td>
+    <td>视图</td>
+    <td>错误截图</td>
+</tr>
+
+<tr class='errorClass'>
+    <td>test_04_wode.TestWoDe1: 测试我的</td>
+    <td>3</td>
+    <td>1</td>
+    <td>1</td>
+    <td>1</td>
+    <td><a href="javascript:showClassDetail('c1',3)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt1.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_01_myPerTodaySales: 测试我的业绩--今日销售</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.1')" >
+        通过</a></span>
+
+    <div id='div_pt1.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt1.1: [2018-08-28 10:44:43,457)]-log.py-INFO:==================================================myPerTodaySales==============================================
+[2018-08-28 10:44:43,464)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/myPerTodaySales.json
+[2018-08-28 10:44:43,473)]-log.py-INFO:输入: 
+[2018-08-28 10:44:44,138)]-log.py-INFO:输出: {'code': 1, 'data': {'note': '仅包含状态为未审核及受理中的订单', 'todayOrderQuantity': '1', 'compareSevenDays': '-56.53%', 'getReward': '', 'todaySalesMoney': '62.7', 'compareYesterday': '--', 'notOutOrderQuantity': '26'}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='ft1.2' class='none'>
+    <td ><div class='testcase'>test_02_getPersonalCenterInfo: 测试个人中心基础资料</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status failCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.2')" >
+        失败</a></span>
+
+    <div id='div_ft1.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.2: [2018-08-28 10:44:44,175)]-log.py-INFO:==================================================getPersonalCenterInfo==============================================
+[2018-08-28 10:44:44,185)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getPersonalCenterInfo.json
+[2018-08-28 10:44:44,197)]-log.py-INFO:输入: 
+[2018-08-28 10:44:44,337)]-log.py-INFO:输出: {'code': 1, 'data': {'supplierName': 'hm供应商测试', 'linkPhone': '13116000998', 'supUserId': 67951, 'auditOrderFlag': 0, 'loginName': 'wumeng', 'isEditPrice': 1, 'linkMan': 'KS'}, 'msg': '获取信息成功'}
+Traceback (most recent call last):
+  File "D:\SVN自动化\B2B_Interface\test\Sup\test_04_wode.py", line 40, in test_02_getPersonalCenterInfo
+    self.assertEqual(True, result[0], result[1])
+AssertionError: True != False : 字段：'linkPhone'的实际结果：'13116000998'不等于期望结果：'19912345678'； 字段：'linkMan'的实际结果：'KS'不等于期望结果：'吴梦'； 
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='ft1.3' class='none'>
+    <td ><div class='testcase'>test_05_getMyTaskTarget: 测试查询指标</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status errorCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.3')" >
+        错误</a></span>
+
+    <div id='div_ft1.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft1.3: [2018-08-28 10:44:44,411)]-log.py-INFO:==================================================getMyTaskTarget==============================================
+[2018-08-28 10:44:44,422)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getMyTaskTarget.json
+[2018-08-28 10:44:44,433)]-log.py-INFO:输入: 
+[2018-08-28 10:44:44,568)]-log.py-INFO:输出: {'code': 1, 'data': {'taskTarget': '1000', 'taskStartTime': '2018-07-02', 'taskEndTime': '2018-08-02'}, 'msg': '查询成功'}
+Traceback (most recent call last):
+  File "D:\SVN自动化\B2B_Interface\test\Sup\test_04_wode.py", line 59, in test_05_getMyTaskTarget
+    result = self.com.get_result(name)
+  File "D:\SVN自动化\B2B_Interface\common\data_operation.py", line 750, in get_result
+    compare_result = self.get_compare_result_c2(resource_name, json_response, index)
+  File "D:\SVN自动化\B2B_Interface\common\data_operation.py", line 208, in get_compare_result_c2
+    expected_list = self.get_expected_list_c2(resource_name, index)
+  File "D:\SVN自动化\B2B_Interface\common\data_operation.py", line 187, in get_expected_list_c2
+    value = sql_result[k][field_name]
+TypeError: 'NoneType' object is not subscriptable
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr class='passClass'>
+    <td>test_04_wode.TestWoDe2: 测试我的模块中的【我的】接口，使用login2用户登录</td>
+    <td>12</td>
+    <td>12</td>
+    <td>0</td>
+    <td>0</td>
+    <td><a href="javascript:showClassDetail('c2',12)">详情</a></td>
+    <td>&nbsp;</td>
+</tr>
+
+<tr id='pt2.1' class='hiddenRow'>
+    <td ><div class='testcase'>test_07_getMerchandiseOrderDetail: 测试我的中的品种明细查询接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.1')" >
+        通过</a></span>
+
+    <div id='div_pt2.1' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.1').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.1: [2018-08-28 10:44:44,975)]-log.py-INFO:==================================================getMerchandiseOrderDetail==============================================
+[2018-08-28 10:44:44,989)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getMerchandiseOrderDetail.json
+[2018-08-28 10:44:45,000)]-log.py-INFO:输入: {'startTime': '2018-08-01', 'endTime': '2018-08-20', 'page': '1', 'pageSize': '30', 'appVersion': '3.4.0', 'imei': 'b4d26f719c6883c0', 'model': 'VTR-AL00', 'systemVersion': 'b4d26f719c6883c0'}
+[2018-08-28 10:44:45,195)]-log.py-INFO:输出: {'code': 1, 'data': {'merchandiseList': [], 'totalSize': 0, 'isCanGoNext': False, 'sumAmount': 0.0}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.2' class='hiddenRow'>
+    <td ><div class='testcase'>test_08_getRewardCashDetail: 测试我的中的【奖励兑付明细查询】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.2')" >
+        通过</a></span>
+
+    <div id='div_pt2.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.2: [2018-08-28 10:44:45,234)]-log.py-INFO:==================================================getRewardCashDetail==============================================
+[2018-08-28 10:44:45,245)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getRewardCashDetail.json
+[2018-08-28 10:44:45,255)]-log.py-INFO:输入: {'startTime': '2018-08-01', 'endTime': '2018-08-20', 'page': '1', 'pageSize': '30', 'appVersion': '3.4.0', 'imei': 'b4d26f719c6883c0', 'model': 'VTR-AL00', 'systemVersion': 'b4d26f719c6883c0'}
+[2018-08-28 10:44:45,458)]-log.py-INFO:输出: {'code': 1, 'data': {'thisDeductionSum': 0.0, 'totalSize': 0, 'cautionAmountSum': 0.0, 'rewardCashList': [], 'surplusAmount': 0.0, 'surplusCautionAmount': 0.0, 'isCanGoNext': False, 'actualAmountSum': 0.0}, 'msg': '查询成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.3' class='hiddenRow'>
+    <td ><div class='testcase'>test_09_searchSalesmanBusinessByStructure: 测试我的中的【业务员销售查询】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.3')" >
+        通过</a></span>
+
+    <div id='div_pt2.3' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.3').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.3: [2018-08-28 10:44:45,480)]-log.py-INFO:==================================================searchSalesmanBusinessByStructure==============================================
+[2018-08-28 10:44:45,491)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/searchSalesmanBusinessByStructure.json
+[2018-08-28 10:44:45,497)]-log.py-INFO:输入: {'startTime': '2011-08-14', 'endTime': '2018-08-20', 'structureId': '136', 'supUserId': '', 'page': '1', 'pageSize': '30', 'appVersion': '3.4.0', 'imei': 'b4d26f719c6883c0', 'model': 'VTR-AL00', 'systemVersion': 'b4d26f719c6883c0'}
+[2018-08-28 10:44:48,642)]-log.py-INFO:输出: {'code': 1, 'data': {'salesOrderMainList': [{'supCustId': 'FDCDWI00053655', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '丹阳市香草堂药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 195.0, 'speciesNum': 1, 'orderCode': 'FDCXSG06477791', 'purchaseNum': 30.0, 'createTimeStr': '2018-03-07 11:43:01'}, {'supCustId': 'FDCDWI00050214', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京玄武悦康诊所', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 607.5, 'speciesNum': 2, 'orderCode': 'FDCXSG06477751', 'purchaseNum': 70.0, 'createTimeStr': '2018-03-07 11:31:35'}, {'supCustId': 'FDCDWI35584701', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京璟丰大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 629.0, 'speciesNum': 2, 'orderCode': 'FDCXSG06477329', 'purchaseNum': 50.0, 'createTimeStr': '2018-03-07 09:44:27'}, {'supCustId': 'FDCDWI35584701', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京璟丰大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 0.0, 'speciesNum': 2, 'orderCode': 'FDCXSG06476719', 'purchaseNum': 50.0, 'createTimeStr': '2018-03-06 16:57:21'}, {'supCustId': 'FDCDWI00000049', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京悦和大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 2278.0, 'speciesNum': 3, 'orderCode': 'FDCXSG06475961', 'purchaseNum': 210.0, 'createTimeStr': '2018-03-06 15:38:55'}, {'supCustId': 'FDCDWI00000049', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京悦和大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 2793.0, 'speciesNum': 3, 'orderCode': 'FDCXSG06475876', 'purchaseNum': 260.0, 'createTimeStr': '2018-03-06 15:30:38'}, {'supCustId': 'FDCDWI35708147', 'branchId': 'FDC', 'supUserId': 155, 'branchName': '江苏', 'custName': '南京朗坤医药有限责任公司', 'linkMan': '苏义亮', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 101.0, 'speciesNum': 1, 'orderCode': 'FDCXSG06475247', 'purchaseNum': 5.0, 'createTimeStr': '2018-03-06 14:20:55'}, {'supCustId': 'FDCDWI35708147', 'branchId': 'FDC', 'supUserId': 155, 'branchName': '江苏', 'custName': '南京朗坤医药有限责任公司', 'linkMan': '苏义亮', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 176.4, 'speciesNum': 1, 'orderCode': 'FDCXSG06475248', 'purchaseNum': 3.0, 'createTimeStr': '2018-03-06 14:20:55'}, {'supCustId': 'FDCDWI00000340', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京市碧水药店有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 204.0, 'speciesNum': 1, 'orderCode': 'FDCXSG06475057', 'purchaseNum': 10.0, 'createTimeStr': '2018-03-06 13:53:48'}, {'supCustId': 'FDCDWI00054506', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '丹阳市泰和药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 2561.0, 'speciesNum': 2, 'orderCode': 'FDCXSG06475020', 'purchaseNum': 300.0, 'createTimeStr': '2018-03-06 13:45:59'}, {'supCustId': 'FDCDWI00058216', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '江阴市好的大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 25.3, 'speciesNum': 1, 'orderCode': 'FDCXSG06474702', 'purchaseNum': 1.0, 'createTimeStr': '2018-03-06 11:04:20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.0, 'supUserId': 153, 'speciesNum': 2, 'branchName': '江苏', 'orderCode': 'FDCXSG06471008', 'purchaseNum': 400.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-05 11:38:12', 'orderStateStr': '已出库', 'orderState': '40'}, {'branchId': 'FDC', 'oneOrderPrice': 0.01, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'dd_20180305_000002', 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-05 10:04:15', 'orderStateStr': '提交失败', 'orderState': '21'}, {'branchId': 'FDC', 'oneOrderPrice': 9.5, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06470108', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-05 08:55:34', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 66.77, 'supUserId': 153, 'speciesNum': 3, 'branchName': '江苏', 'orderCode': 'FDCXSG06469779', 'purchaseNum': 4.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 18:40:32', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 5.5, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469775', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 18:33:26', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.22, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469769', 'purchaseNum': 2.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 18:17:39', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 5.55, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469611', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 17:15:43', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 18.8, 'supUserId': 153, 'speciesNum': 2, 'branchName': '江苏', 'orderCode': 'FDCXSG06469589', 'purchaseNum': 2.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 17:11:04', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.04, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469555', 'purchaseNum': 4.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 17:06:08', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.01, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469065', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 16:08:06', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.01, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469066', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 16:08:06', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'supUserId': 153, 'speciesNum': 0, 'branchName': '江苏', 'orderCode': 'dd_20180228_000002', 'linkMan': '徐晨阳', 'createTimeStr': '2018-02-28 15:29:32', 'orderStateStr': '订单提交中', 'orderState': '12'}, {'branchId': 'FDC', 'oneOrderPrice': 17.0, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06455468', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-02-26 09:00:54', 'orderStateStr': '待开票员处理', 'orderState': '13'}], 'totalNum': '24', 'totalPrice': '9693.61', 'count': 24, 'isCanGoNext': False}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.4' class='hiddenRow'>
+    <td ><div class='testcase'>test_10_searchSalesmanBusinessByStructure: 测试我的中的【业务员销售查询】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.4')" >
+        通过</a></span>
+
+    <div id='div_pt2.4' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.4: [2018-08-28 10:44:48,756)]-log.py-INFO:==================================================searchSalesmanBusinessByStructure==============================================
+[2018-08-28 10:44:48,762)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/searchSalesmanBusinessByStructure.json
+[2018-08-28 10:44:48,767)]-log.py-INFO:输入: {'startTime': '2011-08-14', 'endTime': '2018-08-20', 'structureId': '136', 'supUserId': '', 'page': '1', 'pageSize': '30', 'appVersion': '3.4.0', 'imei': 'b4d26f719c6883c0', 'model': 'VTR-AL00', 'systemVersion': 'b4d26f719c6883c0'}
+[2018-08-28 10:44:51,783)]-log.py-INFO:输出: {'code': 1, 'data': {'salesOrderMainList': [{'supCustId': 'FDCDWI00053655', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '丹阳市香草堂药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 195.0, 'speciesNum': 1, 'orderCode': 'FDCXSG06477791', 'purchaseNum': 30.0, 'createTimeStr': '2018-03-07 11:43:01'}, {'supCustId': 'FDCDWI00050214', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京玄武悦康诊所', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 607.5, 'speciesNum': 2, 'orderCode': 'FDCXSG06477751', 'purchaseNum': 70.0, 'createTimeStr': '2018-03-07 11:31:35'}, {'supCustId': 'FDCDWI35584701', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京璟丰大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 629.0, 'speciesNum': 2, 'orderCode': 'FDCXSG06477329', 'purchaseNum': 50.0, 'createTimeStr': '2018-03-07 09:44:27'}, {'supCustId': 'FDCDWI35584701', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京璟丰大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 0.0, 'speciesNum': 2, 'orderCode': 'FDCXSG06476719', 'purchaseNum': 50.0, 'createTimeStr': '2018-03-06 16:57:21'}, {'supCustId': 'FDCDWI00000049', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京悦和大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 2278.0, 'speciesNum': 3, 'orderCode': 'FDCXSG06475961', 'purchaseNum': 210.0, 'createTimeStr': '2018-03-06 15:38:55'}, {'supCustId': 'FDCDWI00000049', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京悦和大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 2793.0, 'speciesNum': 3, 'orderCode': 'FDCXSG06475876', 'purchaseNum': 260.0, 'createTimeStr': '2018-03-06 15:30:38'}, {'supCustId': 'FDCDWI35708147', 'branchId': 'FDC', 'supUserId': 155, 'branchName': '江苏', 'custName': '南京朗坤医药有限责任公司', 'linkMan': '苏义亮', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 101.0, 'speciesNum': 1, 'orderCode': 'FDCXSG06475247', 'purchaseNum': 5.0, 'createTimeStr': '2018-03-06 14:20:55'}, {'supCustId': 'FDCDWI35708147', 'branchId': 'FDC', 'supUserId': 155, 'branchName': '江苏', 'custName': '南京朗坤医药有限责任公司', 'linkMan': '苏义亮', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 176.4, 'speciesNum': 1, 'orderCode': 'FDCXSG06475248', 'purchaseNum': 3.0, 'createTimeStr': '2018-03-06 14:20:55'}, {'supCustId': 'FDCDWI00000340', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '南京市碧水药店有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 204.0, 'speciesNum': 1, 'orderCode': 'FDCXSG06475057', 'purchaseNum': 10.0, 'createTimeStr': '2018-03-06 13:53:48'}, {'supCustId': 'FDCDWI00054506', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '丹阳市泰和药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已出库', 'orderState': '40', 'oneOrderPrice': 2561.0, 'speciesNum': 2, 'orderCode': 'FDCXSG06475020', 'purchaseNum': 300.0, 'createTimeStr': '2018-03-06 13:45:59'}, {'supCustId': 'FDCDWI00058216', 'branchId': 'FDC', 'supUserId': 153, 'branchName': '江苏', 'custName': '江阴市好的大药房有限公司', 'linkMan': '徐晨阳', 'orderStateStr': '已取消', 'orderState': '20', 'oneOrderPrice': 25.3, 'speciesNum': 1, 'orderCode': 'FDCXSG06474702', 'purchaseNum': 1.0, 'createTimeStr': '2018-03-06 11:04:20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.0, 'supUserId': 153, 'speciesNum': 2, 'branchName': '江苏', 'orderCode': 'FDCXSG06471008', 'purchaseNum': 400.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-05 11:38:12', 'orderStateStr': '已出库', 'orderState': '40'}, {'branchId': 'FDC', 'oneOrderPrice': 0.01, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'dd_20180305_000002', 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-05 10:04:15', 'orderStateStr': '提交失败', 'orderState': '21'}, {'branchId': 'FDC', 'oneOrderPrice': 9.5, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06470108', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-05 08:55:34', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 66.77, 'supUserId': 153, 'speciesNum': 3, 'branchName': '江苏', 'orderCode': 'FDCXSG06469779', 'purchaseNum': 4.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 18:40:32', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 5.5, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469775', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 18:33:26', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.22, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469769', 'purchaseNum': 2.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 18:17:39', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 5.55, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469611', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 17:15:43', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 18.8, 'supUserId': 153, 'speciesNum': 2, 'branchName': '江苏', 'orderCode': 'FDCXSG06469589', 'purchaseNum': 2.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 17:11:04', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.04, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469555', 'purchaseNum': 4.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 17:06:08', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.01, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469065', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 16:08:06', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'oneOrderPrice': 0.01, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06469066', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-03-02 16:08:06', 'orderStateStr': '已取消', 'orderState': '20'}, {'branchId': 'FDC', 'supUserId': 153, 'speciesNum': 0, 'branchName': '江苏', 'orderCode': 'dd_20180228_000002', 'linkMan': '徐晨阳', 'createTimeStr': '2018-02-28 15:29:32', 'orderStateStr': '订单提交中', 'orderState': '12'}, {'branchId': 'FDC', 'oneOrderPrice': 17.0, 'supUserId': 153, 'speciesNum': 1, 'branchName': '江苏', 'orderCode': 'FDCXSG06455468', 'purchaseNum': 1.0, 'linkMan': '徐晨阳', 'createTimeStr': '2018-02-26 09:00:54', 'orderStateStr': '待开票员处理', 'orderState': '13'}], 'totalNum': '24', 'totalPrice': '9693.61', 'count': 24, 'isCanGoNext': False}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.5' class='hiddenRow'>
+    <td ><div class='testcase'>test_11_searchSalesmanSummaryByStructure: 测试我的中的【业务员销售查询】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.5')" >
+        通过</a></span>
+
+    <div id='div_pt2.5' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.5').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.5: [2018-08-28 10:44:51,885)]-log.py-INFO:==================================================searchSalesmanSummaryByStructure==============================================
+[2018-08-28 10:44:51,891)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/searchSalesmanSummaryByStructure.json
+[2018-08-28 10:44:51,897)]-log.py-INFO:输入: {'startTime': '2011-08-14', 'endTime': '2018-08-20', 'structureId': '136', 'supUserId': '', 'page': '1', 'pageSize': '30', 'appVersion': '3.4.0', 'imei': 'b4d26f719c6883c0', 'model': 'VTR-AL00', 'systemVersion': 'b4d26f719c6883c0'}
+[2018-08-28 10:44:54,292)]-log.py-INFO:输出: {'code': 1, 'data': {'totalNum': 1, 'totalPrice': '4196.5', 'count': 1, 'isCanGoNext': False, 'salesSummaryList': [{'myAllCustCount': 0, 'supUserId': '153', 'salesAmount': 4196.5, 'structureName': '江苏', 'rowNum': 1, 'coverageRate': '∞', 'linkMan': '徐晨阳', 'actualCustCount': 10, 'totalNum': 0, 'totalPrice': 0}]}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.6' class='hiddenRow'>
+    <td ><div class='testcase'>test_13_getSalesmanListByStructure: 测试我的中的【组织结构查询业务员list】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.6')" >
+        通过</a></span>
+
+    <div id='div_pt2.6' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.6').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.6: [2018-08-28 10:44:54,344)]-log.py-INFO:==================================================getSalesmanListByStructure==============================================
+[2018-08-28 10:44:54,352)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getSalesmanListByStructure.json
+[2018-08-28 10:44:54,360)]-log.py-INFO:输入: {'structureId': '136'}
+[2018-08-28 10:44:54,551)]-log.py-INFO:输出: {'code': 1, 'data': {'salesmanList': [{'supUserId': 153, 'linkMan': '徐晨阳'}, {'supUserId': 154, 'linkMan': '陈颖'}, {'supUserId': 155, 'linkMan': '苏义亮'}]}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.7' class='hiddenRow'>
+    <td ><div class='testcase'>test_14_getSalesmanStructure: 测试我的中的【获取业务员的组织结构】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.7')" >
+        通过</a></span>
+
+    <div id='div_pt2.7' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.7').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.7: [2018-08-28 10:44:54,590)]-log.py-INFO:==================================================getSalesmanStructure==============================================
+[2018-08-28 10:44:54,600)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getSalesmanStructure.json
+[2018-08-28 10:44:54,611)]-log.py-INFO:输入: {}
+[2018-08-28 10:44:54,824)]-log.py-INFO:输出: {'code': 1, 'data': {'treeList': [{'id': 136, 'text': '江苏', 'iconCls': None, 'children': [{'id': 137, 'text': '淮安', 'iconCls': None, 'children': [{'id': 139, 'text': '连云港', 'iconCls': None, 'children': None, 'checked': None, 'state': None, 'attributes': None, 'resMan': None, 'levelType': 3}], 'checked': None, 'state': 'closed', 'attributes': None, 'resMan': None, 'levelType': 2}, {'id': 138, 'text': '无锡', 'iconCls': None, 'children': None, 'checked': None, 'state': None, 'attributes': None, 'resMan': None, 'levelType': 2}], 'checked': None, 'state': 'closed', 'attributes': None, 'resMan': '徐晨阳', 'levelType': 1}]}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.8' class='hiddenRow'>
+    <td ><div class='testcase'>test_15_getOrderStateNum: 测试我的中的【获取订单状态数量】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.8')" >
+        通过</a></span>
+
+    <div id='div_pt2.8' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.8').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.8: [2018-08-28 10:44:54,844)]-log.py-INFO:==================================================getOrderStateNum==============================================
+[2018-08-28 10:44:54,853)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getOrderStateNum.json
+[2018-08-28 10:44:54,865)]-log.py-INFO:输入: {}
+[2018-08-28 10:44:55,001)]-log.py-INFO:输出: {'code': 1, 'data': {'orderSlzNum': 0, 'orderYqxNum': 0, 'orderYckNum': 0, 'orderDshNum': 0, 'orderQbNum': 0}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.9' class='hiddenRow'>
+    <td ><div class='testcase'>test_17_getOrderDetailInfo: 测试我的中的【订单明细查询】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.9')" >
+        通过</a></span>
+
+    <div id='div_pt2.9' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.9').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.9: [2018-08-28 10:44:55,039)]-log.py-INFO:==================================================getOrderDetailInfo==============================================
+[2018-08-28 10:44:55,050)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getOrderDetailInfo.json
+[2018-08-28 10:44:55,061)]-log.py-INFO:输入: {'orderCode': 'dd_20180822_000003'}
+[2018-08-28 10:44:55,421)]-log.py-INFO:输出: {'code': 1, 'data': {'checkStatus': 0, 'auditMan': None, 'checkMsg': None, 'prodDetaillist': [{'bigPackageQuantity': 400, 'branchId': 'FDG', 'prodNo': 'BAA003237D', 'isPromotion': 0, 'memberPrice': '12', 'policyList': [{'name': '展销会', 'content': '7.1-7.31日0.15积分/盒'}], 'packageUnit': '盒', 'rowPrice': '12', 'midPackageQuantity': 10, 'prodId': 'SPH00033644', 'kpyLinkPhone': '', 'manufacturer': '华北制药股份有限公司', 'isUnpick': 1, 'storageNumber': 492624.0, 'prodName': '阿莫西林胶囊', 'isDecimal': 0, 'prodSpecification': '0.5g*10s', 'purchaseNum': '1', 'showTactics': 492624.0, 'retailPrice': 8.57}, {'bigPackageQuantity': 600, 'branchId': 'FDG', 'prodNo': 'BAA003241D', 'isPromotion': 0, 'memberPrice': '52', 'policyList': [], 'packageUnit': '盒', 'rowPrice': '52', 'midPackageQuantity': 10, 'prodId': 'SPH00049242', 'kpyLinkPhone': '', 'manufacturer': '华北制药股份有限公司', 'isUnpick': 1, 'storageNumber': 14358.0, 'prodName': '阿莫西林胶囊', 'isDecimal': 0, 'prodSpecification': '0.25g*12s*2板', 'purchaseNum': '1', 'showTactics': 14358.0, 'retailPrice': 7.4}, {'bigPackageQuantity': 400, 'branchId': 'FDG', 'prodNo': 'BAA003730D', 'isPromotion': 0, 'memberPrice': '55', 'policyList': [], 'packageUnit': '盒', 'rowPrice': '55', 'midPackageQuantity': 10, 'prodId': 'SPH00089207', 'kpyLinkPhone': '', 'manufacturer': '昆明积大制药股份有限公司', 'isUnpick': 1, 'storageNumber': 6535.0, 'prodName': '阿莫西林胶囊', 'isDecimal': 0, 'prodSpecification': '0.25g*12s*4板', 'purchaseNum': '1', 'showTactics': 6535.0, 'retailPrice': 14.4}], 'totalPrice': 119.0, 'orderNote': None, 'orderCode': 'FDGXSG09219387', 'auditMsg': None, 'custName': '北京同仁堂武汉大药房有限公司', 'totalSpeciesNum': 3, 'kpyLinkPhone': '13995649662', 'orderStateStr': '待开票员处理'}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.10' class='hiddenRow'>
+    <td ><div class='testcase'>test_18_getOrderMainInfo: 测试我的中的【订单查询】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.10')" >
+        通过</a></span>
+
+    <div id='div_pt2.10' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.10').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.10: [2018-08-28 10:44:55,480)]-log.py-INFO:==================================================getOrderMainInfo==============================================
+[2018-08-28 10:44:55,490)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getOrderMainInfo.json
+[2018-08-28 10:44:55,499)]-log.py-INFO:输入: {'branchId': 'FDG', 'custNameKwd': '湖北医药', 'endTime': '2018-10-01', 'orderState': '1', 'page': '1', 'pageSize': '10', 'startTime': '2017-01-01', 'supUserId': ''}
+[2018-08-28 10:44:56,109)]-log.py-INFO:输出: {'code': 1, 'data': {'totalPrice': '0', 'totalNum': 0, 'count': 0, 'orderList': [], 'isCanGoNext': False}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.11' class='hiddenRow'>
+    <td ><div class='testcase'>test_23_searchAuditOrder: 测试我的中的【需要审核的订单查询】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.11')" >
+        通过</a></span>
+
+    <div id='div_pt2.11' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.11').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.11: [2018-08-28 10:44:56,128)]-log.py-INFO:==================================================searchAuditOrder==============================================
+[2018-08-28 10:44:56,137)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesMan/searchAuditOrder.json
+[2018-08-28 10:44:56,148)]-log.py-INFO:输入: {'page': '1', 'pageSize': '10'}
+[2018-08-28 10:44:56,282)]-log.py-INFO:输出: {'code': 1, 'data': {'totalNum': 0, 'count': 0, 'orderList': [], 'isCanGoNext': False}, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='pt2.12' class='hiddenRow'>
+    <td ><div class='testcase'>test_27_getBindAccountListByImei: 测试我的中的【查询设备绑定账号信息】接口</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <span class='status passCase'>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.12')" >
+        通过</a></span>
+
+    <div id='div_pt2.12' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.12').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+pt2.12: [2018-08-28 10:44:56,321)]-log.py-INFO:==================================================getBindAccountListByImei==============================================
+[2018-08-28 10:44:56,332)]-log.py-INFO:Url: http://sup.pre.yyjzt.com/mobile/salesman/getBindAccountListByImei.json
+[2018-08-28 10:44:56,346)]-log.py-INFO:输入: {'imei': 'b4d26f719c6883c0', 'appVersion': '3.4.0', 'model': 'VTR-AL00', 'systemVersion': 'b4d26f719c6883c0'}
+[2018-08-28 10:44:56,490)]-log.py-INFO:输出: {'data': [], 'code': 1, 'msg': '操作成功'}
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+    <td></td>
+</tr>
+
+<tr id='total_row'>
+    <td>统计</td>
+    <td>15</td>
+    <td>13</td>
+    <td>1</td>
+    <td>1</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+</tr>
+</table>
+<script>
+    drawCircle(13, 1, 1)
+</script>
+
+<div id='ending'>&nbsp;</div>
+
+</body>
+</html>
