@@ -32,3 +32,5 @@ class TestRequsts(object):
                     "Host": "stock.xueqiu.com"}
         r= requests.get(t_url,params=t_params,cookies=cookie,headers=t_header,verify=False)
         logging.info(json.dumps(r.json(), indent=2))
+        assert r.json()["data"]["category"]==1
+        assert r.json()["data"]["stocks"][0]["name"]=="中国全通"
