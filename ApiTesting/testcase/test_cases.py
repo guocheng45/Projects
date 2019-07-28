@@ -2,6 +2,8 @@ import requests
 import logging
 import pytest
 import json
+import jsonpath
+# from hamcrest import *
 
 class TestRequsts(object):
     logging.basicConfig(level=logging.INFO)
@@ -34,3 +36,14 @@ class TestRequsts(object):
         logging.info(json.dumps(r.json(), indent=2))
         assert r.json()["data"]["category"]==1
         assert r.json()["data"]["stocks"][0]["name"]=="中国全通"
+        # python2.7才能用hamcrest使用assert_that
+        # assert_that(jsonpath.jsonpath(r.json(),"$.data.stocks[?(@.symbol == 'F006497')].name")[0],equal_to("中国全通"),"比较上市代码的名字")
+        # assert_that(jsonpath.jsonpath(r.json(), "$.data.stocks[*].name"), any_of(
+        #     has_item('中国全通'),
+        #     has_item("澄星股份")
+        # )
+        # )
+
+    # def test_hamcrest(self):
+    #     assert_that(0.1*0.1,close_to(0.01,0.0000000000001))
+    #     # assert_that()
