@@ -3,6 +3,7 @@ from WeixinPro.contact.user import User
 import requests
 import json
 import logging
+import time
 
 class TestUser:
 
@@ -13,22 +14,20 @@ class TestUser:
 
 
     def test_create(self):
+        uid="seveniruby_"+ str(time.time())
         data={
-            "name":"广州研发中心",
-            "parentid":"1",
-            "order": "1",
-            "id": "2"
+            "userid": uid,
+            "name": uid,
+            "department": [self.depart_id],
+            "email": uid + "@testerhome.com"
         }
-        # r=requests.post('https://qyapi.weixin.qq.com/cgi-bin/department/create',
-        #               params={"access_token":Weixin.get_token()}
-        #               ,json=data).json
-
-        r = requests.get('https://qyapi.weixin.qq.com/cgi-bin/department/list',
-                          params={"access_token": Weixin.get_token()}
-                          , json=data).json
-
-        logging.info(json.dumps(r,indent=2))
+        r=self.user.create(data)
+        logging.debug(r)
+        assert r['errcode'] == 0
 
 
     def test_list(self):
-        pass
+        r=self.user.list(1,0)
+
+        logging.debug(r)
+        assert r['errcode'] == 0
