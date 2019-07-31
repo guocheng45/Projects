@@ -19,7 +19,8 @@ class TestDepartment:
         "معهد طوكيو للرسوم المتحركة",
         "東京動漫研究所"
     ])
-    def test_create_order(self,name,token):
+    # 创建部门
+    def test_create_dep(self,name,token):
         data={
             "name": name + Utils.udid(),
             "parentid": 1,
@@ -33,4 +34,18 @@ class TestDepartment:
         # 解密
         logging.debug(r)
         assert r["errcode"] == 0
+
+
+    # 更新部门
+    def test_update_dep(self):
+        pass
+
+    # 删除部门
+    def test_delete_dep(self):
+        pass
+
+    # 获取部门列表
+    def test_list_dep(self):
+        pass
+
     
