@@ -19,6 +19,7 @@ class TestDepartment:
         "معهد طوكيو للرسوم المتحركة",
         "東京動漫研究所"
     ])
+
     # 创建部门
     def test_create_dep(self,name,token):
         data={
@@ -31,21 +32,43 @@ class TestDepartment:
                           json=data
                           ).json()
 
-        # 解密
+
         logging.debug(r)
         assert r["errcode"] == 0
 
 
     # 更新部门
-    def test_update_dep(self):
-        pass
+    def test_update_dep(self,name,token):
+        data={
+            "id": 2,
+            "name": 1,
+            "parentid": 1,
+        }
+        r=requests.post("https://qyapi.weixin.qq.com/cgi-bin/department/update",
+                        params={"access_token":token},
+                        json=data
+                        ).json()
+
+        logging.debug(r)
+        assert r["errcode"]==0
 
     # 删除部门
-    def test_delete_dep(self):
-        pass
+    def test_delete_dep(self,token,id):
+
+        r = requests.get("https://qyapi.weixin.qq.com/cgi-bin/department/delete",
+                          params={"access_token": token,"id":id}
+                         ).json()
+
+        logging.debug(r)
+        assert r["errcode"] == 0
 
     # 获取部门列表
-    def test_list_dep(self):
-        pass
+    def test_list_dep(self,token,id):
+        r = requests.get("https://qyapi.weixin.qq.com/cgi-bin/department/list",
+                         params={"access_token": token, "id": id}
+                         ).json()
+
+        logging.debug(r)
+        assert r["errcode"] == 0
 
     

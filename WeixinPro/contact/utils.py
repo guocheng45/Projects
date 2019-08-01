@@ -3,11 +3,15 @@ import pystache
 
 class Utils:
     @classmethod
-    def parse(cls,template_path,dict):
+    def parse(self,template_path,dict):
         template = "".join(open(template_path).readlines())
         return pystache.render(template,dict)
 
 
     @classmethod
-    def udid(cls):
+    def udid(self):
         return str(time.time()).replace(".","")[0:11]
+
+
+a=Utils.udid()
+print(a)
