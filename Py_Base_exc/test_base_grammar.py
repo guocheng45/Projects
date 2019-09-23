@@ -60,7 +60,7 @@ class Test_Base_grammar():
         print(a)
         print(kwargs)
         print("=======================================")
-
+    #方法参数的使用
     def test_foo(self):
         self.foo(1, (5, 6, 7, 8), {"y": 2, "z": 3})
         self.foo(1, *(5, 6, 7, 8), **{"y": 2, "z": 3}, a=6)     # 此为正确用法
@@ -83,3 +83,60 @@ class Test_Base_grammar():
         # {'y': 2, 'z': 3}
         # == == == == == == == == == == == == == == == == == == == =
 
+    #多变量一起赋值
+    def test_assign(self):
+        a, b, c = 1, 2, "linda"
+        print(a, b, c)
+        return a,b,c
+
+    #python变量直接交换值，牛逼
+    def test_exchange(self):
+        x,y=1,2
+        x,y=y,x
+        print(x,y)
+        return x,y
+
+    # 组合两个列表
+    def test_combina_list(self):
+        a=[1,2,3,4]
+        b=[5,6,7,8]
+        for a,b in zip(a,b):
+            print(a,b)
+        return a,b
+
+
+    def test_moreinput(self):
+        # 输入多个相同的只需要乘法          结果：.abcabcabcabc
+        str='abc'
+        print(str*4)
+
+        # 简洁写法：10以内偶数
+        li = [x for x in range(10) if x % 2 == 0]
+
+        # 反转list列表
+        lists=[1,2,3,4,5,6]
+        print(list(reversed(lists)))
+
+        # 列表排序
+        lists=[6,5,4,3,2,1]
+        print(list(sorted(lists)))
+
+        # 列表元素出现的次数
+        from collections import Counter
+        lists=[2,4,6,7,8,5,3,2,1,3,6]
+        my_couter=Counter(lists)
+        print(my_couter.most_common())
+
+        # 快速添加数据小技巧
+        ls = [1, 2, 3, 4]
+        list1 = [i for i in ls if i > 2]
+        print('list1:',list1)
+        tuple1 = (2, 4, 6)
+        dict1 = {x: x ** 2 for x in tuple1}
+        print('dict1:', dict1)
+        # dict2 = {x: 'item' + str(x ** 2) for x in tuple1}
+        # print('dict2:', dict2)
+        set1 = {x for x in 'hello world' if x not in 'low level'}
+        print('set1:', set1)
+
+        return 1
