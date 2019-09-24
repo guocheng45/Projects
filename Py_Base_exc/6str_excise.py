@@ -17,4 +17,27 @@ print(str*2)            # 输出字符串两次
 print(str+"zhazha")     # 连接字符串
 
 print(len(str))         # 字符串的长度
+print(str.startswith("python"))     # 判断是否以XX开头，是返回true，不是返回false
+b="20"
+print(b.isdecimal())        # 字符串是否只包含十进制字符返回True，否则返回False
+print(str.upper())          # 他的大写
+print(str.title())          # 返回"标题化"的字符串,就是说所有单词都是以大写开始
 
+str0 = 'python 蟒蛇'
+print(str0.replace(str0[0:6],"java".upper()))
+
+s1 = "-"
+s2 = ""
+seq = ("l", "i", "n", "d", "a") # 字符串序列
+print(s1.join(seq))     # 替换中间的 输出 l-i-n-d-a
+print(s2.join(seq))
+
+str4 = "编号 标题 测试数据 测试结果"
+no,title,test_data,test_result=str4.split(" ")   # 拆分数据
+print(test_result)
+
+#格式输出
+print("Hi,%s,you hava $%d." %('linda',100000))
+
+print('Hello, {0}, 成绩提升了 {1:.1f}%'.format('小明', 17.125))  # 保留小数点后1位
+print("{} {}".format("hello", "world"))  # 不设置指定位置，按默认顺序
