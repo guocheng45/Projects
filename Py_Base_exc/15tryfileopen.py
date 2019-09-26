@@ -4,3 +4,7 @@ try:
     print(file_data)
 except FileNotFoundError:
     print("file is not exist")
+except PermissionError:
+    print("permission deny")
+except Exception as err:
+    print("other mistake:" ,str(err))

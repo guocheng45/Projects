@@ -41,3 +41,7 @@ print("Hi,%s,you hava $%d." %('linda',100000))
 
 print('Hello, {0}, 成绩提升了 {1:.1f}%'.format('小明', 17.125))  # 保留小数点后1位
 print("{} {}".format("hello", "world"))  # 不设置指定位置，按默认顺序
+
+# print中%s的用法
+string = "good"  #类型为字符串
+print("string=%s" %string)   #输出的打印结果为 string=good
