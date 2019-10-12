@@ -1,4 +1,3 @@
-from MonkeyRunner import Fir_MonkeyRun_exec
 
 
 class Person:
@@ -13,6 +12,9 @@ class Person:
     @property
     def get_sex(self):
         pass
+
+    def get_sex2(self):
+        return self.sex
 
     def __init__(self):
         self.sex = ''
