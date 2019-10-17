@@ -18,3 +18,6 @@ def test_add2():
     global value        # 一定注意这个global 不然赋值的不是全局变量
     value=10
     assert value ==10
+
+if __name__ == '__main__':
+    pytest.main('-s test_order.py')
