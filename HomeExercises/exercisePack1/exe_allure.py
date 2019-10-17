@@ -9,8 +9,10 @@ def create_allure():
 
 def generate_xml():
     # 生成XML文件
+    generate_filepath='resport/xml/'
+    test_filepath='D:/PyTest/tests/allure/test_allure_demo.py'
     # pytest 测试文件所在路径 --alluredir 生成的测试结果数据保存的目录
-    generate_command = 'pytest --alluredir=resport/xml/ D:/PyTest/tests/allure/test_allure_demo.py'
+    generate_command = 'pytest --alluredir='+generate_filepath+' '+test_filepath
     os.system(generate_command)
 
 

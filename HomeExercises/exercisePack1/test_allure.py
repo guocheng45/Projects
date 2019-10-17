@@ -31,3 +31,4 @@ class TestAllure():
         assert 4.3==4.7
         file=open('./test.png','rb').read()
         allure.attach('test_img',file,allure.attachment_type.PNG)       # 增加附加信息图片
+
