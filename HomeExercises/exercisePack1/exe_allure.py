@@ -9,18 +9,23 @@ def create_allure():
 
 def generate_xml():
     # 生成XML文件
-    generate_filepath='resport/xml/'
-    test_filepath='D:/PyTest/tests/allure/test_allure_demo.py'
+    generate_filepath='report/xml'     # ./  返回到上级目录
+    test_filepath='D:/Projects/HomeExercises/exercisePack1/test_allure.py'
     # pytest 测试文件所在路径 --alluredir 生成的测试结果数据保存的目录
+    # pytest --alluredir=report/xml/ D:/Projects/HomeExercises/exercisePack1/test_allure.py
     generate_command = 'pytest --alluredir='+generate_filepath+' '+test_filepath
     os.system(generate_command)
 
 
 def generate_html():
     # 生成html文件
+    xml_path='report/xml'
+    html_path='report/html'
     # allure generate 测试结果数据所在目录 -o 测试报告保存的目录 --clean
-    generate_command = 'allure generate D:/PyTest/tests/allure/report/xml -o D:/PyTest/tests/allure/report/html --clean'
+    # allure generate D:/Projects/report/xml -o D:/Projects/report/html --clean
+    generate_command = 'allure generate '+xml_path+' -o '+html_path+' --clean'
     os.system(generate_command)
 
 if __name__ == '__main__':
-    create_allure()
+    generate_xml()
+    generate_html()
