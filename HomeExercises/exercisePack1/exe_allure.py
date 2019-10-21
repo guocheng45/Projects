@@ -25,7 +25,10 @@ def generate_html():
     # allure generate D:/Projects/report/xml -o D:/Projects/report/html --clean
     generate_command = 'allure generate '+xml_path+' -o '+html_path+' --clean'
     os.system(generate_command)
-
+def assert_use():
+    a=1;b=-1
+    assert a > 0, b < 0
+    return 1
 if __name__ == '__main__':
     generate_xml()
     generate_html()
