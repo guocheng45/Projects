@@ -1,3 +1,4 @@
+
 '''
 import pytest
 import allure
@@ -33,11 +34,12 @@ class TestAllure:
 
 # if __name__ == '__main__':
 #     pytest.mian('-s TestAllure')
-'''
+
 
 import allure
 import pytest
-'''
+
+
 @allure.feature('这里是一级标签')
 class TestAllure():
 
@@ -56,9 +58,7 @@ class TestAllure():
     @allure.story("这里是第二个二级标签")
     def test_2(self):
         pass
-'''
 
-'''
 @allure.title("用例标题0")
 @allure.description("这里是对test_0用例的一些详细说明")
 @allure.story("这里是第一个二级标签")
@@ -77,6 +77,9 @@ def test_1():
 def test_2():
     pass
 '''
+
+import allure
+import pytest
 @allure.feature("测试Dome")
 class TestDome(object):
 
@@ -92,3 +95,4 @@ class TestDome(object):
         allure.attach("预期结果", "{}".format(self.func(3)))
         allure.attach("实际结果", "{}".format(5))
         assert self.func(3) == 5
+
