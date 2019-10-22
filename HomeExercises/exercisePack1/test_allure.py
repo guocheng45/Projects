@@ -1,5 +1,5 @@
 
-
+'''
 import pytest
 import allure
 @allure.feature('测试求和功能')       # 每个大的功能模块可以定义为一个feature
@@ -32,6 +32,9 @@ class TestAllure:
         # allure.attach('test_img',file,allure.attachment_type.PNG)       # 增加附加信息图片
 
 
+# if __name__ == '__main__':
+#     pytest.mian('-s TestAllure')
+
 
 import allure
 import pytest
@@ -56,8 +59,6 @@ class TestAllure():
     def test_2(self):
         pass
 
-
-'''
 @allure.title("用例标题0")
 @allure.description("这里是对test_0用例的一些详细说明")
 @allure.story("这里是第一个二级标签")
@@ -90,8 +91,8 @@ class TestDome(object):
     @allure.severity("blocker")
     @allure.step("断言结果")
     def test_func(self):
-        with allure.step("断言结果"):
-            allure.attach("预期结果", "{}".format(self.func(3)))
-            allure.attach("实际结果", "{}".format(5))
-            assert self.func(3) == 5
+        # with allure.MASTER_HELPER.step("断言结果"):
+        allure.attach("预期结果", "{}".format(self.func(3)))
+        allure.attach("实际结果", "{}".format(5))
+        assert self.func(3) == 5
 
