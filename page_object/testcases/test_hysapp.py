@@ -4,7 +4,7 @@ import time
 class TestHysApp(object):
 
     @classmethod
-    def setUpClass(cls):
+    def setup_class(cls):
         caps = {}
         caps["platformName"] = "android"
         caps["deviceName"] = "GT_New123"
@@ -46,7 +46,7 @@ class TestHysApp(object):
         pass
 
     @classmethod
-    def tearDownClass(cls):
+    def teardown_class(cls):
         time.sleep(2)
         cls.driver.quit()
 
