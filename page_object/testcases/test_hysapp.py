@@ -41,14 +41,21 @@ class TestHysApp(object):
         sel4=self.driver.find_element_by_id("bt_search")
         self.driver.implicitly_wait(10)
 
-    def swipeUp_ui(self):
-        # x=self.driver.get_window_size()['width']
-        # y=self.driver.get_window_size()['height']
-        # self.driver.swipe(x*0.5,y*0.25,x*0.5,y*0.5)
-        #action=Touch
-        rect=self.driver.get_window_rect()
-        print("rect:",rect)
-        action.press()
+    def swipe_ui(self,act):
+        time.sleep(4)
+        # Swipe（int start x, int start y, int end x, int y, duration)
+        x=self.driver.get_window_size()['width']
+        y=self.driver.get_window_size()['height']
+        if act=="下拉":
+            self.driver.swipe(int(x * 0.5), int(y * 0.2), int(x * 0.5), int(y * 0.5), 1000)
+        elif act=="上拉":
+            self.driver.swipe(int(x * 0.5), int(y * 0.8), int(x * 0.5), int(y * 0.5), 1000)
+        elif act=="左滑":
+            self.driver.swipe(int(x * 0.2), int(y * 0.5), int(x * 0.5), int(y * 0.5), 1000)
+        else:   # 右滑或者返回
+            self.driver.swipe(int(x * 0.5), int(y * 0.5), int(x * 0.2), int(y * 0.5), 1000)
+        time.sleep(4)
+
 
     def place_order(self):
         #self.search_goods()
@@ -66,5 +73,5 @@ class TestHysApp(object):
         #self.install_app()
         # self.login_app()
         # self.logout_app()
-        # self.place_order()
-        self.swipeUp_ui()
+        self.place_order()
+        # self.swipe_ui("上拉")
