@@ -38,7 +38,10 @@ class TestHysApp(object):
         sel1=self.driver.find_element_by_id("radio_home").click()
         sel2=self.driver.find_element_by_id("qmy_main_search_ll").click()
         sel3=self.driver.find_element_by_id("et_search").send_keys('感冒')
-        sel4=self.driver.find_element_by_id("bt_search")
+        sel4=self.driver.find_element_by_id("bt_search").click()
+        self.driver.implicitly_wait(5)
+        sel5=self.driver.find_element_by_id("tv_desc").click()
+        sel6=self.driver.find_element_by_id("tv_desc_2").click()
         self.driver.implicitly_wait(10)
 
     def swipe_ui(self,act):
@@ -58,8 +61,28 @@ class TestHysApp(object):
 
 
     def place_order(self):
-        #self.search_goods()
-        self.swipeUp_ui()
+        self.search_goods()
+        self.swipe_ui("上拉")
+        pel1=self.driver.find_element_by_xpath("//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'com.jzt.kingpharmacist:id/iv_buy')]").click()
+        # time.sleep(4)
+        pel2=self.driver.find_element_by_id("iv_cart").click()
+        self.driver.implicitly_wait(10)
+        pel3=self.driver.find_element_by_id("rb_pharmacy_check").click()
+        time.sleep(3)
+        pel4=self.driver.find_element_by_xpath("//*[@text='马应龙 对乙酰氨基酚栓 0.125g*6s']/../..//*[contains(@resource-id,'rb_check')]").click()
+        time.sleep(3)
+        pel5=self.driver.find_element_by_id("tv_next").click()
+        self.driver.implicitly_wait(10)
+        pel6=self.driver.find_element_by_id("tv_submit_order").click()
+        self.driver.implicitly_wait(10)
+        pel7=self.driver.find_element_by_id("cb_use_balance").click()
+        pel8=self.driver.find_element_by_id("btn_add_addresss").click()
+        self.driver.implicitly_wait(10)
+        pel9=self.driver.find_element_by_id("tv_sure").click()
+
+
+
+
 
     def cancel_order(self):
         pass
@@ -74,4 +97,3 @@ class TestHysApp(object):
         # self.login_app()
         # self.logout_app()
         self.place_order()
-        # self.swipe_ui("上拉")
