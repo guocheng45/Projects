@@ -1,5 +1,4 @@
 #-*-coding:GBK -*-
-import action as action
 from appium import webdriver
 import time
 
@@ -14,6 +13,7 @@ class TestHysApp(object):
         caps["appActivity"] = ".apploadpage.LoadingAc"
         caps["autoGrantPermissions"] = "true"
         caps["noReset"] = "True"
+        caps["unicodeKeyboard"]="True"
         cls.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
         cls.driver.implicitly_wait(10)
 
@@ -37,6 +37,7 @@ class TestHysApp(object):
     def search_goods(self):
         sel1=self.driver.find_element_by_id("radio_home").click()
         sel2=self.driver.find_element_by_id("qmy_main_search_ll").click()
+        self.driver.implicitly_wait(10)
         sel3=self.driver.find_element_by_id("et_search").send_keys('感冒')
         sel4=self.driver.find_element_by_id("bt_search").click()
         self.driver.implicitly_wait(5)
@@ -66,34 +67,54 @@ class TestHysApp(object):
         pel1=self.driver.find_element_by_xpath("//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'com.jzt.kingpharmacist:id/iv_buy')]").click()
         # time.sleep(4)
         pel2=self.driver.find_element_by_id("iv_cart").click()
-        self.driver.implicitly_wait(10)
-        pel3=self.driver.find_element_by_id("rb_pharmacy_check").click()
-        time.sleep(3)
-        pel4=self.driver.find_element_by_xpath("//*[@text='马应龙 对乙酰氨基酚栓 0.125g*6s']/../..//*[contains(@resource-id,'rb_check')]").click()
+        # self.driver.implicitly_wait(10)
+        # pel3=self.driver.find_element_by_id("rb_pharmacy_check").click()
+        # time.sleep(3)
+        # pel4=self.driver.find_element_by_xpath("//*[@text='马应龙 对乙酰氨基酚栓 0.125g*6s']/../..//*[contains(@resource-id,'rb_check')]").click()
         time.sleep(3)
         pel5=self.driver.find_element_by_id("tv_next").click()
-        self.driver.implicitly_wait(10)
+        # self.driver.implicitly_wait(10)
         pel6=self.driver.find_element_by_id("tv_submit_order").click()
+        # self.driver.implicitly_wait(10)
+        # 余额支付，不要支付了，不好退
+        # pel7=self.driver.find_element_by_id("cb_use_balance").click()
+        # pel8=self.driver.find_element_by_id("btn_add_addresss").click()
+        # self.driver.implicitly_wait(10)
+        # pel9=self.driver.find_element_by_id("tv_sure").click()
+        # self.driver.implicitly_wait(10)
+        # pel10=self.driver.find_element_by_id("tv_order_detail").click()
+        # 下单不支付
+        pel_1=self.driver.find_element_by_id("iv_base_left").click()
+        pel_2 = self.driver.find_element_by_id("tv_sure").click()
         self.driver.implicitly_wait(10)
-        pel7=self.driver.find_element_by_id("cb_use_balance").click()
-        pel8=self.driver.find_element_by_id("btn_add_addresss").click()
-        self.driver.implicitly_wait(10)
-        pel9=self.driver.find_element_by_id("tv_sure").click()
-
-
+        # 返回到首页
+        cel_3 = self.driver.find_element_by_id("iv_base_left").click()
+        cel_4 = self.driver.find_element_by_id("iv_back").click()
+        cel_5 = self.driver.find_element_by_id("iv_back").click()
 
 
 
     def cancel_order(self):
-        pass
+        cel1 = self.driver.find_element_by_id("radio_profile").click()
+        cel2 = self.driver.find_element_by_id("img_my_orders").click()
+        cel3 = self.driver.find_elements_by_id("bt_cancel")[0].click()
+
+        cel4 = self.driver.find_element_by_id("iv_check").click()
+        cel5 = self.driver.find_element_by_id("bt_sure").click()
+        cel6 = self.driver.find_element_by_id("iv_base_left").click()
+        cel7 = self.driver.find_element_by_id("radio_home").click()
+
+
 
     @classmethod
     def teardown_class(cls):
-        time.sleep(2)
+        time.sleep(3)
         cls.driver.quit()
 
     def test_hysapp(self):
         #self.install_app()
         # self.login_app()
         # self.logout_app()
+        # self.search_goods()
         self.place_order()
+        self.cancel_order()
