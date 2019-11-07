@@ -106,8 +106,8 @@ class TestHysApp(object):
     def place_order_B2CBuyNow(self):
         self.search_goodsB2C()
         self.swipe_ui("上拉")
-        po1 = self.driver.find_element_by_xpath("//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'iv_buy')]").click()
-        po2 = self.driver.find_element_by_id("iv_img").click()
+        po1 = self.driver.find_element_by_xpath("//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]").click()
+        # po2 = self.driver.find_element_by_id("iv_img").click()
         time.sleep(3)
         po3 = self.driver.find_element_by_id("tv_bottom_buy_now").click()
         po4 = self.driver.find_element_by_id("tv_buy_now").click()
@@ -119,7 +119,10 @@ class TestHysApp(object):
     def place_order_B2CSale(self):
         po1 = self.driver.find_element_by_id("ac_title").click()
         # po1 = self.driver.find_element_by_xpath("//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'iv_buy')]").click()
+        # 多点两次页签2，怕点不中
         po2 = self.driver.find_element_by_id("tv_flash_sale_status").click()
+        po2_1 = self.driver.find_element_by_id("tv_flash_sale_status").click()
+        # 等待页面跳转
         time.sleep(3)
         po3 = self.driver.find_element_by_id("tv_name").click()
         po4 = self.driver.find_element_by_id("tv_bottom_buy_now").click()
@@ -131,8 +134,7 @@ class TestHysApp(object):
 
     def place_order_O2OCart(self):
         self.search_goodsO2O()
-        self.swipe_ui("上拉")
-        po1 = self.driver.find_element_by_xpath("//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'id/iv_buy')]").click()
+        po1 = self.driver.find_element_by_xpath("//*[contains(@text,'东信 对乙酰氨基酚栓')]/../..//*[contains(@resource-id,'iv_buy')]").click()
         po2 = self.driver.find_element_by_id("iv_cart").click()
         time.sleep(3)
         po3 = self.driver.find_element_by_id("tv_next").click()
@@ -143,9 +145,8 @@ class TestHysApp(object):
 
     def place_order_O2OBuyNow(self):
         self.search_goodsO2O()
-        self.swipe_ui("上拉")
-        po1 = self.driver.find_element_by_xpath("//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'iv_buy')]").click()
-        po2 = self.driver.find_element_by_id("iv_img").click()
+        po1 = self.driver.find_element_by_xpath("//*[contains(@text,'东信 对乙酰氨基酚栓')]").click()
+        # po2 = self.driver.find_element_by_id("iv_img").click()
         time.sleep(3)
         po3 = self.driver.find_element_by_id("tv_bottom_buy_now").click()
         po4 = self.driver.find_element_by_id("tv_buy_now").click()
@@ -161,6 +162,7 @@ class TestHysApp(object):
         cel3 = self.driver.find_elements_by_id("bt_cancel")[0].click()
         cel4 = self.driver.find_element_by_id("iv_check").click()
         cel5 = self.driver.find_element_by_id("bt_sure").click()
+        time.sleep(3)
         cel6 = self.driver.find_element_by_id("iv_base_left").click()
         cel7 = self.driver.find_element_by_id("radio_home").click()
 
@@ -170,10 +172,30 @@ class TestHysApp(object):
         time.sleep(3)
         cls.driver.quit()
 
-    def test_hysapp(self):
-        #self.install_app()
-        # self.login_app()
-        # self.logout_app()
-        # self.search_goods()
-        self.place_order()
+    def test_01_placeOrder1(self):
+        self.place_order_B2CCart()
         self.cancel_order()
+
+    def test_02_placeOrder2(self):
+        self.place_order_B2CBuyNow()
+        self.cancel_order()
+
+    def test_03_placeOrder3(self):
+        self.place_order_B2CSale()
+        self.cancel_order()
+
+    def test_04_placeOrder4(self):
+        self.place_order_O2OCart()
+        self.cancel_order()
+
+    def test_05_placeOrder5(self):
+        self.place_order_O2OBuyNow()
+        self.cancel_order()
+
+    # def test_hysapp(self):
+    #     #self.install_app()
+    #     # self.login_app()
+    #     # self.logout_app()
+    #     # self.search_goods()
+    #     self.place_order()
+    #     self.cancel_order()
