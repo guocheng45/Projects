@@ -20,7 +20,7 @@ class BasePage(object):
     def getClient(cls):
          return AndroidClient
 
-    def find(self,kv) ->WebElement:     #根据findByText提供的关键字找控件
+    def find(self,kv) ->WebElement:     #根据findByText提供的关键字找控件          指定方法的返回类型
         #todo:处理各类弹窗
         return self.find(*kv)
 
@@ -45,7 +45,7 @@ class BasePage(object):
                         elements[0].click()
 
 
-    def findByText(self,text)-> WebElement:     #此处设置关键字文本
+    def findByText(self,text)-> WebElement:     #此处设置关键字文本      指定方法的返回类型
         return self.find((By.XPATH,"//*[@txt='%s']" %text))
 
 
