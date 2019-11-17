@@ -1,3 +1,4 @@
+from appium.webdriver.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -5,6 +6,12 @@ from page_object.driver.hysClient import HysClient
 
 
 class HysBase(object):
+    """
+        Page基类，它包括了所有定位元素的方法，所有的page都要继承该类
+    """
+
+    def __init__(self):
+        self.driver:WebDriver=self.getDriver()
 
 
     @classmethod

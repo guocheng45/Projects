@@ -3,8 +3,12 @@ from appium.webdriver.webdriver import WebDriver
 
 
 class HysClient(object):
+    """
+        # 是一个driver类，用于启动APP，重装APP
+        # 用于basePage或者Mainpage来调用初始化driver
+    """
 
-    driver:WebDriver
+    driver:WebDriver    # driver设置成WebDriver格式对象
 
     @classmethod
     def start_app(cls)->WebDriver:
@@ -18,3 +22,4 @@ class HysClient(object):
         caps["unicodeKeyboard"] = "True"
         cls.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
         cls.driver.implicitly_wait(10)
+        return cls.driver

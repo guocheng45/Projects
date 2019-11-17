@@ -171,7 +171,13 @@ class TestHysApp(object):
     def teardown_class(cls):
         time.sleep(3)
         cls.driver.quit()
-
+    """
+    # 例子Testcase
+    def test_price(self):
+        main=MainPage()
+        # 通过上一个page的方法返回的下一个page，直接调用下一page的方法，然后断言结果
+        assert main.gotoSelected().getPriceByName("科大讯飞")==28.83
+    """
     def test_01_placeOrder1(self):
         self.place_order_B2CCart()
         self.cancel_order()

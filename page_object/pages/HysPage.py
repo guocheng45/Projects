@@ -2,7 +2,9 @@ from selenium.webdriver.common.by import By
 import time
 
 class HysPage(object):
-
+    """
+        # 该page的方法返回的结果是一个值类用于testcase断言使用
+    """
     def install_app(self):
         pass
 
