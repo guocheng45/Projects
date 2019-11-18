@@ -1,12 +1,16 @@
 from selenium.webdriver.common.by import By
 import time
 
-class HysPage(object):
+from page_object.pages.HysBase import HysBase
+
+
+class HysPage(HysBase):
     """
         # 该page的方法返回的结果是一个值类用于testcase断言使用
+        self.driver.find_element_by_xpath("XXXX")
     """
     def install_app(self):
-        pass
+        self.driver.find_element_by_xpath("XXXX")
 
     def login_app(self):
         # el1=driver.find_element_by_id("com.jzt.kingpharmacist:id/ll_skip").click()
