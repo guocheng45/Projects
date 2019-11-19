@@ -1,5 +1,7 @@
+from selenium.webdriver.common.by import By
+
 from page_object.driver.hysClient import HysClient
-from page_object.pages import HysPage
+from page_object.pages.HysPage import HysPage
 from page_object.pages.HysBase import HysBase
 
 
@@ -11,8 +13,9 @@ class HysMainPage(HysBase):
     """
 
 
-    def gotoSearch(self):
+    def gotoHyspage(self):
         #调用全局的driver对象使用webdriver 定位元素
-        self.driver.find_element_by_xpath()    # 有时find可能会报错，find两次比较保险
-
+        # self.driver.find_element_by_xpath()    # 有时find可能会报错，find两次比较保险
+        search_button=(By.ID,"home_search")
+        self.find(search_button).click()
         return HysPage()

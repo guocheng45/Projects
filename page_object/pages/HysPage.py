@@ -8,6 +8,7 @@ class HysPage(HysBase):
     """
         # 该page的方法返回的结果是一个值类用于testcase断言使用
         self.driver.find_element_by_xpath("XXXX")
+        为了引用该类的时候调用到类里面的变量，可以给变量加_不会被看到
     """
     def install_app(self):
         self.driver.find_element_by_xpath("XXXX")

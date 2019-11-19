@@ -9,7 +9,7 @@ class SearchPage(BasePage):
 
     def search(self, key):
         self.find(self.__edit__locator).send_keys(key)      #找到元素并发送搜索关键字
-        return self
+        return self     # 返回self是为了链式调用，也就是说可以方法连着调方法  ：func1().func2().func3()
 
     def find(self,key):
         self.find(self._edit_locator).send_keys(key)
@@ -31,7 +31,7 @@ class SearchPage(BasePage):
     def isInSelected(self,key):
         follow_button = (By.XPATH,"//*[contains(@resource-id, 'stockCode') and contains(@text,'%s')]/../../.." %key +
                        "//*[contains(@resource-id, 'follow')]")
-        id = self.find(follow_button).get_attribute("resourceId")
+        id = self.find(follow_button).get_attribute("resourceId")  # 找到元素获取的它的某个东西
         print(id)
         return "followed_btn" in id
 
