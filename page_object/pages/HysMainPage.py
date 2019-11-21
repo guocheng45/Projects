@@ -12,10 +12,15 @@ class HysMainPage(HysBase):
         # 方法是goto其他page，这样在case中就可以直接通过goto方法访问下一页面的方法
     """
 
+    _profile_button=(By.ID,"fl_radio_profile")
 
     def gotoHyspage(self)->HysPage:     # 如果返回不指定返回类型，使用时就不嫩玩链式调用
         #调用全局的driver对象使用webdriver 定位元素
         # self.driver.find_element_by_xpath()    # 有时find可能会报错，find两次比较保险
         search_button=(By.ID,"home_search")
         self.find(search_button).click()
+        return HysPage()
+
+    def gotoProfile(self):
+        self.find(HysMainPage._profile_button).click()
         return HysPage()
