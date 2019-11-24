@@ -1,4 +1,4 @@
-from page_object.pages.HysAPP import App
+from page_object.pages.HysAPP import HysApp
 from page_object.pages.HysMainPage import HysMainPage
 
 
@@ -6,7 +6,7 @@ class TestPlaceOrder(object):
 
     @classmethod
     def setup_class(cls):       # 类执行一下，如启动APP
-        cls.mainPage=App.main()
+        cls.mainPage=HysApp.main()
 
 
     def setup_mothod(self):     # 设置等于自己的mainPage，可以直接调用？

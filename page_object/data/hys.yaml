@@ -1,0 +1,23 @@
+
+login_app:
+  - locator: fl_radio_profile
+    by: id
+    action: click
+
+  - locator: btn_login
+    by: id
+    action: click
+
+  - locator: clet_phone
+    by: id
+    action: send_keys
+    text: $phone
+
+  - locator: clet_password
+    by: id
+    action: send_keys
+    text: $pwd
+
+  - locator: btn_submit
+    by: id
+    action: click

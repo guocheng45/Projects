@@ -14,21 +14,31 @@ class HysPage(HysBase):
     """
 
     def getErrorMsg(self):
-        return "error sd"
+        msg=self.find("self._error_msg").text
+        self.findByText("确定").click()
+        return msg
+
+    def login_app(self,var1=1,var2=2):
+        self.loadSteps("../data/hys.yaml","login_app",phone=var1,pwd=var2)
+        # self.find(By.ID,"fl_radio_profile").click()
+        # self.find(By.ID, "btn_login").click()
+        # self.find(By.ID, "clet_phone").send_keys("15001106951")
+        # self.find(By.ID, "clet_password").send_keys('123456')
+        # self.find(By.ID, "btn_submit").click()
 
     def login_app(self):
-        # el1=driver.find_element_by_id("com.jzt.kingpharmacist:id/ll_skip").click()
-        el2 = self.driver.find_element_by_id("com.jzt.kingpharmacist:id/fl_radio_profile").click()
-        # el2_=driver.find_element_by_id("com.jzt.kingpharmacist:id/iv").click()
-        el3 = self.driver.find_element_by_id("com.jzt.kingpharmacist:id/btn_login").click()
-        el4 = self.driver.find_element_by_id("com.jzt.kingpharmacist:id/clet_phone").send_keys("15001106951")
-        el5 = self.driver.find_element_by_id("com.jzt.kingpharmacist:id/clet_password").send_keys('123456')
-        el6 = self.driver.find_element_by_id("com.jzt.kingpharmacist:id/btn_submit").click()
+        # el1=driver.find_element_by_id("ll_skip").click()
+        el2 = self.driver.find_element_by_id("fl_radio_profile").click()
+        # el2_=driver.find_element_by_id("iv").click()
+        el3 = self.driver.find_element_by_id("btn_login").click()
+        el4 = self.driver.find_element_by_id("clet_phone").send_keys("15001106951")
+        el5 = self.driver.find_element_by_id("clet_password").send_keys('123456')
+        el6 = self.driver.find_element_by_id("btn_submit").click()
 
     def logout_app(self):
         time.sleep(2)
-        el7 = self.driver.find_element_by_id("com.jzt.kingpharmacist:id/ll_setting").click()
-        el8 = self.driver.find_element_by_id("com.jzt.kingpharmacist:id/btn_logout").click()
+        el7 = self.driver.find_element_by_id("ll_setting").click()
+        el8 = self.driver.find_element_by_id("btn_logout").click()
 
     def search_goodsB2C(self):
         sel1=self.driver.find_element_by_id("radio_home").click()
