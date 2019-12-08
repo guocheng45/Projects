@@ -18,7 +18,7 @@ class HysPage(HysBase):
         self.findByText("确定").click()
         return msg
 
-    def login_app(self,var1=1,var2=2):
+    def login_app(self,var1=15001106951,var2=123456):
         self.loadSteps("../data/hys.yaml","login_app",phone=var1,pwd=var2)
         # self.find(By.ID,"fl_radio_profile").click()
         # self.find(By.ID, "btn_login").click()

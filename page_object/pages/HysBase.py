@@ -12,6 +12,7 @@ class HysBase(object):
         初始化一个所有页面都要使用的driver，其他页面继承了就可以直接用self.driver用
         导出都是findelement，所以封装一下给所有页面用
     """
+    element_black = [(By.XPATH,'black1'),(By.XPATH,'black2')]       # 这是弹窗黑名单按钮
 
     def __init__(self):
         # self.driver=HysClient.driver
@@ -29,16 +30,26 @@ class HysBase(object):
         return HysClient
 
     def find(self,kv)->WebElement:
-        return self.driver.find_element(*kv)
-    # def find(self,by ,value)->WebElement:
-    #     element:WebElement
-    #     #重试
-    #     for i in range(3):
-    #         try:
-    #             element=self.driver.find_element(by,value)
-    #             return element
-    #         except:
-    #             print("未找到元素")
+        return self.find(*kv)
+
+    def find(self,by,value):
+        element: WebElement
+        # 加上重试机制，例如3次
+        for i in range(3):
+            try:
+                element = self.driver.find_element(by,value)
+                return element
+            except:
+                self.driver.page_source     # 这是一个页面的XML，找到页面顶层元素进行点击
+                # 动态变化位置的元素处理
+
+                # 黑名单处理
+                ##//*[@text='弹窗']/..//*[@text='确认']
+                for e in HysBase.element_black:
+                    elements = self.driver.find_elements(*e)        # *e 是一个（a,b）
+                    if elements.__sizeof__()>0:     # 如果这个元素存在，则__sizeof__>0
+                        elements[0].click()     # 则找到这个元素的第一个，点了它
+
 
     def findByText(self,text)->WebElement:
         return self.find(By.XPATH,"//*[@text='%s']" %text)
@@ -48,9 +59,21 @@ class HysBase(object):
         file=open(yaml_path,'r')
         data=yaml.load(file)
         po_method=data(key)
-        for step in po_method:
+        po_element = dict()
+        if data.keys().__contains__('elements'):    # 以防文件中没有elements
+            po_element=data['elements']     # 里面是一个字典， 用element就说明是多平台
+        # 如果elements存在于其他的yaml文件中，po_element = yaml.load('xxx.yaml')['elements']
+
+        for step in po_method:      # step是一个集合
+            step: dict
+            element_step = dict()
+            # 判断一下step中有没有element
+            if step.keys().__contains__("element"):
+                element_step = po_element[step['element']]['android']  # step['element'] = element的值；[step['element']] 就是[account]
+            else:
+                element_step = {"by":step['by'],"locator":step['locator']}  # 取得step的by和locator
             # 注明一下类型以防报错
-            element:WebElement=self.driver.find_element(by=step['by'],value=step['locator'])
+            element:WebElement=self.find(by=step['by'],value=step['locator'])
             # 此处加上try catch 避免一下弹窗阻碍
             if str(step['action']).lower()=='click':    # .lower()转成小写，避免里面有大写
                 element.click()
