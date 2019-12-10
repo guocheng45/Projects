@@ -17,8 +17,8 @@ class HysMainPage(HysBase):
     def gotoHyspage(self)->HysPage:     # 如果返回不指定返回类型，使用时就不嫩玩链式调用
         #调用全局的driver对象使用webdriver 定位元素
         # self.driver.find_element_by_xpath()    # 有时find可能会报错，find两次比较保险
-        search_button=(By.ID,"home_search")
-        self.find(search_button).click()
+        page_button=(By.ID,"fl_radio_profile")
+        self.find(page_button).click()
         return HysPage()
 
     def gotoProfile(self):
