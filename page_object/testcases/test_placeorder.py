@@ -1,8 +1,11 @@
 from page_object.pages.HysAPP import HysApp
 from page_object.pages.HysMainPage import HysMainPage
+import pytest
+import logging
 
 
 class TestPlaceOrder(object):
+
 
     @classmethod
     def setup_class(cls):       # 类执行一下，如启动APP
@@ -28,3 +31,8 @@ class TestPlaceOrder(object):
         assert "something" in self.mainPage.gotoProfile().getErrorMsg()
         #下一步
         # 再一个assert
+
+    # @pytest.mark.parametrize("phone,pwd",[("15001106951","123456"),("15001106951","abc123")])
+    def test_login(self):
+        self.mainPage.gotoHyspage().login_app(15001106951,123456)
+        assert "成功" in self.mainPage.gotoHyspage().getToastMsg()

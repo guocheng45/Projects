@@ -18,6 +18,10 @@ class HysPage(HysBase):
         self.findByText("确定").click()
         return msg
 
+    def getToastMsg(self):
+        msg = self.findByXpath("@class='android.widget.Toast'").text
+        return msg
+
     def login_app(self,var1=15001106951,var2=123456):
         self.loadSteps("../data/hys.yaml","login_app",phone=var1,pwd=var2)
         # self.find(By.ID,"fl_radio_profile").click()
@@ -25,6 +29,7 @@ class HysPage(HysBase):
         # self.find(By.ID, "clet_phone").send_keys("15001106951")
         # self.find(By.ID, "clet_password").send_keys('123456')
         # self.find(By.ID, "btn_submit").click()
+        return self         # 返回self是为了链式调用，也就是说可以方法连着调方法  ：func1().func2().func3()
 
     def login_app(self):
         # el1=driver.find_element_by_id("ll_skip").click()

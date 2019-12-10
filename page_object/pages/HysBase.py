@@ -38,7 +38,7 @@ class HysBase(object):
         for i in range(3):
             try:
                 element = self.driver.find_element(by,value)
-                return element
+                return element          # return 直接结束函数
             except:
                 self.driver.page_source     # 这是一个页面的XML，找到页面顶层元素进行点击
                 # 动态变化位置的元素处理
@@ -53,6 +53,9 @@ class HysBase(object):
 
     def findByText(self,text)->WebElement:
         return self.find(By.XPATH,"//*[@text='%s']" %text)
+
+    def findByXpath(self,xpath)->WebElement:
+        return self.find(By.XPATH,"//*[%s]" %xpath)
 
     # 该方法将搞定一切操作流程，原理通过yaml文件直接进行每一步操作
     def loadSteps(self,yaml_path,key,**kwargs):     # 文件目录、key：Android IOS 字典参数
