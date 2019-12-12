@@ -32,12 +32,14 @@ class HysPage(HysBase):
         return self         # 返回self是为了链式调用，也就是说可以方法连着调方法  ：func1().func2().func3()
 
     def is_login_app(self):     # tv_nick_name 判断该控件是否存在即可
-        return 1
+        element = self.find(By.ID,"tv_nick_name")
+        if element.__sizeof__()>0:      # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
+            return 1        # 已登录
+        else:
+            return 0        # 未登录
 
     def logout_app(self):
         time.sleep(2)
-        # el7 = self.driver.find_element_by_id("ll_setting").click()
-        # el8 = self.driver.find_element_by_id("btn_logout").click()
         self.loadSteps("../data/hys.yaml","logout_app")
         return self
 

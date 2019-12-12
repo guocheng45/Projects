@@ -35,8 +35,15 @@ class TestPlaceOrder(object):
         #下一步
         # 再一个assert
 
-    # @pytest.mark.parametrize("phone,pwd",[("15001106951","123456"),("15001106951","abc123")])
-    def test_login(self):
-        # self.mainPage.gotoHyspage().login_app('15001106951','123456')
-        # assert "成功" in self.Hys.getToastMsg()
-        assert str(self.hysPage.login_app('15001106951','123456').getToastMsg()).__contains__("成功")
+    @pytest.mark.parametrize("phone,pwd,msg",[("15001106951","123456","成功"),("15001106951","abc123","错误")])
+    def test_01_login(self,phone,pwd,msg):
+        if self.hysPage.is_login_app()==0:
+            assert str(self.hysPage.login_app(phone,pwd).getToastMsg()).__contains__(msg)
+        else:
+            assert str(self.hysPage.logout_app().login_app(phone,pwd).getToastMsg()).__contains__(msg)
+
+    def test_02_search(self):
+        pass
+
+    def test_03_placeOrder(self):
+        pass
