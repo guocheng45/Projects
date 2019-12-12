@@ -18,6 +18,17 @@ login_app:
     by: id
     action: click
 
+logout_app:
+  - locator: ll_setting
+    by: id
+    action: click
+  - locator: btn_logout
+    by: id
+    action: click
+  - locator: iv_base_left
+    by: id
+    action: click
+
 getErrorMsg:
   - xxx
 elements:

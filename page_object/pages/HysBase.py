@@ -61,7 +61,7 @@ class HysBase(object):
     def loadSteps(self,yaml_path,key,**kwargs):     # 文件目录、key：Android IOS 字典参数
         file=open(yaml_path,'r')
         data=yaml.load(file)
-        po_method=data(key)
+        po_method=data[key]
         po_element = dict()
         if data.keys().__contains__('elements'):    # 以防文件中没有elements
             po_element=data['elements']     # 里面是一个字典， 用element就说明是多平台
@@ -76,7 +76,7 @@ class HysBase(object):
             else:
                 element_step = {"by":step['by'],"locator":step['locator']}  # 取得step的by和locator
             # 注明一下类型以防报错
-            element:WebElement=self.find(by=step['by'],value=step['locator'])
+            element:WebElement=self.find(by=element_step['by'],value=element_step['locator'])
             # 此处加上try catch 避免一下弹窗阻碍
             if str(step['action']).lower()=='click':    # .lower()转成小写，避免里面有大写
                 element.click()
@@ -84,6 +84,6 @@ class HysBase(object):
                 text=str(step['text'])
                 for k,v in kwargs.items():
                     text=text.replace("$%s" %k,v)     # 深入了解这里是一个循环替换符合条件的k,v
-                element.send_keys(step['text'])
+                element.send_keys(text)
             else:
                 print("%s 步骤发生情况不知道如何操作" %step)
