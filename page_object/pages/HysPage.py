@@ -24,16 +24,11 @@ class HysPage(HysBase):
 
     def login_app(self,var1,var2):
         self.loadSteps("../data/hys.yaml","login_app",phone=var1,pwd=var2)
-        # self.find(By.ID,"fl_radio_profile").click()
-        # self.find(By.ID, "btn_login").click()
-        # self.find(By.ID, "clet_phone").send_keys("15001106951")
-        # self.find(By.ID, "clet_password").send_keys('123456')
-        # self.find(By.ID, "btn_submit").click()
         return self         # 返回self是为了链式调用，也就是说可以方法连着调方法  ：func1().func2().func3()
 
     def is_login_app(self):     # tv_nick_name 判断该控件是否存在即可
-        element = self.driver.find_elements(By.ID,"tv_nick_name")
-        # if element.__.__sizeof__()>0:      # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
+        element = self.driver.find_elements(By.ID,"tv_nick_name")       # 只有elements的找不到元素才是为[] 其他报错
+        # if element.__sizeof__()>0:      # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
         if element!=[]:      # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
             return 1        # 已登录
         else:
@@ -44,16 +39,18 @@ class HysPage(HysBase):
         self.loadSteps("../data/hys.yaml","logout_app")
         return self
 
-    def search_goodsB2C(self):
-        sel1=self.driver.find_element_by_id("radio_home").click()
-        sel2=self.driver.find_element_by_id("qmy_main_search_ll").click()
-        self.driver.implicitly_wait(10)
-        sel3=self.driver.find_element_by_id("et_search").send_keys('感冒')
-        sel4=self.driver.find_element_by_id("bt_search").click()
-        self.driver.implicitly_wait(5)
-        sel5=self.driver.find_element_by_id("tv_desc").click()
-        sel6=self.driver.find_element_by_id("tv_desc_2").click()
-        self.driver.implicitly_wait(10)
+    def search_goodsB2C(self,kw):
+        # sel1=self.driver.find_element_by_id("radio_home").click()
+        # sel2=self.driver.find_element_by_id("qmy_main_search_ll").click()
+        # self.driver.implicitly_wait(10)
+        # sel3=self.driver.find_element_by_id("et_search").send_keys('感冒')
+        # sel4=self.driver.find_element_by_id("bt_search").click()
+        # self.driver.implicitly_wait(5)
+        # sel5=self.driver.find_element_by_id("tv_desc").click()
+        # sel6=self.driver.find_element_by_id("tv_desc_2").click()
+        # self.driver.implicitly_wait(10)
+        self.loadSteps("../data/hys.yaml","search_goodsB2C",keywords=kw)
+        return self
 
     def search_goodsO2O(self):
         sel1=self.driver.find_element_by_id("function_img").click()
@@ -64,10 +61,10 @@ class HysPage(HysBase):
         self.driver.implicitly_wait(5)
         sel5=self.driver.find_element_by_id("tv_desc").click()
         sel6=self.driver.find_element_by_id("tv_desc_2").click()
-        self.driver.implicitly_wait(10)
+        # self.driver.implicitly_wait(10)
 
     def swipe_ui(self,act):
-        time.sleep(4)
+        time.sleep(3)
         # Swipe（int start x, int start y, int end x, int y, duration)
         x=self.driver.get_window_size()['width']
         y=self.driver.get_window_size()['height']
@@ -79,7 +76,7 @@ class HysPage(HysBase):
             self.driver.swipe(int(x * 0.2), int(y * 0.5), int(x * 0.5), int(y * 0.5), 1000)
         else:   # 右滑或者返回
             self.driver.swipe(int(x * 0.5), int(y * 0.5), int(x * 0.2), int(y * 0.5), 1000)
-        time.sleep(4)
+        time.sleep(3)
 
 
     def common_backtomainpage(self):

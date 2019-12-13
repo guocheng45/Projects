@@ -1,6 +1,8 @@
-.idea/
+/.idea
 *.log
-.iml
-misc.xml
+/.idea/Projects.iml
+/.idea/misc.xml
+/.idea/vcs.xml
 .pytest_cache/
 venv/
+/.idea/workspace.xml

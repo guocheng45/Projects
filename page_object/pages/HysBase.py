@@ -77,7 +77,6 @@ class HysBase(object):
                 element_step = {"by":step['by'],"locator":step['locator']}  # 取得step的by和locator
             # 注明一下类型以防报错
             element:WebElement=self.find(by=element_step['by'],value=element_step['locator'])
-            # 此处加上try catch 避免一下弹窗阻碍
             if str(step['action']).lower()=='click':    # .lower()转成小写，避免里面有大写
                 element.click()
             elif str(step['action']).lower()=='send_keys':  # 涉及到传参替换的问题

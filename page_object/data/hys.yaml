@@ -46,3 +46,24 @@ elements:
     ios:
       by: id
       locator: ios_password
+
+search_goodsB2C：
+  - locator: radio_home
+    by: id
+    action: click
+  - locator: qmy_main_search_ll
+    by: id
+    action: click
+  - locator: et_search
+    by: id
+    action: send_keys
+    text: $keywords
+  - locator: bt_search
+    by: id
+    action: click
+  - locator: tv_desc
+    by: id
+    action: click
+  - locator: tv_desc_2
+    by: id
+    action: click
