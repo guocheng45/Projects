@@ -12,7 +12,7 @@ class HysBase(object):
         初始化一个所有页面都要使用的driver，其他页面继承了就可以直接用self.driver用
         导出都是findelement，所以封装一下给所有页面用
     """
-    element_black = [(By.XPATH,'black1'),(By.XPATH,'black2')]       # 这是弹窗黑名单按钮
+    element_black = [(By.XPATH,'black-1'),(By.XPATH,'black-2')]       # 这是弹窗黑名单按钮
 
     def __init__(self):
         # self.driver=HysClient.driver
@@ -29,8 +29,8 @@ class HysBase(object):
     def getClient(cls):
         return HysClient
 
-    def find(self,kv)->WebElement:
-        return self.find(*kv)
+    # def find(self,kv)->WebElement:
+    #     return self.find(*kv)
 
     def find(self,by,value):
         element: WebElement
@@ -47,7 +47,7 @@ class HysBase(object):
                 ##//*[@text='弹窗']/..//*[@text='确认']
                 for e in HysBase.element_black:
                     elements = self.driver.find_elements(*e)        # *e 是一个（a,b）
-                    if elements.__sizeof__()>0:     # 如果这个元素存在，则__sizeof__>0
+                    if elements!=[]:     # 如果这个元素存在，则__sizeof__>0
                         elements[0].click()     # 则找到这个元素的第一个，点了它
 
 

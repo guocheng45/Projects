@@ -37,6 +37,7 @@ class TestPlaceOrder(object):
 
     @pytest.mark.parametrize("phone,pwd,msg",[("15001106951","123456","成功"),("15001106951","abc123","错误")])
     def test_01_login(self,phone,pwd,msg):
+        # assert str(self.hysPage.login_app(phone, pwd).getToastMsg()).__contains__(msg)
         if self.hysPage.is_login_app()==0:
             assert str(self.hysPage.login_app(phone,pwd).getToastMsg()).__contains__(msg)
         else:
