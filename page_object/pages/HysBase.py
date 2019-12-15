@@ -2,7 +2,7 @@ import yaml
 from appium.webdriver.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-
+import time
 from page_object.driver.hysClient import HysClient
 
 
@@ -12,7 +12,8 @@ class HysBase(object):
         初始化一个所有页面都要使用的driver，其他页面继承了就可以直接用self.driver用
         导出都是findelement，所以封装一下给所有页面用
     """
-    element_black = [(By.XPATH,'black-1'),(By.XPATH,'black-2')]       # 这是弹窗黑名单按钮
+    black_element = [(By.XPATH, 'black-1'), (By.XPATH, 'black-2')]       # 这是弹窗黑名单按钮
+    wait_element = ("tv_desc","tv_price_desc","cc")
 
     def __init__(self):
         # self.driver=HysClient.driver
@@ -34,6 +35,11 @@ class HysBase(object):
 
     def find(self,by,value):
         element: WebElement
+        # 按钮是否等待
+        for e in HysBase.wait_element:
+            if e == value:
+                time.sleep(3)
+                break
         # 加上重试机制，例如3次
         for i in range(3):
             try:
@@ -45,7 +51,7 @@ class HysBase(object):
 
                 # 黑名单处理
                 ##//*[@text='弹窗']/..//*[@text='确认']
-                for e in HysBase.element_black:
+                for e in HysBase.black_element:
                     elements = self.driver.find_elements(*e)        # *e 是一个（a,b）
                     if elements!=[]:     # 如果这个元素存在，则__sizeof__>0
                         elements[0].click()     # 则找到这个元素的第一个，点了它

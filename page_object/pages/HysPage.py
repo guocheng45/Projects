@@ -50,6 +50,12 @@ class HysPage(HysBase):
         # sel6=self.driver.find_element_by_id("tv_desc_2").click()
         # self.driver.implicitly_wait(10)
         self.loadSteps("../data/hys.yaml","search_goodsB2C",keywords=kw)
+        # judge_result = self.driver.find_elements(By.XPATH,jr)
+        # print("================",judge_result)
+        # if judge_result!=[]:
+        #     print("get right result！")
+        # else:
+        #     print("maybe something wrong happend!")
         return self
 
     def search_goodsO2O(self):
