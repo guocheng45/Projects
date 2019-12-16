@@ -40,22 +40,19 @@ class HysPage(HysBase):
         return self
 
     def search_goodsB2C(self,kw):
-        # sel1=self.driver.find_element_by_id("radio_home").click()
-        # sel2=self.driver.find_element_by_id("qmy_main_search_ll").click()
-        # self.driver.implicitly_wait(10)
-        # sel3=self.driver.find_element_by_id("et_search").send_keys('感冒')
-        # sel4=self.driver.find_element_by_id("bt_search").click()
-        # self.driver.implicitly_wait(5)
-        # sel5=self.driver.find_element_by_id("tv_desc").click()
-        # sel6=self.driver.find_element_by_id("tv_desc_2").click()
-        # self.driver.implicitly_wait(10)
         self.loadSteps("../data/hys.yaml","search_goodsB2C",keys=kw)
-        # judge_result = self.driver.find_elements(By.XPATH,jr)
-        # print("================",judge_result)
-        # if judge_result!=[]:
+        return self
+
+    def judge_Searchresult(self,jr):
+        judge_result = self.driver.find_elements(By.XPATH, jr)
+        print("================", judge_result, '/n', type(judge_result))
+        return len(judge_result)
+        # if len(judge_result) > 1:
         #     print("get right result！")
         # else:
         #     print("maybe something wrong happend!")
+    def search_back(self):
+        self.find(By.ID,"iv_back").click()
         return self
 
     def search_goodsO2O(self):

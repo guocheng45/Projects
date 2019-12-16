@@ -21,8 +21,7 @@ class TestPlaceOrder(object):
 
     def teardown_method(self):
         # 如返回至初始页可放置在此
-        # self.searchPage.cancel()
-        pass
+        self.SearchPage.search_back()
 
     @classmethod
     def teardown_class(cls):
@@ -42,11 +41,12 @@ class TestPlaceOrder(object):
         else:
             assert str(self.ProfilePage.logout_app().login_app(phone,pwd).getToastMsg()).__contains__(msg)
 
-    #@pytest.mark.parametrize("keywords,judgewords",[("感冒",'//*[@text="感冒"]'),("发烧",'//*[@text="发烧"]')])
-    def test_02_search(self):
-        kw = "感冒"
-        # jr = '//*[@text="感冒"]'
-        self.SearchPage.search_goodsB2C(kw)
+    @pytest.mark.parametrize("kw,jr",[("感冒","//*[contains(@text,'感冒')]"),("发烧","//*[contains(@text,'发烧')]")])
+    def test_02_search(self,kw,jr):
+        # kw = "感冒"
+        # jr = "//*[contains(@text,'感冒')]"
+        result = self.SearchPage.search_goodsB2C(kw)
+        assert result.judge_Searchresult(jr)>1
 
     def test_03_placeOrder(self):
         pass

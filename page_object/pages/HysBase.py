@@ -13,7 +13,7 @@ class HysBase(object):
         导出都是findelement，所以封装一下给所有页面用
     """
     black_element = [(By.XPATH, 'black-1'), (By.XPATH, 'black-2')]       # 这是弹窗黑名单按钮
-    wait_element = ("tv_desc","tv_price_desc","cc")
+    wait_element = ("aa","tv_price_desc","cc")
 
     def __init__(self):
         # self.driver=HysClient.driver
@@ -38,7 +38,7 @@ class HysBase(object):
         # 按钮是否等待
         for e in HysBase.wait_element:
             if e == value:
-                time.sleep(3)
+                time.sleep(2)
                 break
         # 加上重试机制，例如3次
         for i in range(3):
