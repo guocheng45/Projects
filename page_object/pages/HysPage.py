@@ -49,7 +49,7 @@ class HysPage(HysBase):
         # sel5=self.driver.find_element_by_id("tv_desc").click()
         # sel6=self.driver.find_element_by_id("tv_desc_2").click()
         # self.driver.implicitly_wait(10)
-        self.loadSteps("../data/hys.yaml","search_goodsB2C",keywords=kw)
+        self.loadSteps("../data/hys.yaml","search_goodsB2C",keys=kw)
         # judge_result = self.driver.find_elements(By.XPATH,jr)
         # print("================",judge_result)
         # if judge_result!=[]:

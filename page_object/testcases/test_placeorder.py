@@ -16,8 +16,8 @@ class TestPlaceOrder(object):
     def setup_method(self):     # 设置等于自己的mainPage，可以直接调用？
         # self.mainPage:HysMainPage=TestPlaceOrder.mainPage    # 意指，还等于mainpage,再次启动APP           可能搞错了
         # self.searchPage = self.mainPage.gotoHyspage()     # 如果是搜索页的话就可用这个
-        self.ProfilePage = self.mainPage.gotoProfile()    # 不同的页面的测试不要放在一个页面，初始化的时候会乱点其他页面
-        # self.SearchPage = self.mainPage.gotoSearchpage()
+        # self.ProfilePage = self.mainPage.gotoProfile()    # 不同的页面的测试不要放在一个页面，初始化的时候会乱点其他页面
+        self.SearchPage = self.mainPage.gotoSearchpage()
 
     def teardown_method(self):
         # 如返回至初始页可放置在此
@@ -45,7 +45,7 @@ class TestPlaceOrder(object):
     #@pytest.mark.parametrize("keywords,judgewords",[("感冒",'//*[@text="感冒"]'),("发烧",'//*[@text="发烧"]')])
     def test_02_search(self):
         kw = "感冒"
-        jr = '//*[@text="感冒"]'
+        # jr = '//*[@text="感冒"]'
         self.SearchPage.search_goodsB2C(kw)
 
     def test_03_placeOrder(self):
