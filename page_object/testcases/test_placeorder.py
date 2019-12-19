@@ -1,4 +1,5 @@
 from page_object.pages.HysAPP import HysApp
+from page_object.pages.HysBase import HysBase
 from page_object.pages.HysMainPage import HysMainPage
 import pytest
 
@@ -46,6 +47,7 @@ class TestPlaceOrder(object):
         # kw = "感冒"
         # jr = "//*[contains(@text,'感冒')]"
         result = self.SearchPage.search_goodsB2C(kw)
+        # HysBase.logger.info('==================',result)
         assert result.judge_Searchresult(jr)>1
 
     def test_03_placeOrder(self):

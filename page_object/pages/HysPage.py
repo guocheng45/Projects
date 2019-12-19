@@ -45,12 +45,10 @@ class HysPage(HysBase):
 
     def judge_Searchresult(self,jr):
         judge_result = self.driver.find_elements(By.XPATH, jr)
-        print("================", judge_result, '/n', type(judge_result))
+        self.logger.info("=================", judge_result, '/n', type(judge_result))
+        print("=================", judge_result, '/n', type(judge_result))
         return len(judge_result)
-        # if len(judge_result) > 1:
-        #     print("get right result！")
-        # else:
-        #     print("maybe something wrong happend!")
+
     def search_back(self):
         self.find(By.ID,"iv_back").click()
         return self

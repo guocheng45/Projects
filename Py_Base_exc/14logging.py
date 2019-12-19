@@ -3,7 +3,7 @@
 import logging
 
 # 创建一个logger
-logger=logging.getLogger('mylogger')
+logger=logging.getLogger('mylogger')        # 括号里面无意义，可为空
 logger.setLevel(logging.DEBUG)
 
 # 创建一个handler（处理的意思），用于写入日志文件
@@ -13,9 +13,10 @@ fh = logging.FileHandler('test.log')
 ch=logging.StreamHandler()
 
 # 定义Handler的输出格式
-formatter=logging.Formatter('[%(asctime)s][%(filename)s][line: %(lineno)d][%(levelname)s] ## %(message)s')
+formatter=logging.Formatter('[%(asctime)s][%(filename)s][line: %(lineno)d][%(levelname)s]: %(message)s')
 fh.setFormatter(formatter)
 ch.setFormatter(formatter)
+
 
 # 给logger添加handler
 logger.addHandler(fh)

@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 import time
 from page_object.driver.hysClient import HysClient
+import logging
 
 
 class HysBase(object):
@@ -15,10 +16,18 @@ class HysBase(object):
     black_element = [(By.XPATH, 'black-1'), (By.XPATH, 'black-2')]       # 这是弹窗黑名单按钮
     wait_element = ("aa","tv_price_desc","cc")
 
+    _logger = logging.getLogger()
+    _logger.setLevel(logging.DEBUG)
+    _ch = logging.StreamHandler()
+    _fmt = logging.Formatter('[%(asctime)s %(filename)s Line: %(lineno)d][%(levelname)s]: %(message)s')
+    _ch.setFormatter(_fmt)
+    _logger.addHandler(_ch)
+
     def __init__(self):
         # self.driver=HysClient.driver
         # 使用什么driver
         self.driver:WebDriver=self.getDriver()
+        self.logger= HysBase._logger
 
     @classmethod
     def getDriver(cls):
