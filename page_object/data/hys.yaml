@@ -67,3 +67,24 @@ search_goodsB2C:
   - locator: tv_price_desc
     by: id
     action: click
+
+search_goodsO2O:
+  - locator: function_img
+    by: id
+    action: click
+  - locator: et_search
+    by: id
+    action: click
+  - locator: et_search
+    by: id
+    action: send_keys
+    text: $keys
+  - locator: bt_search
+    by: id
+    action: click
+  - locator: tv_price_desc
+    by: id
+    action: click
+  - locator: tv_price_desc
+    by: id
+    action: click
