@@ -18,11 +18,13 @@ class TestPlaceOrder(object):
         # self.mainPage:HysMainPage=TestPlaceOrder.mainPage    # 意指，还等于mainpage,再次启动APP           可能搞错了
         # self.searchPage = self.mainPage.gotoHyspage()     # 如果是搜索页的话就可用这个
         # self.ProfilePage = self.mainPage.gotoProfile()    # 不同的页面的测试不要放在一个页面，初始化的时候会乱点其他页面
-        self.SearchPage = self.mainPage.gotoSearchpage()
+        # self.SearchPage = self.mainPage.gotoSearchpage()
+        self.Hyspage = self.mainPage.gotoHyspage()
 
     def teardown_method(self):
         # 如返回至初始页可放置在此
-        self.SearchPage.search_back()
+        # self.SearchPage.search_back()
+        return 1
 
     @classmethod
     def teardown_class(cls):
@@ -42,13 +44,10 @@ class TestPlaceOrder(object):
         else:
             assert str(self.ProfilePage.logout_app().login_app(phone,pwd).getToastMsg()).__contains__(msg)
 
-    @pytest.mark.parametrize("kw,jr",[("感冒","//*[contains(@text,'感冒')]"),("发烧","//*[contains(@text,'发烧')]")])
+    @pytest.mark.parametrize("kw,jr",[("感冒","//*[contains(@text,'感')]"),("发烧","//*[contains(@text,'发')]")])
     def test_02_search(self,kw,jr):
-        # kw = "感冒"
-        # jr = "//*[contains(@text,'感冒')]"
         result = self.SearchPage.search_goodsB2C(kw)
-        # HysBase.logger.info('==================',result)
         assert result.judge_Searchresult(jr)>1
 
     def test_03_placeOrder(self):
-        pass
+        self.Hyspage.cart_goods_isChecked()

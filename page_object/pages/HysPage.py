@@ -89,11 +89,16 @@ class HysPage(HysBase):
         cb4 = self.find(By.ID,"iv_back").click()
         cb5 = self.find(By.ID,"iv_back").click()
 
-    def cart_goods_isSelected(self):
+    def cart_goods_isChecked(self):
+        open_cart = self.find(By.ID,"radio_cart").click()
+        open_cart = self.find(By.ID,"radio_cart").click()
         pel1 = self.find(By.XPATH,
-                         "//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'iv_buy')]").click()
-        pel2 = self.find(By.ID,"iv_cart").click()
-        return self
+                         "//*[contains(@text,'仁和可立克')]/../..//*[contains(@resource-id,'rb_check')]")
+        is_checked = pel1.get_attribute("checked")
+        print("is_checked===========",is_checked)
+        # self.logger.info("pel1.checked====================", pel1.is_checked())       # 不可用
+        # pel2 = self.find(By.ID,"iv_cart").click()
+        return is_checked
 
     def place_order_B2CCart(self,kw):
         self.search_goodsB2C(kw)

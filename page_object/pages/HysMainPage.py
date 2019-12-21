@@ -24,3 +24,6 @@ class HysMainPage(HysBase):
     def gotoSearchpage(self):
         self.find(By.ID,"radio_home").click()
         return HysPage()
+
+    def gotoHyspage(self):
+        return HysPage()
