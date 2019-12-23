@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 import time
 
+from page_object.common.Logger import Logger
 from page_object.pages.HysBase import HysBase
 
 
@@ -14,7 +15,7 @@ class HysPage(HysBase):
     """
 
     def getErrorMsg(self):
-        msg=self.find("self._error_msg").text
+        msg = self.find("self._error_msg").text
         self.findByText("确定").click()
         return msg
 
@@ -22,92 +23,91 @@ class HysPage(HysBase):
         msg = self.findByXpath("@class='android.widget.Toast'").text
         return msg
 
-    def login_app(self,var1,var2):
-        self.loadSteps("../data/hys.yaml","login_app",phone=var1,pwd=var2)
-        return self         # 返回self是为了链式调用，也就是说可以方法连着调方法  ：func1().func2().func3()
+    def login_app(self, var1, var2):
+        self.loadSteps("../data/hys.yaml", "login_app", phone=var1, pwd=var2)
+        return self  # 返回self是为了链式调用，也就是说可以方法连着调方法  ：func1().func2().func3()
 
-    def is_login_app(self):     # tv_nick_name 判断该控件是否存在即可
-        element = self.driver.find_elements(By.ID,"tv_nick_name")       # 只有elements的找不到元素才是为[] 其他报错
+    def is_login_app(self):  # tv_nick_name 判断该控件是否存在即可
+        element = self.driver.find_elements(By.ID, "tv_nick_name")  # 只有elements的找不到元素才是为[] 其他报错
         # if element.__sizeof__()>0:      # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
-        if element!=[]:      # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
-            return 1        # 已登录
+        if element != []:  # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
+            return 1  # 已登录
         else:
-            return 0        # 未登录
+            return 0  # 未登录
 
     def logout_app(self):
         time.sleep(2)
-        self.loadSteps("../data/hys.yaml","logout_app")
+        self.loadSteps("../data/hys.yaml", "logout_app")
         return self
 
-    def search_goodsB2C(self,kw):
-        self.loadSteps("../data/hys.yaml","search_goodsB2C",keys=kw)
+    def search_goodsB2C(self, kw):
+        self.loadSteps("../data/hys.yaml", "search_goodsB2C", keys=kw)
         return self
 
-    def judge_Searchresult(self,jr):
+    def judge_Searchresult(self, jr):
         # judge_result = self.driver.find_elements(By.XPATH, jr)
-        judge_result = self.driver.find_elements(By.ID,"iv_buy")
-        self.logger.info("=================", judge_result, '/n', type(judge_result))
+        judge_result = self.driver.find_elements(By.ID, "iv_buy")
+        Logger.logger.info("=================", judge_result, '/n', type(judge_result))
         print("=================", judge_result, '/n', type(judge_result))
         return len(judge_result)
 
     def search_back(self):
-        self.find(By.ID,"iv_back").click()
+        self.find(By.ID, "iv_back").click()
         return self
 
-    def search_goodsO2O(self,kw):
+    def search_goodsO2O(self, kw):
         # sel1=self.driver.find_element_by_id("function_img").click()
         # sel2=self.driver.find_element_by_id("et_search").click()
         # sel3=self.driver.find_element_by_id("et_search").send_keys('感冒')
         # sel4=self.driver.find_element_by_id("bt_search").click()
         # sel5=self.driver.find_element_by_id("tv_desc").click()
         # sel6=self.driver.find_element_by_id("tv_desc_2").click()
-        self.loadSteps("../data/hys.yaml","search_goodsO2O",keys=kw)
+        self.loadSteps("../data/hys.yaml", "search_goodsO2O", keys=kw)
         return self
 
-    def swipe_ui(self,act):
+    def swipe_ui(self, act):
         time.sleep(3)
         # Swipe（int start x, int start y, int end x, int y, duration)
-        x=self.driver.get_window_size()['width']
-        y=self.driver.get_window_size()['height']
-        if act=="下拉":
+        x = self.driver.get_window_size()['width']
+        y = self.driver.get_window_size()['height']
+        if act == "下拉":
             self.driver.swipe(int(x * 0.5), int(y * 0.2), int(x * 0.5), int(y * 0.5), 1000)
-        elif act=="上拉":
+        elif act == "上拉":
             self.driver.swipe(int(x * 0.5), int(y * 0.8), int(x * 0.5), int(y * 0.5), 1000)
-        elif act=="左滑":
+        elif act == "左滑":
             self.driver.swipe(int(x * 0.2), int(y * 0.5), int(x * 0.5), int(y * 0.5), 1000)
-        else:   # 右滑或者返回
+        else:  # 右滑或者返回
             self.driver.swipe(int(x * 0.5), int(y * 0.5), int(x * 0.2), int(y * 0.5), 1000)
         time.sleep(3)
 
-
     def common_backtomainpage(self):
         # 下单不支付
-        cb1 = self.find(By.ID,"iv_base_left").click()
-        cb2 = self.find(By.ID,"tv_sure").click()
+        cb1 = self.find(By.ID, "iv_base_left").click()
+        cb2 = self.find(By.ID, "tv_sure").click()
         # 返回到首页
-        cb3 = self.find(By.ID,"iv_base_left").click()
-        cb4 = self.find(By.ID,"iv_back").click()
-        cb5 = self.find(By.ID,"iv_back").click()
+        cb3 = self.find(By.ID, "iv_base_left").click()
+        cb4 = self.find(By.ID, "iv_back").click()
+        cb5 = self.find(By.ID, "iv_back").click()
 
-    def cart_goods_isChecked(self):
-        open_cart = self.find(By.ID,"radio_cart").click()
-        open_cart = self.find(By.ID,"radio_cart").click()
+    def cart_goods_isChecked(self,name):
+        open_cart = self.find(By.ID, "radio_cart").click()
+        open_cart = self.find(By.ID, "radio_cart").click()
+        # "//*[contains(@text,'仁和可立克')]/../..//*[contains(@resource-id,'rb_check')]"
         pel1 = self.find(By.XPATH,
-                         "//*[contains(@text,'仁和可立克')]/../..//*[contains(@resource-id,'rb_check')]")
+                         "//*[contains(@text,'%s')]" %name+"/../..//*[contains(@resource-id,'rb_check')]")
         is_checked = pel1.get_attribute("checked")
-        print("is_checked===========",is_checked)
-        # self.logger.info("pel1.checked====================", pel1.is_checked())       # 不可用
-        # pel2 = self.find(By.ID,"iv_cart").click()
+        Logger.logger.info("is_checked===========", is_checked)
         return is_checked
 
-    def place_order_B2CCart(self,kw):
+    def place_order_B2CCart(self, kw):
         self.search_goodsB2C(kw)
         self.swipe_ui("上拉")
-        pel1=self.find(By.XPATH,"//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'iv_buy')]").click()
-        pel2=self.find(By.ID,"iv_cart").click()
+        pel1 = self.find(By.XPATH,
+                         "//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'iv_buy')]").click()
+        pel2 = self.find(By.ID, "iv_cart").click()
         # 此处需判断购物车中的这个商品是否是选中状态？？？？
-        pel5=self.find(By.ID,"tv_next").click()
-        pel6=self.find(By.ID,"tv_submit_order").click()
+        pel5 = self.find(By.ID, "tv_next").click()
+        pel6 = self.find(By.ID, "tv_submit_order").click()
         # 余额支付，不要支付了，不好退
         # pel7=self.find(By.ID,"cb_use_balance").click()
         # pel8=self.find(By.ID,"btn_add_addresss").click()
@@ -120,62 +120,62 @@ class HysPage(HysBase):
     def place_order_B2CBuyNow(self):
         self.search_goodsB2C()
         self.swipe_ui("上拉")
-        po1 = self.find(By.XPATH,"//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]").click()
+        po1 = self.find(By.XPATH, "//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]").click()
         # po2 = self.driver.find_element_by_id("iv_img").click()
         time.sleep(3)
-        po3 = self.find(By.ID,"tv_bottom_buy_now").click()
-        po4 = self.find(By.ID,"tv_buy_now").click()
-        po5 = self.find(By.ID,"tv_submit_order").click()
+        po3 = self.find(By.ID, "tv_bottom_buy_now").click()
+        po4 = self.find(By.ID, "tv_buy_now").click()
+        po5 = self.find(By.ID, "tv_submit_order").click()
 
         self.common_backtomainpage()
-        po6 = self.find(By.ID,"iv_back").click()
+        po6 = self.find(By.ID, "iv_back").click()
 
     def place_order_B2CSale(self):
-        po1 = self.find(By.ID,"ac_title").click()
+        po1 = self.find(By.ID, "ac_title").click()
         # po1 = self.find(By.XPATH,"//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'iv_buy')]").click()
         # 多点两次页签2，怕点不中
-        po2 = self.find(By.ID,"tv_flash_sale_status").click()
-        po2_1 = self.find(By.ID,"tv_flash_sale_status").click()
+        po2 = self.find(By.ID, "tv_flash_sale_status").click()
+        po2_1 = self.find(By.ID, "tv_flash_sale_status").click()
         # 等待页面跳转
         time.sleep(3)
-        po3 = self.find(By.ID,"tv_name").click()
-        po4 = self.find(By.ID,"tv_bottom_buy_now").click()
-        po5 = self.find(By.ID,"tv_buy_now").click()
-        po6 = self.find(By.ID,"tv_submit_order").click()
+        po3 = self.find(By.ID, "tv_name").click()
+        po4 = self.find(By.ID, "tv_bottom_buy_now").click()
+        po5 = self.find(By.ID, "tv_buy_now").click()
+        po6 = self.find(By.ID, "tv_submit_order").click()
 
         self.common_backtomainpage()
-        po7 = self.find(By.ID,"iv_base_left").click()
+        po7 = self.find(By.ID, "iv_base_left").click()
 
     def place_order_O2OCart(self):
         self.search_goodsO2O()
-        po1 = self.find(By.XPATH,"//*[contains(@text,'东信 对乙酰氨基酚栓')]/../..//*[contains(@resource-id,'iv_buy')]").click()
-        po2 = self.find(By.ID,"iv_cart").click()
+        po1 = self.find(By.XPATH, "//*[contains(@text,'东信 对乙酰氨基酚栓')]/../..//*[contains(@resource-id,'iv_buy')]").click()
+        po2 = self.find(By.ID, "iv_cart").click()
         time.sleep(3)
-        po3 = self.find(By.ID,"tv_next").click()
-        po4 = self.find(By.ID,"tv_submit_order").click()
+        po3 = self.find(By.ID, "tv_next").click()
+        po4 = self.find(By.ID, "tv_submit_order").click()
 
         self.common_backtomainpage()
-        po6 = self.find(By.ID,"iv_back").click()
+        po6 = self.find(By.ID, "iv_back").click()
 
     def place_order_O2OBuyNow(self):
         self.search_goodsO2O()
-        po1 = self.find(By.XPATH,"//*[contains(@text,'东信 对乙酰氨基酚栓')]").click()
+        po1 = self.find(By.XPATH, "//*[contains(@text,'东信 对乙酰氨基酚栓')]").click()
         # po2 = self.find(By.ID,"iv_img").click()
         time.sleep(3)
-        po3 = self.find(By.ID,"tv_bottom_buy_now").click()
-        po4 = self.find(By.ID,"tv_buy_now").click()
-        po5 = self.find(By.ID,"tv_submit_order").click()
+        po3 = self.find(By.ID, "tv_bottom_buy_now").click()
+        po4 = self.find(By.ID, "tv_buy_now").click()
+        po5 = self.find(By.ID, "tv_submit_order").click()
 
         self.common_backtomainpage()
-        po6 = self.find(By.ID,"iv_back").click()
-        po7 = self.find(By.ID,"iv_back").click()
+        po6 = self.find(By.ID, "iv_back").click()
+        po7 = self.find(By.ID, "iv_back").click()
 
     def cancel_order(self):
-        cel1 = self.find(By.ID,"radio_profile").click()
-        cel2 = self.find(By.ID,"img_my_orders").click()
-        cel3 = self.find(By.ID,"bt_cancel")[0].click()
-        cel4 = self.find(By.ID,"iv_check").click()
-        cel5 = self.find(By.ID,"bt_sure").click()
+        cel1 = self.find(By.ID, "radio_profile").click()
+        cel2 = self.find(By.ID, "img_my_orders").click()
+        cel3 = self.find(By.ID, "bt_cancel")[0].click()
+        cel4 = self.find(By.ID, "iv_check").click()
+        cel5 = self.find(By.ID, "bt_sure").click()
         time.sleep(3)
-        cel6 = self.find(By.ID,"iv_base_left").click()
-        cel7 = self.find(By.ID,"radio_home").click()
+        cel6 = self.find(By.ID, "iv_base_left").click()
+        cel7 = self.find(By.ID, "radio_home").click()
