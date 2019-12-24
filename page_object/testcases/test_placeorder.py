@@ -51,3 +51,49 @@ class TestPlaceOrder(object):
 
     def test_03_placeOrder(self):
         self.Hyspage.cart_goods_isChecked()
+        # 精确找到某品  断言找到了某品（万一网络问题查无结果？）
+        a = "search goods"
+        assert a==2
+        if a==2:
+            # 加入购物车  断言加购成功
+            b="add to cart"
+            assert b==3
+            if b==3:
+                # 跳转购物车  断言跳转购物车成功
+                c="jump cart"
+                assert c==4
+                if c==4:
+                    d="is all select"
+                    assert d==5
+                    if d==5:
+                        e="select goods"
+                        assert e==6
+                        if e==6:
+                            f="click commit"
+                            assert f==7
+                            if f==7:
+                                g="order commit"
+                                assert g==8
+                                if g==8:
+                                    print("下单成功")
+                                    h="return mainpage"
+                                else:
+                                    print("下单失败")
+                            else:
+                                print("click commit failure")
+                        else:
+                            print("select goods failure")
+                    else:
+                        print("all select failure")
+                else:
+                    print("jump cart failure")
+            else:
+                print("add to cart failure")
+        else:
+            print("search goods failure")
+
+            # 判断购物车中全选按钮是否选中  选中则点一次取消，
+            # 然后选中某品  断言弹框提示成功？？？
+            # 点击购物车提交  断言跳转提交订单页成功？？
+            # 点击提交订单页提交  断言跳转收银台成功？？
+            # 返回到首页
