@@ -49,7 +49,7 @@ class TestPlaceOrder(object):
         result = self.SearchPage.search_goodsB2C(kw)
         assert result.judge_Searchresult(jr) > 1
 
-    def test_03_placeOrder(self):
+    def test_03_placeOrder(self):           # 一个行为只在结束断言
         self.Hyspage.cart_goods_isChecked()
         # 精确找到某品  断言找到了某品（万一网络问题查无结果？）
         a = "search goods"

@@ -99,7 +99,20 @@ class HysPage(HysBase):
         Logger.logger.info("is_checked===========", is_checked)
         return is_checked
 
-    def place_order_B2CCart(self, kw):
+    def addto_B2CCart(self):
+        # 找到第一个商品加购
+        eles = self.driver.find_elements(By.ID,"iv_buy")
+        eles[0].click()
+        # 返回首页
+        self.find(By.ID,"iv_cart").click()
+        # 需判断购物车该品是否选中
+        return self
+
+    def place_order_B2CCart(self):
+         pel5 = self.find(By.ID, "tv_next").click()
+         pel6 = self.find(By.ID, "tv_submit_order").click()
+
+    def __place_order_B2CCart(self, kw):
         self.search_goodsB2C(kw)
         self.swipe_ui("上拉")
         pel1 = self.find(By.XPATH,
