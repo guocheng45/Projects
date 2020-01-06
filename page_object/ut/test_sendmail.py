@@ -18,7 +18,6 @@ def test_sendMail():
     message['From'] = Header('Test_sender', 'utf-8')  # 发送者
     message['To'] = Header('receivers', 'utf-8')  # 接收者
     message['Subject'] = Header('Python Email Subject', 'utf-8')
-    # 1234 shanchu
 
     try:
         # 开启发信服务，这里使用的是加密传输
