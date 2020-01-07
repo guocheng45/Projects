@@ -1,34 +1,57 @@
+# coding=utf-8
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
 
 
 def test_sendMail():
-    # ÉùÃ÷ÓÃÀ´µÇÂ¼µÄÓÊÏäºÍ¿ÚÁî
-    password = 'sdjxhqksmlfsbghd'  # ·¢ĞÅÊÚÈ¨Âë
-    smtp_server = 'smtp.qq.com'  # ·¢ĞÅ·şÎñÆ÷
+    # å£°æ˜ç”¨æ¥ç™»å½•çš„é‚®ç®±å’Œå£ä»¤
+    password = 'sdjxhqksmlfsbghd'  # å‘ä¿¡æˆæƒç 
+    smtp_server = 'smtp.qq.com'  # å‘ä¿¡æœåŠ¡å™¨
 
     sender = '467563369@qq.com'
-    receivers = '467563369@qq.com'  # ['467563369@qq.com','a1804536661@qq.com']        # ½ÓÊÕÓÊÏä
+    receivers = '467563369@qq.com'  # ['467563369@qq.com','a1804536661@qq.com']        # æ¥æ”¶é‚®ç®±
 
-    # ÓÊÏäÕıÎÄ £¬Èı¸ö²ÎÊı£ºµÚÒ»¸öÎªÎÄ±¾ÄÚÈİ£¬µÚ¶ş¸ö plain ÉèÖÃÎÄ±¾¸ñÊ½£¬µÚÈı¸ö utf-8 ÉèÖÃ±àÂë
-    message = MIMEText('Python sendmail test', 'plain', 'utf-8')
+    # é‚®ç®±æ­£æ–‡ ï¼Œä¸‰ä¸ªå‚æ•°ï¼šç¬¬ä¸€ä¸ªä¸ºæ–‡æœ¬å†…å®¹ï¼Œç¬¬äºŒä¸ª plain è®¾ç½®æ–‡æœ¬æ ¼å¼ï¼Œç¬¬ä¸‰ä¸ª utf-8 è®¾ç½®ç¼–ç 
+    # message = MIMEText('Python sendmail test', 'plain', 'utf-8')
+    message = MIMEMultipart('related')
 
-    # ÓÊ¼şÍ·ĞÅÏ¢
-    message['From'] = Header('Test_sender', 'utf-8')  # ·¢ËÍÕß
-    message['To'] = Header('receivers', 'utf-8')  # ½ÓÊÕÕß
+    # é‚®ä»¶å¤´ä¿¡æ¯
+    message['From'] = Header('Test_sender', 'utf-8')  # å‘é€è€…
+    message['To'] = Header('receivers', 'utf-8')  # æ¥æ”¶è€…
     message['Subject'] = Header('Python Email Subject', 'utf-8')
 
+    # msgAlternative = MIMEMultipart('alternative')
+    # message.attach(msgAlternative)
+
+    mail_msg = """
+    <p>Python é‚®ä»¶å‘é€æµ‹è¯•...</p>
+    <p><a href="http://www.runoob.com">èœé¸Ÿæ•™ç¨‹é“¾æ¥</a></p>
+    <p>å›¾ç‰‡æ¼”ç¤ºï¼š</p>
+    <p><img src="cid:image1"></p>
+    """
+    message.attach(mail_msg)
+
+    file = open('test.png', 'rb')
+    img_data = file.read()
+    file.close()
+
+    img=MIMEImage(img_data)
+    img.add_header('Content-ID','image1')
+    message.attach(img)
+
+
     try:
-        # ¿ªÆô·¢ĞÅ·şÎñ£¬ÕâÀïÊ¹ÓÃµÄÊÇ¼ÓÃÜ´«Êä
+        # å¼€å¯å‘ä¿¡æœåŠ¡ï¼Œè¿™é‡Œä½¿ç”¨çš„æ˜¯åŠ å¯†ä¼ è¾“
         smtpObj = smtplib.SMTP_SSL()
         smtpObj.connect(smtp_server, 465)
-        smtpObj.login(sender,password)
+        smtpObj.login(sender, password)
         smtpObj.sendmail(sender, receivers, message.as_string())
         print("send mail success")
     except smtplib.SMTPException:
         print("Error: can not send the mail")
     finally:
-        # ¹Ø±Õ·şÎñÆ÷
+        # å…³é—­æœåŠ¡å™¨
         smtpObj.quit()
-
