@@ -16,23 +16,23 @@ def test_sendMail():
 
     # 邮箱正文 ，三个参数：第一个为文本内容，第二个 plain 设置文本格式，第三个 utf-8 设置编码
     # message = MIMEText('Python sendmail test', 'plain', 'utf-8')
-    message = MIMEMultipart('related')
+    msg = MIMEMultipart('related')
 
     # 邮件头信息
-    message['From'] = Header('Test_sender', 'utf-8')  # 发送者
-    message['To'] = Header('receivers', 'utf-8')  # 接收者
-    message['Subject'] = Header('Python Email Subject', 'utf-8')
+    msg['From'] = Header('Test_sender', 'utf-8')  # 发送者
+    msg['To'] = Header('receivers', 'utf-8')  # 接收者
+    msg['Subject'] = Header('Python Email Subject', 'utf-8')
 
     # msgAlternative = MIMEMultipart('alternative')
     # message.attach(msgAlternative)
 
-    mail_msg = """
+    mail_msg = MIMEText("""
     <p>Python 邮件发送测试...</p>
     <p><a href="http://www.runoob.com">菜鸟教程链接</a></p>
     <p>图片演示：</p>
     <p><img src="cid:image1"></p>
-    """
-    message.attach(mail_msg)
+    """,'html','utf-8')
+    msg.attach(mail_msg)
 
     file = open('test.png', 'rb')
     img_data = file.read()
@@ -40,7 +40,7 @@ def test_sendMail():
 
     img=MIMEImage(img_data)
     img.add_header('Content-ID','image1')
-    message.attach(img)
+    msg.attach(img)
 
 
     try:
@@ -48,7 +48,7 @@ def test_sendMail():
         smtpObj = smtplib.SMTP_SSL()
         smtpObj.connect(smtp_server, 465)
         smtpObj.login(sender, password)
-        smtpObj.sendmail(sender, receivers, message.as_string())
+        smtpObj.sendmail(sender, receivers, msg.as_string())
         print("send mail success")
     except smtplib.SMTPException:
         print("Error: can not send the mail")
