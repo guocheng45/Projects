@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
@@ -55,3 +56,14 @@ def test_sendMail():
     finally:
         # 关闭服务器
         smtpObj.quit()
+
+'''
+from datetime import datetime
+# 然后在需要的位置加上截图语句，文件路径自定义为自己本地路径   
+driver.get_screenshot_as_file('/Users/hugo/Desktop/PythonStudy/%s.png'% datetime.now().strftime("%Y%m%d%H%M%S%f")[:-3])
+# strftime里面可以定义YMDHMSf（对应年月日时分秒，如不相太长，可以根据需要去掉年、月之类的），后面的[:-3是保留秒的后面3位]。
+'''
+def test_screenshorts():
+    name = datetime.now().strftime("%Y%m%d%H%M%S")
+    # driver.get_screenshot_as_file('D:\Projects\page_object\ut\%s.png' % name)
+    print(name)
