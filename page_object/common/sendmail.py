@@ -18,7 +18,7 @@ class SendMail():
         msg = MIMEMultipart('related')
         # 邮件头信息
         msg['From'] = Header('Test_sender', 'utf-8')  # 发送者
-        msg['To'] = Header('receivers', 'utf-8')  # 接收者
+        msg['To'] = receivers  # 接收者
         msg['Subject'] = Header('Test Feedback Email', 'utf-8')     # 邮件标题
 
         # 邮箱正文 ，三个参数：第一个为文本内容，第二个 plain 设置文本格式，第三个 utf-8 设置编码
@@ -26,7 +26,7 @@ class SendMail():
         mail_msg = MIMEText("""
         <p>Python 邮件发送图文</p>
         <p>测试截图：</p>
-        <p><img src="cid:image1"></p>
+        <p><img  height="600" width="300" src="cid:image1"></p>
         <p><a href="http://www.baidu.com">这是一个链接</a></p>
         """, 'html', 'utf-8')
         msg.attach(mail_msg)
