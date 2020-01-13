@@ -5,9 +5,9 @@ from email.header import Header
 from email.mime.multipart import MIMEMultipart
 import smtplib
 import os
-from common.fileReader import IniUtil
+from TestProject.common.fileReader import IniUtil
 from socket import gaierror, error
-from common.log import Log
+from TestProject.common.log import Log
 
 
 # ===========================发送邮件==============================================
@@ -17,7 +17,7 @@ def send_report(file_new, to_addr, subject=u'接口自动化测试报告'):
         mail_body = f.read()
 
     # to_addr = IniUtil().get_value_of_option('to_list', 'to_list_sup')
-    to_lists = to_addr.strip(',').split(',')  # 这里需要是list类型
+    to_lists = to_addr.strip(',').split(',')  # 这里需要是list类型   split 按,分割放在一个list中
     smtp_server = IniUtil().get_value_of_option('mail', 'server')
     from_addr = IniUtil().get_value_of_option('mail', 'send_addr')
     password = IniUtil().get_value_of_option('mail', 'password')
@@ -27,7 +27,7 @@ def send_report(file_new, to_addr, subject=u'接口自动化测试报告'):
     msg['Subject'] = Header(subject, 'utf-8')
     # msg['From'] = from_addr
     msg['From'] = Header(u"FBBC自动化测试专用邮箱", 'utf-8')
-    msg['To'] = ";".join(to_lists)  # 接收string，邮箱之间用分号；隔开
+    msg['To'] = ";".join(to_lists)  # 接收string，邮箱之间用分号；隔开  以; 符号把list拼装起来
     print(msg['To'])
     # 邮件正文
     msg.attach(MIMEText(mail_body, 'html', 'utf-8'))
