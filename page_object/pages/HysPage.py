@@ -1,8 +1,9 @@
 from selenium.webdriver.common.by import By
 import time
-
+from datetime import datetime
 from page_object.common.Logger import Logger
 from page_object.pages.HysBase import HysBase
+from page_object.common.sendmail import SendMail
 
 
 class HysPage(HysBase):
@@ -97,6 +98,8 @@ class HysPage(HysBase):
                          "//*[contains(@text,'%s')]" %name+"/../..//*[contains(@resource-id,'rb_check')]")
         is_checked = pel1.get_attribute("checked")
         Logger.logger.info("is_checked===========", is_checked)
+        screenshot = self.driver.get_screenshot_as_png('D:\Projects\page_object\ut\%s.png' % (datetime.now().strftime("%Y%m%d%H%M%S")))
+        SendMail.sendMail(msg=0,pic=screenshot,receiver=1)
         return is_checked
 
     def addto_B2CCart(self):

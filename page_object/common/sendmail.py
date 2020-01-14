@@ -7,18 +7,17 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
 class SendMail():
-    def sendMail(self):
+    def sendMail(self,msg,pic,receiver):
         # 声明用来登录的邮箱和口令
         password = 'sdjxhqksmlfsbghd'  # 发信授权码
         smtp_server = 'smtp.qq.com'  # 发信服务器
         sender = '467563369@qq.com'
-        receivers = '467563369@qq.com'  # ['467563369@qq.com','a1804536661@qq.com']        # 接收邮箱
-
+        receivers = ['467563369@qq.com','guozhicheng@ehaoyao.com']        # 接收邮箱
 
         msg = MIMEMultipart('related')
         # 邮件头信息
-        msg['From'] = Header('Test_sender', 'utf-8')  # 发送者
-        msg['To'] = receivers  # 接收者
+        msg['From'] = sender  # 发送者
+        msg['To'] = ";".join(receivers)  # 接收者
         msg['Subject'] = Header('Test Feedback Email', 'utf-8')     # 邮件标题
 
         # 邮箱正文 ，三个参数：第一个为文本内容，第二个 plain 设置文本格式，第三个 utf-8 设置编码
@@ -39,7 +38,6 @@ class SendMail():
         img=MIMEImage(img_data)
         img.add_header('Content-ID','image1')
         msg.attach(img)
-
 
         try:
             # 开启发信服务，这里使用的是加密传输
