@@ -66,6 +66,10 @@ class HysPage(HysBase):
         self.loadSteps("../data/hys.yaml", "search_goodsO2O", keys=kw)
         return self
 
+    def back_mainPage(self,curpage):
+        # todo:完成从各个页面返回到mainpage
+        return True
+
     def swipe_ui(self, act):
         time.sleep(3)
         # Swipe（int start x, int start y, int end x, int y, duration)
