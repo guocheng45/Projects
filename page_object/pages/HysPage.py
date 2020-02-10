@@ -43,6 +43,7 @@ class HysPage(HysBase):
 
     def search_goodsB2C(self, kw):
         self.loadSteps("../data/hys.yaml", "search_goodsB2C", keys=kw)
+        self.screenshots()
         return self
 
     def judge_Searchresult(self, jr):
@@ -102,8 +103,8 @@ class HysPage(HysBase):
                          "//*[contains(@text,'%s')]" %name+"/../..//*[contains(@resource-id,'rb_check')]")
         is_checked = pel1.get_attribute("checked")
         Logger.logger.info("is_checked===========", is_checked)
-        screenshot = self.driver.get_screenshot_as_png('D:\Projects\page_object\ut\%s.png' % (datetime.now().strftime("%Y%m%d%H%M%S")))
-        SendMail.sendMail(msg=0,pic=screenshot,receiver=1)
+        # screenshot = self.driver.get_screenshot_as_png('D:\Projects\page_object\ut\%s.png' % (datetime.now().strftime("%Y%m%d%H%M%S")))
+        # SendMail.sendMail(msg=0,pic=screenshot,receiver=1)
         return is_checked
 
     def addto_B2CCart(self):

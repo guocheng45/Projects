@@ -2,7 +2,6 @@ from page_object.pages.HysAPP import HysApp
 from page_object.pages.HysBase import HysBase
 from page_object.pages.HysMainPage import HysMainPage
 import pytest
-
 from page_object.pages.HysPage import HysPage
 
 
@@ -15,14 +14,13 @@ class TestPlaceOrder(object):
 
     def setup_method(self):  # 设置等于自己的mainPage，可以直接调用？
         # self.mainPage:HysMainPage=TestPlaceOrder.mainPage    # 意指，还等于mainpage,再次启动APP           可能搞错了
-        # self.searchPage = self.mainPage.gotoHyspage()     # 如果是搜索页的话就可用这个
         # self.ProfilePage = self.mainPage.gotoProfile()    # 不同的页面的测试不要放在一个页面，初始化的时候会乱点其他页面
-        # self.SearchPage = self.mainPage.gotoSearchpage()
         self.Hyspage = self.mainPage.gotoHyspage()
 
     def teardown_method(self):
         # 如返回至初始页可放置在此
-        # self.SearchPage.search_back()
+        self.Hyspage.search_back()
+        # todo: 方法结束发送邮件or 整个case结束发送邮件
         return 1
 
     @classmethod
@@ -46,7 +44,7 @@ class TestPlaceOrder(object):
 
     @pytest.mark.parametrize("kw,jr", [("感冒", "//*[contains(@text,'感')]"), ("发烧", "//*[contains(@text,'发')]")])
     def test_02_search(self, kw, jr):
-        result = self.SearchPage.search_goodsB2C(kw)
+        result = self.Hyspage.search_goodsB2C(kw)
         assert result.judge_Searchresult(jr) > 1
 
     def test_03_placeOrder(self):           # 一个行为只在结束断言

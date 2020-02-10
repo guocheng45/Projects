@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 import time
 from page_object.driver.hysClient import HysClient
+from datetime import datetime
 import logging
 
 
@@ -34,6 +35,16 @@ class HysBase(object):
 
     # def find(self,kv)->WebElement:
     #     return self.find(*kv)
+
+    def screenshots(self):
+        name = datetime.now().strftime("%Y%m%d%H%M%S")
+        self.driver.get_screenshot_as_file(r'D:\Projects\page_object\ut\%s.png' % name)
+        pic = name+'.png'
+        return pic
+
+    def send_mail(self):
+        # todo: 实现发邮件
+        return 1
 
     def find(self,by,value):
         element: WebElement
