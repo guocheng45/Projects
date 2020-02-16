@@ -6,6 +6,7 @@ import time
 from page_object.driver.hysClient import HysClient
 from datetime import datetime
 import logging
+from page_object.common.sendmail import SendMail
 
 
 class HysBase(object):
@@ -42,8 +43,9 @@ class HysBase(object):
         pic = name+'.png'
         return pic
 
-    def send_mail(self):
+    def send_mail(self,msg1,pic1,receiver1):
         # todo: 实现发邮件
+        SendMail.sendMail(msg1,pic1,receiver1)
         return 1
 
     def find(self,by,value):

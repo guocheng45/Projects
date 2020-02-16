@@ -28,20 +28,25 @@ def test_sendMail():
     # message.attach(msgAlternative)
 
     mail_msg = MIMEText("""
-    <p>Python 邮件发送测试...</p>
-    <p><a href="http://www.runoob.com">菜鸟教程链接</a></p>
-    <p>图片演示：</p>
-    <p><img src="cid:image1"></p>
-    """,'html','utf-8')
+        <p>Python 邮件发送图文</p>
+        <p>cid:cotent1</p>
+        <p><img  height="600" width="300" src="cid:image1"></p>
+        <p><a href="http://www.baidu.com">这是一个链接</a></p>
+        """,'html','utf-8')
     msg.attach(mail_msg)
 
-    file = open('test.png', 'rb')
+    file = open('20200216150011.png', 'rb')
     img_data = file.read()
     file.close()
 
     img=MIMEImage(img_data)
     img.add_header('Content-ID','image1')
     msg.attach(img)
+
+    msg = "用例：测试搜索列表，测试结果截图如下："
+    cont1 = Mi(msg)
+    cont1.add_header('Content-ID','content1')
+    msg.attach
 
 
     try:
@@ -63,7 +68,7 @@ from datetime import datetime
 driver.get_screenshot_as_file('/Users/hugo/Desktop/PythonStudy/%s.png'% datetime.now().strftime("%Y%m%d%H%M%S%f")[:-3])
 # strftime里面可以定义YMDHMSf（对应年月日时分秒，如不相太长，可以根据需要去掉年、月之类的），后面的[:-3是保留秒的后面3位]。
 '''
-def test_screenshorts():
+def atest_screenshorts():
     name = datetime.now().strftime("%Y%m%d%H%M%S")
     # driver.get_screenshot_as_file('D:\Projects\page_object\ut\%s.png' % name)
     print(name)

@@ -6,7 +6,7 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
 class SendMail():
-    def sendMail(self,msg,pic,receiver):
+    def sendMail(self,msg1,pic,receiver):
         # 声明用来登录的邮箱和口令
         password = 'sdjxhqksmlfsbghd'  # 发信授权码
         smtp_server = 'smtp.qq.com'  # 发信服务器
@@ -26,10 +26,10 @@ class SendMail():
         <p>测试截图：</p>
         <p><img  height="600" width="300" src="cid:image1"></p>
         <p><a href="http://www.baidu.com">这是一个链接</a></p>
-        """, 'html', 'utf-8')
+        """, 'html', 'utf-8')       # cid 即Content-Id java或python发邮件时使用，在HTML格式的正文中可以使用这个唯一标识号来引用内嵌资源。
         msg.attach(mail_msg)
 
-        # 图片处理
+        # 指定图片的目录，读取图片
         file = open('test.png', 'rb')
         img_data = file.read()
         file.close()
