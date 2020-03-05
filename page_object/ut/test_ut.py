@@ -16,3 +16,6 @@ class TestYaml(object):
         print("str2:",str2)
         print("str3:", str3)
         assert str2==str3
+
+    def test_print(self):
+        print('%(asctime)s %(name)s %(levelname)s %(module)s:%(lineno)d %(message)s')

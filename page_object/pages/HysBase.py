@@ -48,6 +48,11 @@ class HysBase(object):
         SendMail.sendMail(msg1,pic1,receiver1)
         return 1
 
+    def getToastMsg(self):
+        #msg = self.findByXpath("@class='android.widget.Toast'").text
+        msg = self.find(By.XPATH,"//*[@class='android.widget.Toast']").text
+        return msg
+
     def find(self,by,value):
         element: WebElement
         # 按钮是否等待
