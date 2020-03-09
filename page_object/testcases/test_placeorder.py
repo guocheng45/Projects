@@ -65,7 +65,7 @@ class TestPlaceOrder(object):
         a = "search goods"
         assert a==2
         if a==2:
-            # 加入购物车  断言加购成功
+            # 加入购物车  断言加购成功11
             b="add to cart"
             assert b==3
             if b==3:
