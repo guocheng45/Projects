@@ -3,8 +3,9 @@ from page_object.pages.HysBase import HysBase
 from page_object.pages.HysMainPage import HysMainPage
 import pytest
 from page_object.pages.HysPage import HysPage
+import allure
 
-
+@allure.feature("测试好药师APP搜索")
 class TestPlaceOrder(object):
 
     @classmethod
@@ -35,6 +36,10 @@ class TestPlaceOrder(object):
     # 下一步
     # 再一个assert
 
+    @allure.story("测试登录功能")
+    @allure.severity('normal')
+    @allure.testcase("http://www.testlink.com/id=001")
+    @allure.issue("http://www.jira.com/id=001")
     @pytest.mark.parametrize("phone,pwd,msg", [("15001106951", "123456", "成功"), ("15001106951", "abc123", "错误")])
     def test_01_login(self, phone, pwd, msg):
         if self.ProfilePage.is_login_app() == 0:
@@ -42,10 +47,17 @@ class TestPlaceOrder(object):
         else:
             assert str(self.ProfilePage.logout_app().login_app(phone, pwd).getToastMsg()).__contains__(msg)
 
+    @allure.story("测试搜索功能")
+    @allure.severity('blocker')
+    @allure.testcase("http://www.testlink.com/id=002")
+    @allure.issue("http://www.jira.com/id=002")
     @pytest.mark.parametrize("kw,jr", [("感冒", "//*[contains(@text,'感')]"), ("发烧", "//*[contains(@text,'发')]")])
     def test_02_search(self, kw, jr):
-        result = self.Hyspage.search_goodsB2C(kw)
-        assert result.judge_Searchresult(jr) > 1
+        with allure.step("使用关键字进行搜索"):
+            result = self.Hyspage.search_goodsB2C(kw)
+        with allure.step("获取搜索结果的长度"):
+            search_resault = result.judge_Searchresult(jr)
+        assert search_resault > 1
 
     def test_03_placeOrder(self):           # 一个行为只在结束断言
         self.Hyspage.cart_goods_isChecked()

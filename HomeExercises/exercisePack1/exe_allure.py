@@ -23,7 +23,7 @@ def generate_html():
     html_path='report/html'
     # allure generate 测试结果数据所在目录 -o 测试报告保存的目录 --clean
     # allure generate D:/Projects/report/xml -o D:/Projects/report/html --clean
-    generate_command = 'allure generate '+xml_path+' -o '+html_path+' --clean-alluredir'
+    generate_command = 'allure generate '+xml_path+' -o '+html_path+' --clean'
     os.system(generate_command)
 def assert_use():
     a=1;b=-1
