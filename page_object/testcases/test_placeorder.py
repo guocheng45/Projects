@@ -1,3 +1,4 @@
+# coding=utf-8
 from page_object.pages.HysAPP import HysApp
 from page_object.pages.HysBase import HysBase
 from page_object.pages.HysMainPage import HysMainPage
@@ -21,8 +22,7 @@ class TestPlaceOrder(object):
     def teardown_method(self):
         # 如返回至初始页可放置在此
         self.Hyspage.search_back()
-        # todo: 方法结束发送邮件or 整个case结束发送邮件
-        return 1
+
 
     @classmethod
     def teardown_class(cls):

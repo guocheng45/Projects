@@ -24,7 +24,7 @@ class TestYaml(object):
 
     def test_screenshots(self):
         import os
-        os.remove('xiaoming.png')       # 删除一个文件，这是点杀文件
+        os.remove('xiaoming.png')       # 删除一个文件，这是点杀文件  os.remove(path) path -- 要移除的文件路径
         import shutil
         shutil.rmtree('log/report/', ignore_errors=True)  # 表示递归删除文件夹下的所有文件夹和子文件
         from page_object.common import screenshots
@@ -39,3 +39,14 @@ class TestYaml(object):
         for f in files:
             if (f.endswith('.png')):
                 print('png file name :',f)
+
+
+    def test_logging(self):
+        import logging
+
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        # bad
+        logging.debug('Hello {0}, {1}!'.format('World', 'Congratulations'))
+        # good
+        logging.debug('Hello %s, %s!', 'World', 'Congratulations')

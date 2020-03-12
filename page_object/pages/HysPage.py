@@ -1,9 +1,10 @@
 from selenium.webdriver.common.by import By
 import time
 from datetime import datetime
-from page_object.common.Logger import Logger
+import logging
 from page_object.pages.HysBase import HysBase
-from page_object.common.sendmail import SendMail
+import allure
+import os
 
 
 class HysPage(HysBase):
@@ -38,15 +39,21 @@ class HysPage(HysBase):
         return self
 
     def search_goodsB2C(self, kw):
-        self.loadSteps("../data/hys.yaml", "search_goodsB2C", keys=kw)
-        self.screenshots()
+
+        # import os
+        # print('当前所在位置：====================', os.getcwd())
+        self.loadSteps("data/hys.yaml", "search_goodsB2C", keys=kw)
         return self
 
     def judge_Searchresult(self, jr):
         # judge_result = self.driver.find_elements(By.XPATH, jr)
         judge_result = self.driver.find_elements(By.ID, "iv_buy")
-        Logger.logger.info("=================", judge_result, '/n', type(judge_result))
-        print("=================", judge_result, '/n', type(judge_result))
+        logging.info("=================type(judge_result: %s", type(judge_result))
+        print('========================',type(judge_result))
+        pic = self.screenshots()
+        file = open(pic,'rb').read()         # 先把文件open 然后再read读取一下，然后即可把这个文件加到allure中
+        allure.attach.file(pic, attachment_type=allure.attachment_type.PNG)       # attach图片上步已经可以读取，直接写上名字就可以了
+        os.remove(pic)
         return len(judge_result)
 
     def search_back(self):
@@ -98,7 +105,7 @@ class HysPage(HysBase):
         pel1 = self.find(By.XPATH,
                          "//*[contains(@text,'%s')]" %name+"/../..//*[contains(@resource-id,'rb_check')]")
         is_checked = pel1.get_attribute("checked")
-        Logger.logger.info("is_checked===========", is_checked)
+        logging.info("is_checked===========: %s", is_checked)
         # screenshot = self.driver.get_screenshot_as_png('D:\Projects\page_object\ut\%s.png' % (datetime.now().strftime("%Y%m%d%H%M%S")))
         # SendMail.sendMail(msg=0,pic=screenshot,receiver=1)
         return is_checked

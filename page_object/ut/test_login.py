@@ -47,10 +47,9 @@ class TestLogin:
             time.sleep(random.randint(2, 4))
             name = datetime.now().strftime("%Y%m%d%H%M%S")
             screenshots.screenshot_PC(name)
-            file = open(name + '.png', 'rb').read()
-            #attachment_type = allure.attachment_type.PNG
-            allure.attach.file(name + '.png', attachment_type=allure.attachment_type.PNG)
-            os.remove(name + '.png')        # 删除一个文件，这是点杀文件
+            file = open(name + '.png', 'rb').read()         # 先把文件open 然后再read读取一下，然后即可把这个文件加到allure中
+            allure.attach.file(name + '.png', attachment_type=allure.attachment_type.PNG)       # attach图片上步已经可以读取，直接写上名字就可以了
+            os.remove(name + '.png')        # 删除一个文件，这是点杀文件  os.remove(path) path -- 要移除的文件路径
             user_name_text = ''
 
         print("I am log")

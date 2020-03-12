@@ -5,7 +5,6 @@ from selenium.webdriver.remote.webelement import WebElement
 import time
 from page_object.driver.hysClient import HysClient
 from datetime import datetime
-import logging
 from page_object.common.sendmail import SendMail
 
 
@@ -16,7 +15,7 @@ class HysBase(object):
         导出都是findelement，所以封装一下给所有页面用
     """
     black_element = [(By.XPATH, 'black-1'), (By.XPATH, 'black-2')]       # 这是弹窗黑名单按钮
-    wait_element = ("aa","tv_price_desc","cc")
+    # wait_element = ("aa","tv_price_desc","cc")
 
 
     def __init__(self):
@@ -39,7 +38,8 @@ class HysBase(object):
 
     def screenshots(self):
         name = datetime.now().strftime("%Y%m%d%H%M%S")
-        self.driver.get_screenshot_as_file(r'D:\Projects\page_object\ut\%s.png' % name)
+        # self.driver.get_screenshot_as_file(r'D:\Projects\page_object\ut\%s.png' % name)
+        self.driver.get_screenshot_as_file(r'%s.png' % name)
         pic = name+'.png'
         return pic
 
@@ -56,12 +56,12 @@ class HysBase(object):
     def find(self,by,value):
         element: WebElement
         # 按钮是否等待
-        for e in HysBase.wait_element:
-            if e == value:
-                time.sleep(2)
-                break
+        # for e in HysBase.wait_element:
+        #     if e == value:
+        #         time.sleep(2)
+        #         break
         # 加上重试机制，例如3次
-        for i in range(3):
+        for i in range(2):
             try:
                 element = self.driver.find_element(by,value)
                 return element          # return 直接结束函数
@@ -86,7 +86,7 @@ class HysBase(object):
     # 该方法将搞定一切操作流程，原理通过yaml文件直接进行每一步操作
     def loadSteps(self,yaml_path,key,**kwargs):     # 文件目录、key：Android IOS 字典参数
         file=open(yaml_path,'r')
-        data=yaml.load(file)
+        data=yaml.load(file,Loader=yaml.FullLoader)
         po_method=data[key]
         po_element = dict()
         if data.keys().__contains__('elements'):    # 以防文件中没有elements

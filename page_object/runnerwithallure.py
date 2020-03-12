@@ -21,7 +21,8 @@ if __name__ == '__main__':
     # pytest.main(['--alluredir', '../log/report/xml', 'testcases/alluredemo/login/test_login.py::TestLogin::test_2474609'])
     # pytest.main(['--alluredir', '../log/report/xml','--allure-severities=blocker', 'testcases/alluredemo/'])
     # pytest.main(['--alluredir', '../log/report/xml','--allure-features=测试登录功能', 'testcases/alluredemo/'])
-    pytest.main(['--alluredir', 'log/report/xml', '--allure-features=测试登录功能', 'ut/'])
+    # pytest.main(['--alluredir', 'log/report/xml', '--allure-features=测试登录功能', 'ut/'])
+    pytest.main(['--alluredir', 'log/report/xml', '--allure-stories=测试搜索功能', 'testcases/'])
 
     # 通过subprocess.getstatusoutput 获得shell返回结果
     print(subprocess.getstatusoutput('allure generate --clean log/report/xml -o log/report/html'))
