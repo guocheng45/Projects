@@ -1,4 +1,4 @@
-from page_object.driver.hysClient import HysClient
+# from page_object.driver.hysClient import HysClient
 from page_object.pages.HysBase import HysBase
 from page_object.pages.HysMainPage import HysMainPage
 
@@ -11,6 +11,8 @@ class HysApp(HysBase):
     @classmethod
     def main(cls):
         # HysClient.start_app()
-        cls.getClient().start_app()     # 此处通过Base类调用，意义不大
+        cls.driver = HysBase._driver
+        if cls.driver is None:
+            cls.getClient().start_app()     # 此处通过Base类调用，意义不大
         return HysMainPage()
 

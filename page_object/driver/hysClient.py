@@ -21,5 +21,5 @@ class HysClient(object):
         caps["noReset"] = "True"
         caps["unicodeKeyboard"] = "True"
         cls.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
-        cls.driver.implicitly_wait(10)
+        cls.driver.implicitly_wait(7)
         return cls.driver

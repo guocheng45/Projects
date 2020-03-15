@@ -43,6 +43,8 @@ class BasePage(object):
                     # 判断元素的大小
                     if (elements.__sizeof__()>0):
                         elements[0].click()
+                        return self.find(by,value)
+                # 如果黑名单没有就报错
 
 
     def findByText(self,text)-> WebElement:     #此处设置关键字文本      指定方法的返回类型

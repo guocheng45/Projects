@@ -22,6 +22,7 @@ if __name__ == '__main__':
     # pytest.main(['--alluredir', '../log/report/xml','--allure-severities=blocker', 'testcases/alluredemo/'])
     # pytest.main(['--alluredir', '../log/report/xml','--allure-features=测试登录功能', 'testcases/alluredemo/'])
     # pytest.main(['--alluredir', 'log/report/xml', '--allure-features=测试登录功能', 'ut/'])
+
     pytest.main(['--alluredir', 'log/report/xml', '--allure-stories=测试搜索功能', 'testcases/'])
 
     # 通过subprocess.getstatusoutput 获得shell返回结果

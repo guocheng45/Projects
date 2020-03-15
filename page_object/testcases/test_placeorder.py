@@ -1,6 +1,5 @@
 # coding=utf-8
 from page_object.pages.HysAPP import HysApp
-from page_object.pages.HysBase import HysBase
 from page_object.pages.HysMainPage import HysMainPage
 import pytest
 from page_object.pages.HysPage import HysPage
@@ -26,6 +25,8 @@ class TestPlaceOrder(object):
 
     @classmethod
     def teardown_class(cls):
+        # time.sleep(2)
+        # cls.driver.quit()
         pass
 
     # 炒个栗子
