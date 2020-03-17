@@ -16,22 +16,27 @@ class HysBase(object):
     """
     black_element = [(By.XPATH, 'black-1'), (By.XPATH, 'black-2')]       # 这是弹窗黑名单按钮
     # wait_element = ("aa","tv_price_desc","cc")
-    _driver: WebDriver
+    driver: WebDriver
 
 
-    def __init__(self,driver: WebDriver = None):
-        # self.driver=HysClient.driver
-        # 使用什么driver
-        self._driver = driver
+    def __init__(self):
+        self.driver=self.getDriver()
+
 
     @classmethod
     def getDriver(cls):     # 此处是获取HysClient类的driver  但是不初始化APP生成driver
-        cls._driver = HysClient.driver
-        return cls._driver
+        cls.driver = HysClient.driver
+        return cls.driver
 
     # 定义一个Client实例化供APP类调用
     @classmethod
     def getClient(cls):
+        # if cls.driver is None:
+        #     return HysClient.start_app()
+        # else:
+        #     return cls.driver
+        print("======================", HysBase.driver)
+        print("======================", cls.driver)
         return HysClient
 
     # def find(self,kv)->WebElement:
@@ -39,8 +44,8 @@ class HysBase(object):
 
     def screenshots(self):
         name = datetime.now().strftime("%Y%m%d%H%M%S")
-        # self._driver.get_screenshot_as_file(r'D:\Projects\page_object\ut\%s.png' % name)
-        self._driver.get_screenshot_as_file(r'%s.png' % name)
+        # self.driver.get_screenshot_as_file(r'D:\Projects\page_object\ut\%s.png' % name)
+        self.driver.get_screenshot_as_file(r'%s.png' % name)
         pic = name+'.png'
         return pic
 
@@ -64,16 +69,16 @@ class HysBase(object):
         # 加上重试机制，例如3次，目的是为了防止这个控件没有加载出来
         for i in range(2):
             try:
-                element = self._driver.find_element(by,value)
+                element = self.driver.find_element(by,value)
                 return element          # return 直接结束函数
             except:
-                # self._driver.page_source     # 这是一个页面的XML，找到页面顶层元素进行点击
+                # self.driver.page_source     # 这是一个页面的XML，找到页面顶层元素进行点击
                 # 动态变化位置的元素处理
 
                 # 未找到元素可能是有弹窗，进行黑名单处理
                 ##//*[@text='弹窗']/..//*[@text='确认']
                 for e in HysBase.black_element:
-                    elements = self._driver.find_elements(*e)        # *e 是一个（a,b） 挨个在界面上尝试找黑名单元素
+                    elements = self.driver.find_elements(*e)        # *e 是一个（a,b） 挨个在界面上尝试找黑名单元素
                     if elements!=[]:     # 如果这个元素存在，则__sizeof__>0
                         elements[0].click()     # 则找到这个元素的第一个，点了它
                 # 如果黑名单没有就报错

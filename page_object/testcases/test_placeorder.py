@@ -1,8 +1,6 @@
 # coding=utf-8
 from page_object.pages.HysAPP import HysApp
-from page_object.pages.HysMainPage import HysMainPage
 import pytest
-from page_object.pages.HysPage import HysPage
 import allure
 
 @allure.feature("测试好药师APP搜索")

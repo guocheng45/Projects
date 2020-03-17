@@ -15,7 +15,6 @@ class HysPage(HysBase):
         也可以对一个操作功能进行封装
         为了引用该类的时候调用到类里面的变量，可以给变量加_不会被看到
     """
-
     def getErrorMsg(self):
         msg = self.find("self._error_msg").text
         self.findByText("确定").click()

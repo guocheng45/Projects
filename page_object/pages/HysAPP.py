@@ -11,8 +11,11 @@ class HysApp(HysBase):
     @classmethod
     def main(cls):
         # HysClient.start_app()
-        cls.driver = HysBase._driver
+        # cls.driver = HysBase._driver
+        print("======================", cls.driver)
+        print("======================", HysBase.driver)
         if cls.driver is None:
             cls.getClient().start_app()     # 此处通过Base类调用，意义不大
+        cls.getClient()
         return HysMainPage()
 
