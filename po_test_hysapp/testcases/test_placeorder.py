@@ -1,5 +1,5 @@
 # coding=utf-8
-from page_object.pages.HysAPP import HysApp
+from po_test_hysapp.pages.HysAPP import HysApp
 import pytest
 import allure
 

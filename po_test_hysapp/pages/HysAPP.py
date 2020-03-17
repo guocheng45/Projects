@@ -1,6 +1,6 @@
 # from page_object.driver.hysClient import HysClient
-from page_object.pages.HysBase import HysBase
-from page_object.pages.HysMainPage import HysMainPage
+from po_test_hysapp.pages.HysBase import HysBase
+from po_test_hysapp.pages.HysMainPage import HysMainPage
 
 
 class HysApp(HysBase):

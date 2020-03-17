@@ -6,3 +6,4 @@ Projects/.idea/workspace.xml
 Projects/.idea/vcs.xml
 .pytest_cache/
 venv/
+log/

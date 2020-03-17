@@ -2,10 +2,8 @@ import yaml
 from appium.webdriver.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-import time
-from page_object.driver.hysClient import HysClient
+from po_test_hysapp.driver.hysClient import HysClient
 from datetime import datetime
-from page_object.common.sendmail import SendMail
 
 
 class HysBase(object):
@@ -46,7 +44,7 @@ class HysBase(object):
 
     def send_mail(self,msg1,pic1,receiver1):
         # todo: 实现发邮件
-        SendMail.sendMail(msg1,pic1,receiver1)
+        # SendMail.sendMail(msg1,pic1,receiver1)
         return 1
 
     def getToastMsg(self):

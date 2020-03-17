@@ -1,8 +1,7 @@
 from selenium.webdriver.common.by import By
 
-from page_object.driver.hysClient import HysClient
-from page_object.pages.HysPage import HysPage
-from page_object.pages.HysBase import HysBase
+from po_test_hysapp.pages.HysPage import HysPage
+from po_test_hysapp.pages.HysBase import HysBase
 
 
 class HysMainPage(HysBase):
