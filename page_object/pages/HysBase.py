@@ -31,13 +31,8 @@ class HysBase(object):
     # 定义一个Client实例化供APP类调用
     @classmethod
     def getClient(cls):
-        # if cls.driver is None:
-        #     return HysClient.start_app()
-        # else:
-        #     return cls.driver
-        print("======================", HysBase.driver)
-        print("======================", cls.driver)
         return HysClient
+
 
     # def find(self,kv)->WebElement:
     #     return self.find(*kv)

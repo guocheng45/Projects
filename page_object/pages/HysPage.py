@@ -25,7 +25,7 @@ class HysPage(HysBase):
         return self  # 返回self是为了链式调用，也就是说可以方法连着调方法  ：func1().func2().func3()
 
     def is_login_app(self):  # tv_nick_name 判断该控件是否存在即可
-        element = self._driver.find_elements(By.ID, "tv_nick_name")  # 只有elements的找不到元素才是为[] 其他报错
+        element = self.driver.find_elements(By.ID, "tv_nick_name")  # 只有elements的找不到元素才是为[] 其他报错
         # if element.__sizeof__()>0:      # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
         if element != []:  # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
             return 1  # 已登录
@@ -45,8 +45,8 @@ class HysPage(HysBase):
         return self
 
     def judge_Searchresult(self, jr):
-        # judge_result = self._driver.find_elements(By.XPATH, jr)
-        judge_result = self._driver.find_elements(By.ID, "iv_buy")
+        # judge_result = self.driver.find_elements(By.XPATH, jr)
+        judge_result = self.driver.find_elements(By.ID, "iv_buy")
         logging.info("=================type(judge_result: %s", type(judge_result))
         pic = self.screenshots()
         file = open(pic,'rb').read()         # 先把文件open 然后再read读取一下，然后即可把这个文件加到allure中
@@ -75,16 +75,16 @@ class HysPage(HysBase):
     def swipe_ui(self, act):
         time.sleep(3)
         # Swipe（int start x, int start y, int end x, int y, duration)
-        x = self._driver.get_window_size()['width']
-        y = self._driver.get_window_size()['height']
+        x = self.driver.get_window_size()['width']
+        y = self.driver.get_window_size()['height']
         if act == "下拉":
-            self._driver.swipe(int(x * 0.5), int(y * 0.2), int(x * 0.5), int(y * 0.5), 1000)
+            self.driver.swipe(int(x * 0.5), int(y * 0.2), int(x * 0.5), int(y * 0.5), 1000)
         elif act == "上拉":
-            self._driver.swipe(int(x * 0.5), int(y * 0.8), int(x * 0.5), int(y * 0.5), 1000)
+            self.driver.swipe(int(x * 0.5), int(y * 0.8), int(x * 0.5), int(y * 0.5), 1000)
         elif act == "左滑":
-            self._driver.swipe(int(x * 0.2), int(y * 0.5), int(x * 0.5), int(y * 0.5), 1000)
+            self.driver.swipe(int(x * 0.2), int(y * 0.5), int(x * 0.5), int(y * 0.5), 1000)
         else:  # 右滑或者返回
-            self._driver.swipe(int(x * 0.5), int(y * 0.5), int(x * 0.2), int(y * 0.5), 1000)
+            self.driver.swipe(int(x * 0.5), int(y * 0.5), int(x * 0.2), int(y * 0.5), 1000)
         time.sleep(3)
 
     def common_backtomainpage(self):
@@ -110,7 +110,7 @@ class HysPage(HysBase):
 
     def addto_B2CCart(self):
         # 找到第一个商品加购
-        eles = self._driver.find_elements(By.ID,"iv_buy")
+        eles = self.driver.find_elements(By.ID,"iv_buy")
         eles[0].click()
         # 返回首页
         self.find(By.ID,"iv_cart").click()

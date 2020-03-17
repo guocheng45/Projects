@@ -14,12 +14,12 @@ class HysClient(object):
     def start_app(cls)->WebDriver:
         caps = {}
         caps["platformName"] = "android"
-        caps["deviceName"] = "GT_New123"
+        caps["deviceName"] = "GT_New"
         caps["appPackage"] = "com.jzt.kingpharmacist"
         caps["appActivity"] = ".apploadpage.LoadingAc"
-        caps["autoGrantPermissions"] = "true"
-        caps["noReset"] = "True"
-        caps["unicodeKeyboard"] = "True"
+        caps["autoGrantPermissions"] = True
+        caps["noReset"] = True
+        caps["unicodeKeyboard"] = True
         cls.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
-        cls.driver.implicitly_wait(7)
+        cls.driver.implicitly_wait(5)
         return cls.driver
