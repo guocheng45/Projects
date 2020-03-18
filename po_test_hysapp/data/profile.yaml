@@ -1,0 +1,89 @@
+login_app:
+  - locator: fl_radio_profile
+    by: id
+    action: click
+  - locator: btn_login
+    by: id
+    action: click
+  - element: clet_phone
+    by: id
+    action: send_keys
+    text: $phone
+  - element: clet_password
+    by: id
+    action: send_keys
+    text: $pwd
+  - locator: btn_submit
+    by: id
+    action: click
+
+logout_app:
+  - locator: ll_setting
+    by: id
+    action: click
+  - locator: btn_logout
+    by: id
+    action: click
+  - locator: iv_base_left
+    by: id
+    action: click
+
+getErrorMsg:
+  - xxx
+elements:
+  clet_phone:
+    android:
+      by: id
+      locator: clet_phone
+    ios:
+      by: id
+      locator: ios_account
+  clet_password:
+    android:
+      by: id
+      locator: clet_password
+    ios:
+      by: id
+      locator: ios_password
+
+search_goodsB2C:
+  - locator: radio_home
+    by: id
+    action: click
+  - locator: qmy_main_search_ll
+    by: id
+    action: click
+  - locator: et_search
+    by: id
+    action: send_keys
+    text: $keys
+  - locator: bt_search
+    by: id
+    action: click
+  - locator: tv_price_desc
+    by: id
+    action: click
+  - locator: tv_price_desc
+    by: id
+    action: click
+
+search_goodsO2O:
+  - locator: function_img
+    by: id
+    action: click
+  - locator: et_search
+    by: id
+    action: click
+  - locator: et_search
+    by: id
+    action: send_keys
+    text: $keys
+  - locator: bt_search
+    by: id
+    action: click
+  - locator: tv_price_desc
+    by: id
+    action: click
+  - locator: tv_price_desc
+    by: id
+    action: click

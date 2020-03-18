@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from po_test_hysapp.driver.hysClient import HysClient
 from datetime import datetime
+import allure
+import os
 
 
 class HysBase(object):
@@ -40,7 +42,10 @@ class HysBase(object):
         # self.driver.get_screenshot_as_file(r'D:\Projects\page_object\ut\%s.png' % name)
         self.driver.get_screenshot_as_file(r'%s.png' % name)
         pic = name+'.png'
-        return pic
+        file = open(pic, 'rb').read()  # 先把文件open 然后再read读取一下，然后即可把这个文件加到allure中
+        allure.attach.file(pic, attachment_type=allure.attachment_type.PNG)  # attach图片上步已经可以读取，直接写上名字就可以了
+        os.remove(pic)
+
 
     def send_mail(self,msg1,pic1,receiver1):
         # todo: 实现发邮件
