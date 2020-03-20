@@ -12,7 +12,7 @@ class HysMainPage(HysBase):
         # 方法是goto其他page，这样在case中就可以直接通过goto方法访问下一页面的方法
     """
 
-    _search_button = (By.ID, "radio_home")
+
 
     def gotoProfile(self) -> ProfilePage:  # 如果返回不指定返回类型，使用时就不嫩玩链式调用    这个只是告诉看你代码的人，返回类型是啥。python 没有强制检测???试试吧
         # 调用全局的driver对象使用webdriver 定位元素

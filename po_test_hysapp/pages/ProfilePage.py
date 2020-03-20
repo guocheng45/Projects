@@ -1,9 +1,7 @@
 from selenium.webdriver.common.by import By
 import time
-import logging
 from po_test_hysapp.pages.HysBase import HysBase
-import allure
-import os
+from po_test_hysapp.pages.LoginPage import LoginPage
 
 
 class ProfilePage(HysBase):
@@ -15,21 +13,24 @@ class ProfilePage(HysBase):
         为了引用该类的时候调用到类里面的变量，可以给变量加_不会被看到
     """
 
+    # 注意要跳登录页，首先判断是否登录
+    def gotoLogin(self) -> LoginPage:
+        self.find(By.ID,"btn_login").click()
+        return LoginPage()
+
     # ================首先判断个人页是否已登录
     def is_login_app(self):  # tv_nick_name 判断该控件是否存在即可
         element = self.driver.find_elements(By.ID, "tv_nick_name")  # 只有elements的找不到元素才是为[] 其他报错
-        self.screenshots()  # 操作页面进行截图
+        # self.screenshots()  # 操作页面进行截图
         # if element.__sizeof__()>0:      # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
         if element != []:  # 判断昵称元素是否存在，大于0就是存在已登录，否则就是未登录
-            return True  # 已登录
+            return "logged"  # 已登录
         else:
-            return False  # 未登录
+            return "not logged"  # 未登录
 
-    # ================未登录，可进行登录测试
-    def login_app(self, var1, var2):
-        self.loadSteps("data/hys.yaml", "login_app", phone=var1, pwd=var2)
-        self.screenshots()  # 操作页面进行截图
-        return self  # 返回self是为了链式调用，也就是说可以方法连着调方法  ：func1().func2().func3()
+    def back_profile(self):
+        self.find(By.ID, "iv_base_left").click()
+        return self
 
     # ================登录的，可退出登录测试
     def logout_app(self):

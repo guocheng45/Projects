@@ -1,10 +1,4 @@
 login_app:
-  - locator: fl_radio_profile
-    by: id
-    action: click
-  - locator: btn_login
-    by: id
-    action: click
   - element: clet_phone
     by: id
     action: send_keys
