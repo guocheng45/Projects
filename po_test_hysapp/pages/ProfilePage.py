@@ -74,8 +74,13 @@ class ProfilePage(HysBase):
     # 4.点待付款
     def click_payment(self):
         self.find(By.ID,"ll_my_pending_pay").click()
+        length = len(self.driver.find_elements(By.ID, "tv_pharmacy_name"))
         self.screenshots()          # 操作页面进行截图
         self.find(By.ID,"iv_base_left").click()
+        if length>0:
+            return True
+        else:
+            return False
 
     # 5.点我的需求
     def click_needs(self):

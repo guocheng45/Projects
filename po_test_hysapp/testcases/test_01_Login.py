@@ -4,7 +4,7 @@ import allure
 import logging
 
 
-@allure.feature("测试APP个人页")
+@allure.feature("测试APP登录页")
 class TestProfile(object):
 
     @classmethod

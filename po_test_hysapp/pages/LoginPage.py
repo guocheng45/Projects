@@ -11,5 +11,3 @@ class LoginPage(HysBase):
     def login_success_byuser(self, var1, var2):
         self.loadSteps("data/hys.yaml", "login_app", phone=var1, pwd=var2)
         return self
-
-
