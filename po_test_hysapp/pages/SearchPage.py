@@ -19,7 +19,16 @@ class SearchPage(HysBase):
         self.loadSteps("data/hys.yaml", "search_goodsB2C", keys=kw)
         return self
 
-    def judge_Searchresult(self, jr):
+    def search_goodsO2O(self, kw):
+        self.loadSteps("data/hys.yaml", "search_goodsO2O", keys=kw)
+        return self
+
+    def search_by_record(self):
+        eles = self.driver.find_elements(By.ID,"tv_tag")
+        eles[0].click()
+        return self
+
+    def judge_Searchresult(self):
         # judge_result = self.driver.find_elements(By.XPATH, jr)
         judge_result = self.driver.find_elements(By.ID, "iv_buy")
         logging.info("=================type(judge_result: %s", type(judge_result))
@@ -32,15 +41,6 @@ class SearchPage(HysBase):
 
     def search_back(self):
         self.find(By.ID, "iv_back").click()
-        return self
-
-    def search_goodsO2O(self, kw):
-        self.loadSteps("data/hys.yaml", "search_goodsO2O", keys=kw)
-        return self
-
-    def search_by_record(self):
-        eles = self.driver.find_elements(By.ID,"tv_tag")
-        eles[0].click()
         return self
 
     def swipe_ui(self, act):
@@ -59,11 +59,14 @@ class SearchPage(HysBase):
         time.sleep(3)
 
     def addto_Carts(self):
+        amount1 = self.find(By.XPATH,"//*[contains(@resource-id,'iv_cart')]/../android.widget.TextView").text
         # 找到第一个商品加购
         eles = self.driver.find_elements(By.ID,"iv_buy")
         eles[0].click()
-        # 返回首页
-        # 关闭弹窗提示
-        self.find(By.ID,"iv_cart").click()
-        # 需判断购物车该品是否选中
-        return self
+        amount2 = self.find(By.XPATH, "//*[contains(@resource-id,'iv_cart')]/../android.widget.TextView").text
+        # 目前判断不了是否加到购物车
+        self.screenshots()
+        if amount2 >=amount1:
+            return True
+        else:
+            return False

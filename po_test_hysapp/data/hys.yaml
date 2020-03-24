@@ -56,8 +56,8 @@ search_goodsB2C:
     action: click
 
 search_goodsO2O:
-  - locator: function_img
-    by: id
+  - locator: //*[contains(@resource-id,'function_Name')and(@text='1Ð¡Ê±´ï')]/..
+    by: xpath
     action: click
   - locator: et_search
     by: id
