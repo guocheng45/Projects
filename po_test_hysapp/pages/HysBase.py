@@ -7,6 +7,7 @@ from datetime import datetime
 import allure
 import os
 import logging
+import time
 
 
 class HysBase(object):
@@ -56,6 +57,20 @@ class HysBase(object):
         msg = toast.text
         logging.info("打印是否获取到msg: %s" % msg)
         return msg
+
+    def swipe_ui(self, action):
+        # Swipe（int start x, int start y, int end x, int y, duration)
+        x = self.driver.get_window_size()['width']
+        y = self.driver.get_window_size()['height']
+        if action == "down":
+            self.driver.swipe(int(x * 0.5), int(y * 0.2), int(x * 0.5), int(y * 0.5), 1000)
+        elif action == "up":
+            self.driver.swipe(int(x * 0.5), int(y * 0.8), int(x * 0.5), int(y * 0.5), 1000)
+        elif action == "left":
+            self.driver.swipe(int(x * 0.2), int(y * 0.5), int(x * 0.5), int(y * 0.5), 1000)
+        else:  # 右滑或者返回
+            self.driver.swipe(int(x * 0.5), int(y * 0.5), int(x * 0.2), int(y * 0.5), 1000)
+        time.sleep(2)
 
     def find(self, by, value):
         element: WebElement

@@ -43,21 +43,6 @@ class SearchPage(HysBase):
         self.find(By.ID, "iv_back").click()
         return self
 
-    def swipe_ui(self, act):
-        time.sleep(2)
-        # Swipe（int start x, int start y, int end x, int y, duration)
-        x = self.driver.get_window_size()['width']
-        y = self.driver.get_window_size()['height']
-        if act == "down":
-            self.driver.swipe(int(x * 0.5), int(y * 0.2), int(x * 0.5), int(y * 0.5), 1000)
-        elif act == "up":
-            self.driver.swipe(int(x * 0.5), int(y * 0.8), int(x * 0.5), int(y * 0.5), 1000)
-        elif act == "left":
-            self.driver.swipe(int(x * 0.2), int(y * 0.5), int(x * 0.5), int(y * 0.5), 1000)
-        else:  # 右滑或者返回
-            self.driver.swipe(int(x * 0.5), int(y * 0.5), int(x * 0.2), int(y * 0.5), 1000)
-        time.sleep(3)
-
     def addto_Carts(self):
         amount1 = self.find(By.XPATH,"//*[contains(@resource-id,'iv_cart')]/../android.widget.TextView").text
         # 找到第一个商品加购
