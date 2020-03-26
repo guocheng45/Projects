@@ -1,0 +1,30 @@
+change_quantity:
+  - locator: et_dialog_number
+    by: id
+    action: clear
+  - element: et_dialog_number
+    by: id
+    action: send_keys
+    text: $quantity
+  - element: bt_dialog_sure
+    by: id
+    action: click
+
+remove_item:
+  - locator: tv_delete
+    by: id
+    action: click
+  - locator: tv_sure
+    by: id
+    action: click
+
+back:
+  - locator: iv_base_left
+    by: id
+    action: click
+  - locator: tv_sure
+    by: id
+    action: click
+  - locator: iv_base_left
+    by: id
+    action: click

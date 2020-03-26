@@ -23,42 +23,54 @@ class CartsPage(HysBase):
         else:
             return False
 
-    # 选中车中某品
+    # 选中商品
     def select_goods(self, name='一力'):
         general_check = self.find(By.ID, "rb_pharmacy_check")
         check_status = general_check.get_attribute("checked")
         if check_status == 'true':
             general_check.click()
-        # "//*[contains(@text,'仁和可立克')]/../..//*[contains(@resource-id,'rb_check')]"
         goods_checkbt = self.find(By.XPATH,
-                                  "//*[contains(@text,'%s')]" % name + "/../..//*[contains(@resource-id,'rb_check')]")
-        checked = goods_checkbt.click()
+                                  "//*[contains(@text,'%s')]" % name + "/../..//*[contains(@resource-id,'rb_check')]").click()
         self.screenshots()
         return self
 
-    # 加减某品的数量为多少
-    def change_quantity(self, name='一力'):
+    # 修改商品数量为number
+    def change_quantity(self, name='一力',number=1):
         goods_quantity = self.find(By.XPATH,
                                    "//*[contains(@text,'%s')]" % name + "/../..//*[contains(@resource-id,'tv_number')]").click()
-        clear_quantity = self.find(By.ID,'et_dialog_number').clear()
-        set_quantity = self.find(By.ID,'et_dialog_number').send_keys('1')
-        self.find(By.ID,'bt_dialog_sure').click()
+        # clear_quantity = self.find(By.ID,'et_dialog_number').clear()
+        # set_quantity = self.find(By.ID,'et_dialog_number').send_keys('1')
+        # self.find(By.ID,'bt_dialog_sure').click()
+        self.loadSteps('data/carts.yaml','change_quantity',quant=number)
         return self
 
     # 编辑移除商品
-    def remove_item(self):
+    def remove_item(self,name='力生'):
         self.find(By.ID,'tv_edit_all').click()
-
-
-    def back(self):
-        self.find(By.ID, "iv_back").click()
+        self.find(By.XPATH,"//*[contains(@text,'%s')]" % name + "/../..//*[contains(@resource-id,'rb_check')]").click()
+        # self.find(By.ID,"tv_delete").click()
+        # self.find(By.ID,"tv_sure").click()
+        self.loadSteps('data/carts.yaml','remove_item')
         return self
 
-    # 下单结算
+    def back(self):         # 收银台->购物车
+        # self.find(By.ID, "iv_base_left").click()  # 收银台返回
+        # self.find(By.ID, "tv_sure").click()  # 弹窗确定按钮
+        # self.find(By.ID, "iv_base_left").click()  # 订单详情返回按钮——>回到购物车
+        self.loadSteps('data/carts.yaml','back')
+        return self
+
+    # 下单结算，首先需要选中商品
     def place_order(self):
-        pel5 = self.find(By.ID, "tv_next").click()
-        pel6 = self.find(By.ID, "tv_submit_order").click()
-        return self
+        self.find(By.ID, "tv_next").click()
+        order_price1 = str(self.find(By.ID,"tv_total_to_pay").text)
+        self.find(By.ID, "tv_submit_order").click()
+        order_price2 = str(self.find(By.ID, "order_price").text)
+        if order_price1 == order_price2:
+            return True
+        else:
+            return False
+
 
     # def __place_order_B2CCart(self, kw):        # B2C搜索商品加到购物车下单
     #     self.search_goodsB2C(kw)
