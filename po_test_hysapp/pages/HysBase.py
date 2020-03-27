@@ -37,6 +37,7 @@ class HysBase(object):
     #     return self.find(*kv)
 
     def screenshots(self):
+        time.sleep(1.5)
         name = datetime.now().strftime("%Y%m%d%H%M%S")
         # self.driver.get_screenshot_as_file(r'D:\Projects\page_object\ut\%s.png' % name)
         self.driver.get_screenshot_as_file(r'%s.png' % name)
@@ -125,6 +126,8 @@ class HysBase(object):
             element: WebElement = self.find(by=element_step['by'], value=element_step['locator'])
             if str(step['action']).lower() == 'click':  # .lower()转成小写，避免里面有大写
                 element.click()
+            elif str(step['action']).lower() == 'clear':
+                element.clear()
             elif str(step['action']).lower() == 'send_keys':  # 涉及到传参替换的问题
                 text = str(step['text'])
                 for k, v in kwargs.items():

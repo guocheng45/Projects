@@ -76,11 +76,24 @@ class ProfilePage(HysBase):
         self.find(By.ID,"ll_my_pending_pay").click()
         length = len(self.driver.find_elements(By.ID, "tv_pharmacy_name"))
         self.screenshots()          # 操作页面进行截图
+        if length>0:
+            self.cancel_order()
         self.find(By.ID,"iv_base_left").click()
         if length>0:
-            return True
-        else:
             return False
+        else:
+            return True
+
+    def cancel_order(self):
+        self.loadSteps('data/profile.yaml','cancel_order')
+        # self.find(By.ID,'bt_cancel').click()
+        # self.find(By.ID, 'iv_check').click()
+        # self.find(By.ID, 'bt_sure').click()
+
+        # cel3 = self.driver.find_elements(By.ID,"bt_cancel")[0].click()
+
+        self.screenshots()
+        return self
 
     # 5.点我的需求
     def click_needs(self):

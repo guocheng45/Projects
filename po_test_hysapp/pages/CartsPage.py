@@ -64,9 +64,13 @@ class CartsPage(HysBase):
     def place_order(self):
         self.find(By.ID, "tv_next").click()
         order_price1 = str(self.find(By.ID,"tv_total_to_pay").text)
+        self.screenshots()
         self.find(By.ID, "tv_submit_order").click()
         order_price2 = str(self.find(By.ID, "order_price").text)
-        if order_price1 == order_price2:
+        self.screenshots()
+        logging.info("===================order_price1: %s" % order_price1)
+        logging.info("===================order_price2: %s" % order_price2)
+        if order_price1 in order_price2:
             return True
         else:
             return False

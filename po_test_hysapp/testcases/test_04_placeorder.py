@@ -57,14 +57,14 @@ class TestPlaceOrder(object):
     @allure.severity('blocker')
     @allure.testcase("")
     @allure.issue("")
-    @pytest.mark.parametrize("str1,str2",[("一力",1),("好医生",1)])
+    @pytest.mark.parametrize("str1,str2",[("一力",'1'),("好医生",'1')])
     def test_03_change_quantity(self,str1,str2):
         with allure.step("修改商品的数量"):
             self.cartspage.change_quantity(name=str1,number=str2)
             self.cartspage.screenshots()
 
     @allure.story("测试移除商品")
-    @allure.severity('blocker')
+    @allure.severity('normal')
     @allure.testcase("")
     @allure.issue("")
     def test_04_remove_item(self):

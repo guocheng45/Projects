@@ -40,13 +40,15 @@ class TestSearch(object):
     @allure.severity('Trivial')  # 我这里定三个等级：Trivial、Normal、Blocker
     @allure.testcase('')
     @allure.issue('')
-    @pytest.mark.parametrize("kw",["感冒","发烧"])
+    @pytest.mark.parametrize("kw",["一力","力生"])
     def test_01_search_goodsB2C(self,kw):
         with allure.step("输入关键字进行搜索"):
             self.SearchPage.search_goodsB2C(kw)
             self.SearchPage.screenshots()
         with allure.step("检查搜索结果"):
             result = self.SearchPage.judge_Searchresult()
+        with allure.step("将搜索结果第一个加购物车"):
+            self.SearchPage.addto_Carts()
         assert result == True
 
     # # 由于setup_method设置的暂不可应用于O2O搜索（原理上说不属于同一个页面）
