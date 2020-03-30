@@ -18,7 +18,7 @@ if __name__ == '__main__':
     # pytest.main(['-sq', '--alluredir', '../log/testreport', 'testcases/myselector/test_all_stocks.py'])
     # pytest.main(['-sq', '--alluredir', '../log/testreport/xml', 'testcases/login','testcases/myselector'])
     # pytest.main(['--alluredir', '../log/report/xml','--allure_severities=blocker', 'testcases/'])
-    # pytest.main(['--alluredir', '../log/report/xml', 'testcases/alluredemo/login/test_login.py::TestLogin::test_2474609'])
+    # pytest.main(['--alluredir', '../log/report/xml', 'testcases/alluredemo/login/test_hys.py::TestLogin::test_2474609'])
     # pytest.main(['--alluredir', '../log/report/xml','--allure-severities=blocker', 'testcases/alluredemo/'])
     # pytest.main(['--alluredir', '../log/report/xml','--allure-features=测试登录功能', 'testcases/alluredemo/'])
     # pytest.main(['--alluredir', 'log/report/xml', '--allure-features=测试登录功能', 'ut/'])

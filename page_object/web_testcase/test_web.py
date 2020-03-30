@@ -15,7 +15,6 @@ for handle in handles:
         driver.close()
         driver.switch_to.window(handle)
 
-driver.find_element_by_id("lgnByaccount").click()
 driver.find_element_by_id("loginName").send_keys("13663397421")
 driver.find_element_by_id("loginPwd").send_keys("abc123")
 driver.find_element_by_id("submitLogin2").click()
