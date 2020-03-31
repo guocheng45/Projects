@@ -18,3 +18,6 @@ class LoginPage(BasePage):
         self.driver.find_element_by_id('exit_top_btn').click()
         sleep(3)
         return self
+
+    def profile(self):
+        print(self.driver.get_cookies())

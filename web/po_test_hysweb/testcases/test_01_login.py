@@ -1,6 +1,6 @@
 from selenium import webdriver
-from selenium.webdriver import DesiredCapabilities
-
+# from selenium.webdriver import DesiredCapabilities
+# from selenium.webdriver.remote.webdriver import WebDriver
 from web.po_test_hysweb.pages.MainPage import MainPage
 
 
@@ -12,12 +12,12 @@ class TestLogin(object):
         cls.driver.implicitly_wait(10)
         cls.driver.get("https://www.ehaoyao.com")
         cls.driver.maximize_window()
-        cls.main = MainPage(cls.driver)
+        cls.main = MainPage(cls.driver)         # 对主页面的初始化
 
     @classmethod
     def teardown_class(cls):
-        cls.main
-        pass
+        cls.main.driver_quit()
+
 
     def setup_method(self):
         pass
