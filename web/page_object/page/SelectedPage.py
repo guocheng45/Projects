@@ -9,6 +9,7 @@ class SelectedPage(BasePage):
     def __init__(self, driver):
         super(self, driver)
         #super().__init__(driver)
+        # 等待加载完成后可点击
         WebDriverWait(self.driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".optional_stocks .iconfont")))
     def select(self, keyword, market):
         self.driver.find_element_by_css_selector(".optional .search__dropdown input").send_keys(keyword)

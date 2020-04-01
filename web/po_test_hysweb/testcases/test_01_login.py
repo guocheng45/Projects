@@ -7,16 +7,13 @@ from web.po_test_hysweb.pages.MainPage import MainPage
 class TestLogin(object):
     @classmethod
     def setup_class(cls):
-        # cls.driver = webdriver.Remote(desired_capabilities=DesiredCapabilities.CHROME)
-        cls.driver = webdriver.Chrome()
-        cls.driver.implicitly_wait(10)
-        cls.driver.get("https://www.ehaoyao.com")
-        cls.driver.maximize_window()
-        cls.main = MainPage(cls.driver)         # 对主页面的初始化
+        # cls.main = MainPage(cls.driver)         # 对主页面的初始化
+        # cls.loginpage = Driver().startmain().gotologin()
+        cls.loginpage = MainPage().gotologin()
 
     @classmethod
     def teardown_class(cls):
-        cls.main.driver_quit()
+        cls.loginpage.driver_quit()
 
 
     def setup_method(self):
@@ -26,8 +23,15 @@ class TestLogin(object):
         pass
 
     def test_01_login(self):
-        self.main.gotologin().login_by_pwd()
-        # assert 1==1
+        self.loginpage.login_by_pwd()
+        result = self.loginpage.login_result()
+        self.loginpage.screenshots()
+        assert "login" in result
+
 
     def test_02_logout(self):
-        pass
+        self.loginpage.login_by_pwd()
+        self.loginpage.logout()
+        self.loginpage.screenshots()
+        result = self.loginpage.login_result()
+        assert "not login" in result
