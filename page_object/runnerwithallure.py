@@ -6,7 +6,7 @@ import logging
 import subprocess
 
 fileHander = logging.FileHandler(filename="log/uiautotest.log", encoding="utf-8")
-logging.getLogger().setLevel(0)
+logging.getLogger().setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(module)s:%(lineno)d %(message)s')
 fileHander.setFormatter(formatter)
 logging.getLogger().addHandler(fileHander)

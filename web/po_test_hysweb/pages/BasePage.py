@@ -24,9 +24,9 @@ class BasePage(object):
         pic = ImageGrab.grab()  # web实现截屏功能
         im = pic.convert('RGB')
         im.save(name)
-        # file = open(name, 'rb').read()  # 先把文件open 然后再read读取一下，然后即可把这个文件加到allure中
-        # allure.attach.file(name, attachment_type=allure.attachment_type.PNG)  # attach图片上步已经可以读取，直接写上名字就可以了
-        # os.remove(name)
+        file = open(name, 'rb').read()  # 先把文件open 然后再read读取一下，然后即可把这个文件加到allure中
+        allure.attach.file(name, attachment_type=allure.attachment_type.PNG)  # attach图片上步已经可以读取，直接写上名字就可以了
+        os.remove(name)
 
     def find(self,by,locator):
         if isinstance(by,tuple):        # isinstance(by,tuple) 判断by是不是元祖  返回的是True或False
@@ -35,6 +35,6 @@ class BasePage(object):
             return self._driver.find_element(by,locator)
 
     def driver_quit(self):
-        sleep(5)
+        sleep(3)
         self._driver.quit()
         return self

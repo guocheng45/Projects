@@ -4,10 +4,10 @@ from time import sleep
 
 class LoginPage(BasePage):
 
-    def login_by_pwd(self):
+    def login_by_pwd(self,name,pwd):
         self.find(By.ID,'lgnByaccount').click()
-        self.find(By.NAME,'loginName').send_keys('15001106951')
-        self.find(By.NAME,'loginPwd').send_keys('123456')
+        self.find(By.NAME,'loginName').send_keys(name)
+        self.find(By.NAME,'loginPwd').send_keys(pwd)
         self.find(By.ID,'submitLogin2').click()
         return self
 

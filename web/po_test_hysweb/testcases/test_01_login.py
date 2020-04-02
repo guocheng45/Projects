@@ -1,37 +1,56 @@
+import pytest
 from selenium import webdriver
 # from selenium.webdriver import DesiredCapabilities
 # from selenium.webdriver.remote.webdriver import WebDriver
 from web.po_test_hysweb.pages.MainPage import MainPage
+import allure
+import logging
 
 
+@allure.feature("测试web登录")
 class TestLogin(object):
     @classmethod
     def setup_class(cls):
-        # cls.main = MainPage(cls.driver)         # 对主页面的初始化
-        # cls.loginpage = Driver().startmain().gotologin()
-        cls.loginpage = MainPage().gotologin()
+        # cls.loginpage = MainPage().gotologin()         # 对页面的初始化
+        pass
 
     @classmethod
     def teardown_class(cls):
-        cls.loginpage.driver_quit()
+        # cls.loginpage.driver_quit()
+        pass
 
 
     def setup_method(self):
-        pass
+        self.loginpage = MainPage().gotologin()
 
     def teardown_method(self):
-        pass
+        self.loginpage.driver_quit()
 
-    def test_01_login(self):
-        self.loginpage.login_by_pwd()
-        result = self.loginpage.login_result()
+    @allure.story("测试登录功能")
+    @allure.severity('normal')
+    @allure.testcase('')
+    @allure.issue('')
+    @pytest.mark.parametrize("name,pwd",[("15001106951","123456"),("13663397421","abc123")])
+    def test_01_login(self,name,pwd):
+        with allure.step("进行登录"):
+            self.loginpage.login_by_pwd(name,pwd)
+        with allure.step("获取登录结果"):
+            result = self.loginpage.login_result()
         self.loginpage.screenshots()
+        logging.info("测试result：%s" % result)
         assert "login" in result
 
-
+    @allure.story("测试登录登出功能")
+    @allure.severity('normal')
+    @allure.testcase('')
+    @allure.issue('')
     def test_02_logout(self):
-        self.loginpage.login_by_pwd()
-        self.loginpage.logout()
-        self.loginpage.screenshots()
-        result = self.loginpage.login_result()
+        with allure.step("进行登录"):
+            self.loginpage.login_by_pwd("15001106951","123456")
+        with allure.step("然后登出"):
+            self.loginpage.logout()
+        with allure.step("获取登录结果"):
+            result = self.loginpage.login_result()
+            self.loginpage.screenshots()
+            logging.info("测试result：%s" % result)
         assert "not login" in result
