@@ -19,6 +19,6 @@ if __name__ == '__main__':
     # pytest.main(['--alluredir', '../log/report/xml', 'testcases/alluredemo/login/test_hys.py::TestLogin::test_2474609'])
     # pytest.main(['--alluredir', '../log/report/xml','--allure-severities=blocker', 'testcases/alluredemo/'])
 
-    pytest.main(['--alluredir', 'log/report/xml', 'testcases/test_01_login.py'])
+    pytest.main(['--alluredir', 'log/report/xml', 'testcases/'])
     # 通过subprocess.getstatusoutput 获得shell返回结果
     print(subprocess.getstatusoutput('allure generate --clean log/report/xml -o log/report/html'))

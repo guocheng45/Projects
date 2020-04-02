@@ -11,7 +11,7 @@ import logging
 class TestLogin(object):
     @classmethod
     def setup_class(cls):
-        # cls.loginpage = MainPage().gotologin()         # 对页面的初始化
+        # cls.loginpage = MainPage().goto_login()         # 对页面的初始化
         pass
 
     @classmethod
@@ -21,7 +21,7 @@ class TestLogin(object):
 
 
     def setup_method(self):
-        self.loginpage = MainPage().gotologin()
+        self.loginpage = MainPage().goto_login()
 
     def teardown_method(self):
         self.loginpage.driver_quit()
@@ -37,6 +37,7 @@ class TestLogin(object):
         with allure.step("获取登录结果"):
             result = self.loginpage.login_result()
         self.loginpage.screenshots()
+        logging.info("测试登录功能")
         logging.info("测试result：%s" % result)
         assert "login" in result
 
@@ -52,5 +53,6 @@ class TestLogin(object):
         with allure.step("获取登录结果"):
             result = self.loginpage.login_result()
             self.loginpage.screenshots()
+            logging.info("测试登录登出功能")
             logging.info("测试result：%s" % result)
         assert "not login" in result
