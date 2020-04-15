@@ -41,6 +41,41 @@ def factorial(n):
         return 1    # 到了等于1的时候最底层的函数就会结束，一层一层的出来
     return n * factorial(n-1)
 
-print(factorial(9))
+# print(factorial(9))
 
 # 二分查找      在有序的队列里面找某个元素，先判断中间位置元素，在判断剩余元素的中间元素...
+data1 = list(range(100))
+print("data1:",data1)
+def b_search(num,low,high,data):
+    mid = int((low+high)/2)
+    # if low == high:
+    #     print("can not find it")
+    #     return
+    if data[mid] > num:
+        print(data[mid],"bigger than num")
+        return b_search(num,low,mid-1,data)
+    elif data[mid] < num:
+        print(data[mid], "lower than num")
+        return b_search(num,mid+1,high,data)
+    elif data[mid] == num:
+        print("find it",data[mid])
+    else:
+        print("can not find it")
+        return -1
+
+# b_search(99,0,len(data1),data1)
+
+# 冒泡排序
+def bubble_sort():
+    nums = [6, 5, 4, 3, 2, 1]
+    print("===========:", len(nums))
+    for i in range(len(nums) - 1):  # 从0 开始到len-1结束不包括len-1,共计len-1次
+        for j in range(len(nums) - 1 - i):      # 每次循环都从0开始到len-1-i结束
+            if nums[j] > nums[j + 1]:
+                nums[j + 1] = nums[j] + nums[j + 1]
+                nums[j] = nums[j + 1] - nums[j]
+                nums[j + 1] = nums[j + 1] - nums[j]
+
+    print("==========nums:",nums)
+
+bubble_sort()
