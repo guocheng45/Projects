@@ -20,7 +20,7 @@ class myThread(threading.Thread):       # 线程类
 
 def print_time(threadName,delay,count):     # print_time方法
     while count:                # count非0执行循环
-        # 这个if只是看上面的一个开关吧
+        # 这个if作用是一个开关
         if exitFlag:            # exitFlag为0不执行，非0时执行
             threadName.exit()   # 对应名称线程退出
         time.sleep(delay)       # 休息几秒

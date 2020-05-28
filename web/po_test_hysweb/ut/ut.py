@@ -88,17 +88,69 @@ def bubble_sort():
 
 # bubble_sort()
 #判断字符串是否对称，字符串如：“abcdedcba”
-list1 = "abcddcba"
-list_len = len(list1)
-if list_len%2 !=0:
-    print("不对称!")
-else:
-    ranges = int(len(list1)/2)      # 4
-    print("ranges:", ranges)
-    for i in range(ranges):
-        print(i)
-        if list1[i] != list1[list_len-1-i] :
-            print('不对称！')
-            break
-        elif list1[i] == list1[list_len-1-i] and i == ranges-1 :
-            print("字符串对称！", "list1[i]=", list1[i], "list1[list_len-1-i]=", list1[list_len - 1 - i])
+def is_sym():
+    list1 = "abcddcba"
+    list_len = len(list1)
+    if list_len%2 !=0:
+        print("不对称!")
+    else:
+        ranges = int(len(list1)/2)      # 4
+        print("ranges:", ranges)
+        for i in range(ranges):
+            print(i)
+            if list1[i] != list1[list_len-1-i] :
+                print('不对称！')
+                break
+            elif list1[i] == list1[list_len-1-i] and i == ranges-1 :
+                print("字符串对称！", "list1[i]=", list1[i], "list1[list_len-1-i]=", list1[list_len - 1 - i])
+
+
+class baseClass:
+    def test1(self, num):
+        print(num)
+
+
+class sonClass(baseClass):
+    def test2(self,num):
+        super().test1(num)     #super还是引用的父类，除非重写才是覆盖父类
+        print(num+1)
+    def test1(self, num):
+        print(num+1)
+
+
+# son = sonClass()
+# son.test1(11)
+# son.test2(123)
+
+def foo():
+    print("starting...")
+    while True:
+        res = yield 4
+        print("res:",res)
+g = foo()
+# print(next(g))
+# print("*"*20)
+# print(next(g))      # next相当于下一步
+
+# l= [1,2,3,4]
+# print(l[2:])
+#
+# s=''
+# for i in l:
+#     s+=str(i)
+# print(s)
+
+def tes_tuple():
+    tuple1 = ('龙猫','泰迪','叮当猫')
+    tuple1 = tuple1[:2]+('小猪佩奇',)+tuple1[2:]        #注意[:2]取前2   [2:]舍弃前2
+    print("tuple1:",tuple1)
+
+    tuple1 = ('龙猫','泰迪','小猪佩奇','叮当猫')
+    tuple1 = tuple1[:2]+tuple1[3:]          #注意[:2]取前2   [3:]舍弃前3
+    print("tuple2:",tuple1)
+
+# a=tes_tuple()
+
+l = [2,1,2,3,4,5,6,6,5,4,3,2,1]
+print(list(set(l)))
+print(list({}.fromkeys(l).keys()))

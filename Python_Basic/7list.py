@@ -18,8 +18,19 @@ print(book.copy()*4+book)       # book copy4次再加一次
 print(book.copy().clear())      # 删除了book的全部copy
 print(book)                     # book仍然存在
 
+# list 字符拼接
+l2 = ['a','dd','s','df']
+print(''.join(l2))      # addsdf   注意list中是int类型则不可以拼接
+
 book = ['Google', 'testerhome', 'testing-studio', 'Baidu']
-book.reverse()                  # 列表翻转
+book.reverse()                  # 列表倒序
 print("列表翻转后：",book)
-book.sort()                     # 列表排序
+book.sort()                     # 列表正序
 print("列表排序后：",book)
+
+ids = [1, 2, 3, 11, 2, 5, 3, 2, 5, 3]
+ids = list(set(ids))  # list去重
+print(ids)
+ids.sort()  # 正序排序
+print(ids)
+ids.reverse()   # 倒序排序

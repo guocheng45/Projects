@@ -65,7 +65,7 @@ class Test_Base_grammar():
         self.foo(1, (5, 6, 7, 8), {"y": 2, "z": 3})
         self.foo(1, *(5, 6, 7, 8), **{"y": 2, "z": 3}, a=6)     # 此为正确用法
         # .== == == == == == == == == == == == == == == == == == == =
-        # < Py_Base_exc.test_base_grammar.Test_Base_grammar
+        # < Python_Basic.test_base_grammar.Test_Base_grammar
         # object
         # at
         # 0x00000000036918D0 >
@@ -74,7 +74,7 @@ class Test_Base_grammar():
         # {}
         # == == == == == == == == == == == == == == == == == == == =
         # == == == == == == == == == == == == == == == == == == == =
-        # < Py_Base_exc.test_base_grammar.Test_Base_grammar
+        # < Python_Basic.test_base_grammar.Test_Base_grammar
         # object
         # at
         # 0x00000000036918D0 >
