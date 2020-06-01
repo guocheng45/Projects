@@ -21,5 +21,5 @@ class HysClient(object):
         caps["noReset"] = True
         caps["unicodeKeyboard"] = True
         cls.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
-        cls.driver.implicitly_wait(5)
+        cls.driver.implicitly_wait(3)       # 隐式等待是对全局元素设置的隐式等待时间，影响全局速度
         return cls.driver

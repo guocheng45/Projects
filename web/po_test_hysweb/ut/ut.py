@@ -1,3 +1,5 @@
+
+
 def re_print1():
     for i in range(1, 10):
         for j in range(i, 10):
@@ -154,3 +156,47 @@ def tes_tuple():
 l = [2,1,2,3,4,5,6,6,5,4,3,2,1]
 print(list(set(l)))
 print(list({}.fromkeys(l).keys()))
+
+### 海量数据找前几的数     如： 使用生成器生成1000万个随机整数，求最大的1000个数
+import random
+import time
+
+num= 1000*10000
+print(num)
+def gen_num(n):
+    for i in range(n):
+        yield random.randint(0,n)
+# l = gen_num(num)
+# start_time = time.time()
+# l = list(set(l))
+# result = l[-1000:]
+# dura_time = time.time()-start_time
+# print("消耗时间：",dura_time ,"\n",result)   # 耗时37.52秒   很耗内存
+#
+# import heapq
+# start_time = time.time()
+# result = heapq.nlargest(1000,l)
+# dura_time = time.time()-start_time
+# print("消耗时间：",dura_time ,"\n",result)   # 耗时22.05秒   比上面的少了15秒
+
+### 两数之和     l=[1,2,3,4,5,6,7,8] 数据不重复，target=6，快速找出数组中两个元素之和等于target 的数组下标。
+list1 = [1,2,3,4,5,6,7,8]
+target = 6
+# for a in list1:
+#     if a >=6:
+#         break
+#     b = target - a
+#     print("运行了几次？")
+#     if a < b < target and b in list1:              # 可以直接作为一个判断，     b in setl
+#         print("%s + %s = %s" % (a,b,target))      # print("a=%s, b=%s, c = %s" %(a,b,c))
+#         print("a 的位置：%s \n b的位置：%s" % (list1.index(a),list1.index(b)))
+
+def foo(x, *args, a=4, **kwarg): #使用默认参数时，注意默认参数的位置要在args之后kwargs之前
+    print(x)
+    print(a)
+    print(args)
+    print(kwarg)
+print('=====================================')
+foo(1, *(5, 6, 7, 8),**{"y": 2, "z": 3})            # 使用时，最好前加* 或**便于程序识别那个是那个
+foo(1, *(5, 6, 7, 8), **{"y": 2, "z": 3}, a=6)
+foo(1,*(2,3,4),a=5,**{"y":2,"z":3})

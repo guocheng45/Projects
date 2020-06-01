@@ -33,6 +33,9 @@ def use_random():
     print(random.sample('dadsahdkahdusiwyiyriwyr',5))       # 随机生成指定数量的字符——输出：['a', 'y', 'a', 'i', 'r']
     print(''.join(random.sample('dadsahdkahdusiwyiyriwyr', 5)))       # 随机生成指定数量的字符，并拼接成一个字符串，输出：ikwyy
 
+    print(random.sample('abcde', 5))        # 随机获取5个不同的随机值
+    print(random.sample(range(100), 10))    # 在0-100中随机获取10个不同的数
+
     a = [1, 3, 5, 6, 7]  # 将序列a中的元素顺序打乱
     random.shuffle(a)
     print(a)

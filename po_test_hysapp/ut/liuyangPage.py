@@ -130,12 +130,6 @@ class OrderPage(HysBase):
         pel5 = self.find(By.ID, "tv_next").click()
         pel6 = self.find(By.ID, "tv_submit_order").click()
         # 余额支付，不要支付了，不好退
-        # pel7=self.find(By.ID,"cb_use_balance").click()
-        # pel8=self.find(By.ID,"btn_add_addresss").click()
-        # self.driver.implicitly_wait(10)
-        # pel9=self.find(By.ID,"tv_sure").click()
-        # self.driver.implicitly_wait(10)
-        # pel10=self.find(By.ID,"tv_order_detail").click()
         self.common_backtomainpage()
 
     def place_order_B2CBuyNow(self):

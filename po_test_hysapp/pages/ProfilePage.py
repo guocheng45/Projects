@@ -86,12 +86,6 @@ class ProfilePage(HysBase):
 
     def cancel_order(self):
         self.loadSteps('data/profile.yaml','cancel_order')
-        # self.find(By.ID,'bt_cancel').click()
-        # self.find(By.ID, 'iv_check').click()
-        # self.find(By.ID, 'bt_sure').click()
-
-        # cel3 = self.driver.find_elements(By.ID,"bt_cancel")[0].click()
-
         self.screenshots()
         return self
 

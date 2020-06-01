@@ -13,6 +13,7 @@ book.extend(book)         # 列表最后追加一个列表
 book.remove("tomorrow history")     # 列表中删除指定值
 book.pop()          # 获取并移除列表最后一个
 print(book)
+print("索引位置：",book.index('java'))      # 从列表中找出某个值第一个匹配项的索引位置
 
 print(book.copy()*4+book)       # book copy4次再加一次
 print(book.copy().clear())      # 删除了book的全部copy
@@ -29,7 +30,9 @@ book.sort()                     # 列表正序
 print("列表排序后：",book)
 
 ids = [1, 2, 3, 11, 2, 5, 3, 2, 5, 3]
-ids = list(set(ids))  # list去重
+print(list(set(ids)))       # 去重,捎带正序排序
+print(list({}.fromkeys(ids).keys()))        # 保持原顺序
+ids = list(set(ids))  # list去重,捎带正序排序
 print(ids)
 ids.sort()  # 正序排序
 print(ids)

@@ -15,7 +15,7 @@ class TestHysApp(object):
         caps["noReset"] = "True"
         caps["unicodeKeyboard"]="True"
         cls.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
-        cls.driver.implicitly_wait(10)
+        cls.driver.implicitly_wait(5)
 
     def install_app(self):
         pass
@@ -37,24 +37,18 @@ class TestHysApp(object):
     def search_goodsB2C(self):
         sel1=self.driver.find_element_by_id("radio_home").click()
         sel2=self.driver.find_element_by_id("qmy_main_search_ll").click()
-        self.driver.implicitly_wait(10)
         sel3=self.driver.find_element_by_id("et_search").send_keys('感冒')
         sel4=self.driver.find_element_by_id("bt_search").click()
-        self.driver.implicitly_wait(5)
         sel5=self.driver.find_element_by_id("tv_desc").click()
         sel6=self.driver.find_element_by_id("tv_desc_2").click()
-        self.driver.implicitly_wait(10)
 
     def search_goodsO2O(self):
         sel1=self.driver.find_element_by_id("function_img").click()
         sel2=self.driver.find_element_by_id("et_search").click()
-        self.driver.implicitly_wait(10)
         sel3=self.driver.find_element_by_id("et_search").send_keys('感冒')
         sel4=self.driver.find_element_by_id("bt_search").click()
-        self.driver.implicitly_wait(5)
         sel5=self.driver.find_element_by_id("tv_desc").click()
         sel6=self.driver.find_element_by_id("tv_desc_2").click()
-        self.driver.implicitly_wait(10)
 
     def swipe_ui(self,act):
         time.sleep(4)
@@ -76,7 +70,6 @@ class TestHysApp(object):
         # 下单不支付
         cb1 = self.driver.find_element_by_id("iv_base_left").click()
         cb2 = self.driver.find_element_by_id("tv_sure").click()
-        self.driver.implicitly_wait(10)
         # 返回到首页
         cb3 = self.driver.find_element_by_id("iv_base_left").click()
         cb4 = self.driver.find_element_by_id("iv_back").click()
@@ -87,7 +80,6 @@ class TestHysApp(object):
         self.swipe_ui("上拉")
         pel1=self.driver.find_element_by_xpath("//*[contains(@text,'马应龙 对乙酰氨基酚栓 0.125g*6s')]/../..//*[contains(@resource-id,'iv_buy')]").click()
         pel2=self.driver.find_element_by_id("iv_cart").click()
-        # self.driver.implicitly_wait(10)
         # pel3=self.driver.find_element_by_id("rb_pharmacy_check").click()
         # time.sleep(3)
         # pel4=self.driver.find_element_by_xpath("//*[@text='马应龙 对乙酰氨基酚栓 0.125g*6s']/../..//*[contains(@resource-id,'rb_check')]").click()
@@ -97,9 +89,7 @@ class TestHysApp(object):
         # 余额支付，不要支付了，不好退
         # pel7=self.driver.find_element_by_id("cb_use_balance").click()
         # pel8=self.driver.find_element_by_id("btn_add_addresss").click()
-        # self.driver.implicitly_wait(10)
         # pel9=self.driver.find_element_by_id("tv_sure").click()
-        # self.driver.implicitly_wait(10)
         # pel10=self.driver.find_element_by_id("tv_order_detail").click()
         self.common_backtomainpage()
 
