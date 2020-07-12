@@ -1,5 +1,6 @@
 from flask import Flask,request
 
+# Flask服务器搭建代码
 app = Flask(__name__)
 
 @app.route('/')
