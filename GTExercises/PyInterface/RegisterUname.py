@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*- 
 
 
-from Tkinter import *
+from tkinter import *
 import ttk
-import Regisintfa
+from GTExercises.PyInterface import Regisintfa
 
 # import sys
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
+
+
 regis = Regisintfa.RegisIntfa()
 class Application():
 
@@ -85,7 +87,7 @@ class Application():
         
     def produced(self,Uname):
         comb0_value = self.comb0.get()  #打印选中项的值
-        print comb0_value
+        print(comb0_value)
         if comb0_value =="CN":
             #Uname = self.str_ent1
             gid = self.enty2.get()

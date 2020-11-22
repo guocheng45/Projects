@@ -14,9 +14,9 @@ class RegisIntfa:
         request=urllib2.Request(url,body)# 用Request来发送POST请求，指明请求目标是之前定义过的url，请求内容放在data里
         response = urllib2.urlopen(request)  # 用urlopen打开上一步返回的结果，得到请求后的响应内容
         apicontent = response.read()  #将响应内容用read()读取出来
-        print  apicontent  #打印读取到的内容
+        print(apicontent)
         ret =apicontent.find('username')  #位置从0开始算，如果没找到则返回-1。
-        print ret
+        print(ret)
         return ret
 #     if ret >=0:
 #         return ret
@@ -31,9 +31,9 @@ class RegisIntfa:
         request=urllib2.Request(url,body)# 用Request来发送POST请求，指明请求目标是之前定义过的url，请求内容放在data里
         response = urllib2.urlopen(request)  # 用urlopen打开上一步返回的结果，得到请求后的响应内容
         apicontent = response.read()  #将响应内容用read()读取出来
-        print  apicontent  #打印读取到的内容
+        print(apicontent)
         ret =apicontent.find('username')  #位置从0开始算，如果每找到则返回-1。
-        print ret
+        print(ret)
         return ret
 
 #     names = 'gzc1'
